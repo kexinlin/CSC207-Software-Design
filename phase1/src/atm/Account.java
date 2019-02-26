@@ -1,14 +1,22 @@
 package atm;
 
+import java.util.Date;
+
 public abstract class Account {
 	private double balance;
+	private Date dateOfCreation;
 
 	public Account() {
 		this.balance = 0;
+		this.dateOfCreation = new Date();
 	}
 
 	public double getBalance() {
 		return this.balance;
+	}
+
+	public Date getDateOfCreation(){
+		return this.dateOfCreation;
 	}
 
 	// return boolean to indicate whether the action succeeds or not
