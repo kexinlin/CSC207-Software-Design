@@ -5,14 +5,23 @@ import java.util.Date;
 public abstract class Account {
 	private double balance;
 	private Date dateOfCreation;
+	private String accountId;
+	private static int totalNumAccount = 1;
+
 
 	public Account() {
 		this.balance = 0;
 		this.dateOfCreation = new Date();
+		this.accountId = String.valueOf(totalNumAccount);
+		totalNumAccount++;
 	}
 
 	public double getBalance() {
 		return this.balance;
+	}
+
+	public String getAccountId() {
+		return accountId;
 	}
 
 	public Date getDateOfCreation(){
