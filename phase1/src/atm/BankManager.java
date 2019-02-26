@@ -1,3 +1,5 @@
+package atm;
+
 public class BankManager{
     public User createUser(String username, String password){
         User u = new User();
@@ -7,7 +9,7 @@ public class BankManager{
     }
 
     public restockMachine(int faceValue, int number){
-      
+
     }
 
     public undoTransacation(){
