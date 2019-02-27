@@ -6,6 +6,9 @@ public abstract class Account {
 	private double balance;
 	private Date dateOfCreation;
 	private String accountId;
+	// FIXME: Total number of accounts will reset to one
+	// when the program restarts, which may not be the
+	// desired behaviour.
 	private static int totalNumAccount = 1;
 
 
@@ -31,6 +34,8 @@ public abstract class Account {
 	// return boolean to indicate whether the action succeeds or not
 	public abstract boolean withdrawMoney(double amount);
 
+	// FIXME: In my opinion, this should be the function of
+	// `Transaction`s
 	public abstract boolean transferOut(Account destinationAccount);
 
 	// increaseBalance always return true
