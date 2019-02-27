@@ -1,18 +1,25 @@
 package atm;
-
 public class BankManager{
     public User createUser(String username, String password){
-        User u = new User();
-        u.username = username;
-        u.password = password;
-        return u;
+      	// Call the constructor of User class
     }
 
-    public restockMachine(int faceValue, int number){
+	public Account createAccount(String cardType){
+		if(cardType == "Credit Card"){}
+		if(cardType == "Line of Credit"){}
+		if(cardType == "Chequing"){}
+		if(cardType == "Savings"){}
+	}
+
+    public void restockMachine(int faceValue, int number){
+		//atm.ATM.depositCash();
+    }
+
+    public void undoTransacation(){
 
     }
 
-    public undoTransacation(){
+    public void setTime(){
 
-    }
+	}
 }
