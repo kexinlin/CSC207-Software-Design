@@ -6,41 +6,68 @@ public abstract class Account {
 	private double balance;
 	private Date dateOfCreation;
 	private String accountId;
-	// FIXME: Total number of accounts will reset to one
-	// when the program restarts, which may not be the
-	// desired behaviour.
-	private static int totalNumAccount = 1;
+	private User owner;
 
-
-	public Account() {
-		this.balance = 0;
-		this.dateOfCreation = new Date();
-		this.accountId = String.valueOf(totalNumAccount);
-		totalNumAccount++;
+	/**
+	 * Create an instance of account
+	 * @param balance the balance of the account
+	 * @param dateOfCreation the date of creation
+	 * @param accountId account id
+	 * @param owner owner of the account
+	 */
+	public Account(double balance, Date dateOfCreation, String accountId, User owner) {
+		this.balance = balance;
+		this.dateOfCreation = dateOfCreation;
+		this.accountId = accountId;
+		this.owner = owner;
 	}
 
+	/**
+	 * Gets the balance of this account.
+	 * @return balance of the account
+	 */
 	public double getBalance() {
 		return this.balance;
 	}
 
+	/**
+	 * Gets the account id of this account.
+	 * @return account id
+	 */
 	public String getAccountId() {
 		return accountId;
 	}
 
-	public Date getDateOfCreation(){
+	/**
+	 * Gets the date of account creation.
+	 * @return date of creation
+	 */
+	public Date getDateOfCreation() {
 		return this.dateOfCreation;
 	}
 
 	// return boolean to indicate whether the action succeeds or not
-	public abstract boolean withdrawMoney(double amount);
+
+	/**
+	 * Take `amount` of money out of the account.
+	 * @param amount the amount of money to take out.
+	 * @return true if the operation succeeds, false otherwise.
+	 */
+	public abstract boolean takeMoneyOut(double amount);
 
 	// FIXME: In my opinion, this should be the function of
 	// `Transaction`s
-	public abstract boolean transferOut(Account destinationAccount);
+	//public abstract boolean transferOut(Account destinationAccount);
 
 	// increaseBalance always return true
-	public abstract boolean increaseBalance(double amount);
 
-	public abstract boolean payBill(String nonUserAccount);
+	/**
+	 * Put `amount` of money into the account.
+	 * @param amount the amount of money to put in
+	 * @return true if the operation succeeds, false otherwise.
+	 */
+	public abstract boolean putMoneyIn(double amount);
+
+	//public abstract boolean payBill(String nonUserAccount);
 
 }
