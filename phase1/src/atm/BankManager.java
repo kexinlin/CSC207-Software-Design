@@ -1,25 +1,26 @@
 package atm;
-public class BankManager{
+
+public class BankManager implements Loginable {
+	/**
+	 * Check if the password provided is the same as the one set for the user.
+	 * @param password the password to check.
+	 * @return true if password matches, false otherwise.
+	 */
+	@Override
+	public boolean verifyPassword(String password) {
+		return false;
+	}
+
     public User createUser(String username, String password){
-      	// Call the constructor of User class
+        User u = new User();
+        return u;
     }
 
-	public Account createAccount(String cardType){
-		if(cardType == "Credit Card"){}
-		if(cardType == "Line of Credit"){}
-		if(cardType == "Chequing"){}
-		if(cardType == "Savings"){}
-	}
-
-    public void restockMachine(int faceValue, int number){
-		//atm.ATM.depositCash();
+    public boolean restockMachine(int faceValue, int number){
+		return false;
     }
 
-    public void undoTransacation(){
-
+    public boolean undoTransacation(){
+		return false;
     }
-
-    public void setTime(){
-
-	}
 }
