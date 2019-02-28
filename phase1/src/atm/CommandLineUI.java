@@ -70,8 +70,8 @@ public class CommandLineUI implements UI {
 			output.println("Enter username:");
 			username = reader.readLine();
 
-			if (console == null) {
-				if (readPasswordFromConsole) {
+			if (readPasswordFromConsole) {
+				if (console == null) {
 					error.println("Error: console not found");
 					return;
 				} else {
