@@ -17,12 +17,14 @@ public class CommandLineUITest {
 	PrintStream output;
 	PrintStream error;
 	CommandLineUI ui;
+	ByteArrayOutputStream errStream;
 	@Before
 	public void setUp() {
 		machine = mock(ATM.class);
 		input = mock(InputStream.class);
 		output = mock(PrintStream.class);
-		error = mock(PrintStream.class);
+		errStream = new ByteArrayOutputStream();
+		error = new PrintStream(errStream);
 	}
 
 	private void createUI() {
@@ -36,13 +38,15 @@ public class CommandLineUITest {
 		createUI();
 		// the ui should terminate within a short period of time
 		ui.mainLoop();
+		error.flush();
+		// we should get no errors
+		assertEquals("", errStream.toString());
 	}
 
 	@Test(timeout=1000)
 	public void testLogin() {
 		when(machine.login("foo", "bar")).thenReturn(true);
-		ByteArrayOutputStream errStream = new ByteArrayOutputStream();
-		error = new PrintStream(errStream);
+
 		input = new ByteArrayInputStream("login\nfoo\nbar\nexit\n".getBytes());
 
 		createUI();
@@ -56,8 +60,7 @@ public class CommandLineUITest {
 	@Test(timeout = 1000)
 	public void testLoginFailure() {
 		when(machine.login("foo", "bar")).thenReturn(true);
-		ByteArrayOutputStream errStream = new ByteArrayOutputStream();
-		error = new PrintStream(errStream);
+
 		input = new ByteArrayInputStream("login\nfoo\nfuzz\nexit\n".getBytes());
 
 		createUI();
