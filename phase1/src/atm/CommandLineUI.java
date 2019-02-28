@@ -76,13 +76,13 @@ public class CommandLineUI implements UI {
 					return;
 				} else {
 					output.println("Enter password:");
-					password = reader.readLine();
+					password = new String(console.readPassword());
 				}
 			} else {
 				output.println("Enter password:");
 				// FIXME: potentially dangerous.
 				// Oracle suggests using char[].
-				password = new String(console.readPassword());
+				password = reader.readLine();
 			}
 			if (machine.login(username, password)) {
 				output.println("Login successful.");

@@ -4,14 +4,12 @@ import jdk.internal.util.xml.impl.Input;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class CommandLineUITest {
@@ -26,13 +24,13 @@ public class CommandLineUITest {
 		input = mock(InputStream.class);
 		output = mock(PrintStream.class);
 		error = mock(PrintStream.class);
-		ui = new CommandLineUI(machine, input,
-			output, error, false);
 	}
 
 	@Test(timeout=1000)
 	public void testExit() {
 		input = new ByteArrayInputStream("exit\n".getBytes());
+		ui = new CommandLineUI(machine, input,
+			output, error, false);
 		// the ui should terminate within a short period of time
 		ui.mainLoop();
 	}
@@ -44,9 +42,29 @@ public class CommandLineUITest {
 		error = new PrintStream(errStream);
 		input = new ByteArrayInputStream("login\nfoo\nbar\nexit\n".getBytes());
 
+		ui = new CommandLineUI(machine, input,
+			output, error, false);
+
 		ui.mainLoop();
+		error.flush();
 		// we should see no error here
 		assertEquals("", errStream.toString());
+	}
+
+	@Test(timeout = 1000)
+	public void testLoginFailure() {
+		when(machine.login("foo", "bar")).thenReturn(true);
+		ByteArrayOutputStream errStream = new ByteArrayOutputStream();
+		error = new PrintStream(errStream);
+		input = new ByteArrayInputStream("login\nfoo\nfuzz\nexit\n".getBytes());
+
+		ui = new CommandLineUI(machine, input,
+			output, error, false);
+
+		ui.mainLoop();
+		error.flush();
+		// we should see error here
+		assertNotEquals("", errStream.toString());
 	}
 
 
