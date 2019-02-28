@@ -1,29 +1,44 @@
 package atm;
 
-import java.io.BufferedReader;
-import java.io.Console;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class CommandLineUI implements UI {
-	private final boolean allowReadingFromFile = true;
+	private boolean readPasswordFromConsole;
 	private ATM machine;
 	private BufferedReader reader;
-	public CommandLineUI(ATM machine) {
+	private InputStream input;
+	private PrintStream output;
+	private PrintStream error;
+
+	/**
+	 * Constructs a new Command Line UI.
+	 * @param machine the ATM to handle
+	 * @param input the input stream
+	 * @param output the output stream
+	 * @param error the error stream
+	 * @param readPasswordFromConsole whether to read password only from a console
+	 */
+	public CommandLineUI(ATM machine, InputStream input,
+						 PrintStream output, PrintStream error,
+						 boolean readPasswordFromConsole) {
 		this.machine = machine;
-		this.reader = new BufferedReader(new InputStreamReader(System.in));
+		this.input = input;
+		this.reader = new BufferedReader(new InputStreamReader(this.input));
+		this.output = output;
+		this.error = error;
+		this.readPasswordFromConsole = readPasswordFromConsole;
 	}
 
 	public void mainLoop() {
-		System.out.println("Welcome. Please enter `help` for help, `exit` to quit.");
+		output.println("Welcome. Please enter `help` for help, `exit` to quit.");
 		REPL:
 		while (true) {
-			System.out.print("> ");
+			output.print("> ");
 			String command;
 			try {
 				command = reader.readLine().trim();
 			} catch (IOException e) {
-				System.err.println("Cannot read command.");
+				error.println("Cannot read command.");
 				break;
 			}
 			switch (command) {
@@ -39,7 +54,7 @@ public class CommandLineUI implements UI {
 					break REPL;
 
 				default:
-					System.err.println("Unknown command: " + command);
+					error.println("Unknown command: " + command);
 					break;
 			}
 		}
@@ -52,31 +67,30 @@ public class CommandLineUI implements UI {
 		try {
 			Console console = System.console();
 			String username, password;
+			output.println("Enter username:");
+			username = reader.readLine();
+
 			if (console == null) {
-				if (! allowReadingFromFile) {
-					System.err.println("Error: console not found");
+				if (readPasswordFromConsole) {
+					error.println("Error: console not found");
 					return;
 				} else {
-					System.out.println("Enter username:");
-					username = reader.readLine();
-					System.out.println("Enter password:");
+					output.println("Enter password:");
 					password = reader.readLine();
 				}
 			} else {
-				System.out.println("Enter username:");
-				username = console.readLine();
-				System.out.println("Enter password:");
+				output.println("Enter password:");
 				// FIXME: potentially dangerous.
 				// Oracle suggests using char[].
 				password = new String(console.readPassword());
 			}
 			if (machine.login(username, password)) {
-				System.out.println("Login successful.");
+				output.println("Login successful.");
 			} else {
-				System.err.println("Login failed.");
+				error.println("Login failed.");
 			}
 		} catch (IOException e) {
-			System.err.println("Cannot read username and/or password.");
+			error.println("Cannot read username and/or password.");
 		}
 	}
 
@@ -84,7 +98,7 @@ public class CommandLineUI implements UI {
 	 * Displays help information.
 	 */
 	private void help() {
-		System.out.println(
+		output.println(
 			"login\t-\tLog in as a user or admin\n"
 			+ "help\t-\tDisplay this help information\n"
 			+ "exit\t-\tQuit the program\n");
