@@ -11,10 +11,14 @@ public class BankManager implements Loginable {
 		return false;
 	}
 
-    public User createUser(String username, String password){
-        User u = new User();
+    public User createUser(String login, String password){
+        User u = new User(login, password);
         return u;
     }
+
+    public Account createAccount(){
+
+	}
 
     public boolean restockMachine(int faceValue, int number){
 		return false;
