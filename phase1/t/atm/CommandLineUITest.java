@@ -25,11 +25,15 @@ public class CommandLineUITest {
 		error = mock(PrintStream.class);
 	}
 
+	private void createUI() {
+		ui = new CommandLineUI(machine, input,
+			output, error, false);
+	}
+
 	@Test(timeout=1000)
 	public void testExit() {
 		input = new ByteArrayInputStream("exit\n".getBytes());
-		ui = new CommandLineUI(machine, input,
-			output, error, false);
+		createUI();
 		// the ui should terminate within a short period of time
 		ui.mainLoop();
 	}
@@ -41,8 +45,7 @@ public class CommandLineUITest {
 		error = new PrintStream(errStream);
 		input = new ByteArrayInputStream("login\nfoo\nbar\nexit\n".getBytes());
 
-		ui = new CommandLineUI(machine, input,
-			output, error, false);
+		createUI();
 
 		ui.mainLoop();
 		error.flush();
@@ -57,8 +60,7 @@ public class CommandLineUITest {
 		error = new PrintStream(errStream);
 		input = new ByteArrayInputStream("login\nfoo\nfuzz\nexit\n".getBytes());
 
-		ui = new CommandLineUI(machine, input,
-			output, error, false);
+		createUI();
 
 		ui.mainLoop();
 		error.flush();
