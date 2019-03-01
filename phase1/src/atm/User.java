@@ -14,7 +14,7 @@ public class User implements Loginable {
 
 	private ArrayList<CreditCardAccount> creditcards = new ArrayList<CreditCardAccount>();
 
-	private ArrayList<CheuqingAccount> cheuqing;
+	private ArrayList<ChequingAccount> cheuqing;
 
 	private ArrayList<LineOfCreditAccount> lineofcredit = new ArrayList<LineOfCreditAccount>();
 
@@ -22,7 +22,7 @@ public class User implements Loginable {
 
 	private ArrayList<Account> allAccount = new ArrayList<Account>();
 
-	private CheuqingAccount primaryaccount;
+	private ChequingAccount primaryaccount;
 
 	public Date date;
 
@@ -85,7 +85,7 @@ public class User implements Loginable {
 		for (CreditCardAccount acc:creditcards){
 			total -= acc.getBalance();
 		}
-		for (CheuqingAccount acc:cheuqing) {
+		for (ChequingAccount acc:cheuqing) {
 			total += cheuqing.getBalance;
 		}
 		for (LineOfCreditAccount acc:lineofcredit){
@@ -130,14 +130,14 @@ public class User implements Loginable {
 
 
 
-	public void setPrimaryCheuqingAccount(CheuqingAccount acc){
+	public void setPrimaryCheuqingAccount(ChequingAccount acc){
 		this.primaryaccount = acc;
 	}
 
 
 
 
-	public void addAccount(CheuqingAccount acc){
+	public void addAccount(ChequingAccount acc){
 		this.cheuqing.add(acc);
 	}
 
