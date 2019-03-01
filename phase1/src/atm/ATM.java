@@ -43,6 +43,7 @@ public class ATM {
 	 * @return the individual who is logged in, or null if none.
 	 */
 	public Loginable currentLoggedIn() {
+
 		return null;
 	}
 }
