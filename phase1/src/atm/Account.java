@@ -3,10 +3,10 @@ package atm;
 import java.util.Date;
 
 public abstract class Account {
-	private double balance;
-	private Date dateOfCreation;
-	private String accountId;
-	private User owner;
+	protected double balance;
+	protected Date dateOfCreation;
+	protected String accountId;
+	protected User owner;
 
 	/**
 	 * Create an instance of account
