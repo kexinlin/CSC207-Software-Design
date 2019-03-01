@@ -23,18 +23,27 @@ public class BankManager implements Loginable {
         return u;
     }
 
-    public Object responseToRequest(){
+    public Object responseToRequest(String accoutType){
 		// input: Accept the request of creating the account or not
 		if (false)
 			return false;	// if not
 		else{
-			return createAccount();
+			return createAccount(accoutType);
 		}
 	}
 
 	public Account createAccount(String accountType){
-		if(accountType == "CreditCardsAccount"){
-			//
+		if(accountType == "CreditCardAccount"){
+			return new CreditCardAccount();
+		}
+		if(accountType == "LineOfCreditAccount"){
+			return new LineOfCreditAccount();
+		}
+		if(accountType == "CheuqingAccount"){
+			return new CheuqingAccount();
+		}
+		if(accountType == "SavingAccount"){
+			return new SavingAccount();
 		}
 	}
 
