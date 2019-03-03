@@ -1,6 +1,7 @@
 package atm;
 import java.util.ArrayList;
 import java.util.Date;
+//import java.text.SimpleDateFormat;
 
 public class BankManager implements Loginable {
 	private ArrayList<User> users;	// stores all the users.
@@ -19,15 +20,15 @@ public class BankManager implements Loginable {
 		this.users = new ArrayList<User>();
 	}
 
-	public User createUser(String login, String password){
-        User u = new User(login, password);
+	public User createUser(String name, String username, String password){
+        User u = new User(name, username, password);
         this.users.add(u);
         return u;
     }
 
     public Object responseToRequest(String accountType, User owner){
 		// input: Accept the request of creating the account or not
-		if (false)
+		if (false)	// communicate with UI.!!!
 			return false;	// if not
 		else{
 			return createAccount(accountType, owner);
@@ -55,7 +56,15 @@ public class BankManager implements Loginable {
 	}
 
     public boolean undoTransaction(Account account){
-		// account.pop();  .... sth. like this
-		return false;
+		if (account.logEmpty())
+			return false;
+		else
+			return account.undoTrans();
     }
+
+    public boolean setTime(){
+		//SimpleDateFormat dateForm = new SimpleDateFormat("Y/MM/dd HH:mm");
+		date = new Date();
+		return true;
+	}
 }

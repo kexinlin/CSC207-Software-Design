@@ -23,11 +23,8 @@ public class ATM {
 	 * @param password the password of that person
 	 * @return true if the operation succeeds, false otherwise.
 	 */
-	public boolean login(String username, String password) {
-		if(username == username && password == password){
-			return true;
-		}
-
+	public boolean login(User user, String username, String password) {
+		return (username.equals(user.getUsername()) && user.verifyPassword(password));
 	}
 
 	/**

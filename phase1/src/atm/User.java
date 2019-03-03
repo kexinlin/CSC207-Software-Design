@@ -2,6 +2,7 @@ package atm;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Stack;
 
 public class User implements Loginable {
 	public String name;
@@ -24,8 +25,6 @@ public class User implements Loginable {
 
 	public Date date;
 
-
-
 	public User(String name, String username, String password) {
 
 		this.name = name;
@@ -33,9 +32,9 @@ public class User implements Loginable {
 		this.password = password;
 	}
 
-
-
-	
+	public String getUsername(){
+		return this.username;
+	}
 
 	/**
 	 * Check if the password provided is the same as the one set for the user.
@@ -44,9 +43,9 @@ public class User implements Loginable {
 	 */
 	@Override
 	public boolean verifyPassword(String password) {
-		return false;
+		return this.password.equals(password); // Can I change like this?
+		//return false;
 	}
-
 
 
 

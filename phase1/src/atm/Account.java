@@ -1,12 +1,16 @@
 package atm;
 
+import org.omg.IOP.TAG_ALTERNATE_IIOP_ADDRESS;
+
 import java.util.Date;
+import java.util.Stack;
 
 public abstract class Account {
 	protected double balance;
 	protected Date dateOfCreation;
 	protected String accountId;
 	protected User owner;
+	protected Stack<Transaction> logs;
 
 	/**
 	 * Create an instance of account
@@ -20,6 +24,7 @@ public abstract class Account {
 		this.dateOfCreation = dateOfCreation;
 		this.accountId = accountId;
 		this.owner = owner;
+		this.logs = new Stack<Transaction>();
 	}
 
 	/**
@@ -70,4 +75,13 @@ public abstract class Account {
 
 	//public abstract boolean payBill(String nonUserAccount);
 
+	public boolean logEmpty(){
+		return this.logs.empty();
+	}
+
+	public boolean undoTrans(){
+		this.logs.pop();
+		// also have to deal with the money
+		return true;
+	}
 }
