@@ -36,25 +36,26 @@ public class BankManager implements Loginable {
 
 	public Account createAccount(String accountType, User owner){
 		String accountId = ".........."; 	//generated randomly??
-		if(accountType == "CreditCardAccount"){
+		if(accountType.equals("CreditCardAccount")){
 			return new CreditCardAccount(0, date, accountId, owner);
 		}
-		if(accountType == "LineOfCreditAccount"){
+		if(accountType.equals("LineOfCreditAccount")){
 			return new LineOfCreditAccount(0, date, accountId, owner);
 		}
-		if(accountType == "CheuqingAccount"){
+		if(accountType.equals("ChequingAccount")){
 			return new ChequingAccount(0, date, accountId, owner);
 		}
-		if(accountType == "SavingAccount"){
+		if(accountType.equals("SavingAccount")){
 			return new SavingAccount(0, date, accountId, owner);
 		}
 	}
 
-    public boolean restockMachine(int faceValue, int number){
-		return false;
-    }
+    public boolean restockMachine(ATM theATM, int denomination, int number){
+		return theATM.addCash(denomination, number);
+	}
 
-    public boolean undoTransaction(){
+    public boolean undoTransaction(Account account){
+		// account.pop();  .... sth. like this
 		return false;
     }
 }

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class User implements Loginable {
-	private String login;
-
 	public String name;
 
 	public String username;
@@ -14,7 +12,7 @@ public class User implements Loginable {
 
 	private ArrayList<CreditCardAccount> creditcards = new ArrayList<CreditCardAccount>();
 
-	private ArrayList<ChequingAccount> cheuqing;
+	private ArrayList<ChequingAccount> chequing;
 
 	private ArrayList<LineOfCreditAccount> lineofcredit = new ArrayList<LineOfCreditAccount>();
 
@@ -49,12 +47,6 @@ public class User implements Loginable {
 		return false;
 	}
 
-	public User(String login, String password){
-		this.login = login;
-		this.password = password;
-	}
-
-
 
 
 
@@ -64,8 +56,7 @@ public class User implements Loginable {
 	 * @return
 	 */
 	public boolean checkPassword(String password){
-
-		return password == this.password;
+		return password.equals(this.password);
 	}
 
 
