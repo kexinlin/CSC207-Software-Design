@@ -8,6 +8,10 @@ public class ATM {
 	 */
 	public ATM() {
 
+
+
+
+
 	}
 
 	/**
@@ -17,7 +21,10 @@ public class ATM {
 	 * @return true if the operation succeeds, false otherwise.
 	 */
 	public boolean login(String username, String password) {
-		return false;
+		if(username == username && password == password){
+			return true;
+		}
+
 	}
 
 	/**
@@ -25,8 +32,9 @@ public class ATM {
 	 * @param cash the collection of cash to put in
 	 * @return true if the operation succeeds, false otherwise.
 	 */
-	public boolean depositCash(Collection<? extends Cash> cash) {
-		return false;
+	public void depositCash(Collection<? extends Cash> cash) {
+
+
 	}
 
 	/**
