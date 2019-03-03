@@ -5,7 +5,6 @@ import java.util.Date;
 
 public class BankManager implements Loginable {
 	private ArrayList<User> users;	// stores all the users.
-	public static Date date;
 	/**
 	 * Check if the password provided is the same as the one set for the user.
 	 * @param password the password to check.
@@ -38,16 +37,16 @@ public class BankManager implements Loginable {
 	public Account createAccount(String accountType, User owner){
 		String accountId = ".........."; 	//generated randomly??
 		if(accountType.equals("CreditCardAccount")){
-			return new CreditCardAccount(0, date, accountId, owner);
+			return new CreditCardAccount(0, ATM.date, accountId, owner);
 		}
 		if(accountType.equals("LineOfCreditAccount")){
-			return new LineOfCreditAccount(0, date, accountId, owner);
+			return new LineOfCreditAccount(0, ATM.date, accountId, owner);
 		}
 		if(accountType.equals("ChequingAccount")){
-			return new ChequingAccount(0, date, accountId, owner);
+			return new ChequingAccount(0, ATM.date, accountId, owner);
 		}
 		if(accountType.equals("SavingAccount")){
-			return new SavingAccount(0, date, accountId, owner);
+			return new SavingAccount(0, ATM.date, accountId, owner);
 		}
 	}
 
@@ -64,7 +63,7 @@ public class BankManager implements Loginable {
 
     public boolean setTime(){
 		//SimpleDateFormat dateForm = new SimpleDateFormat("Y/MM/dd HH:mm");
-		date = new Date();
+		ATM.date = new Date();
 		return true;
 	}
 }
