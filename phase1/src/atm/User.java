@@ -13,7 +13,7 @@ public class User implements Loginable {
 
 	private ArrayList<CreditCardAccount> creditcards = new ArrayList<CreditCardAccount>();
 
-	private ArrayList<ChequingAccount> chequing;
+	private ArrayList<ChequingAccount> chequing = new ArrayList<>();
 
 	private ArrayList<LineOfCreditAccount> lineofcredit = new ArrayList<LineOfCreditAccount>();
 
@@ -24,6 +24,11 @@ public class User implements Loginable {
 	private ChequingAccount primaryaccount;
 
 	public Date date;
+
+	private ArrayList<Transaction> transactions = new ArrayList<>();
+
+
+
 
 	public User(String name, String username, String password) {
 
@@ -36,6 +41,9 @@ public class User implements Loginable {
 		return this.username;
 	}
 
+
+
+
 	/**
 	 * Check if the password provided is the same as the one set for the user.
 	 * @param password the password to check.
@@ -45,17 +53,6 @@ public class User implements Loginable {
 	public boolean verifyPassword(String password) {
 		return this.password.equals(password); // Can I change like this?
 		//return false;
-	}
-
-
-
-	/**
-	 *
-	 * @param password
-	 * @return
-	 */
-	public boolean checkPassword(String password){
-		return password.equals(this.password);
 	}
 
 
@@ -89,11 +86,17 @@ public class User implements Loginable {
 
 
 
+
 	public Date getDateOfCreation(){ return date; }
 
 
 
 
+	/**
+	 * return specific account by entering accountid
+	 * @param accountid
+	 * @return
+	 */
 	public Account getAccount(String accountid) {
 
 		for (Account acc:allAccount) {
@@ -107,8 +110,13 @@ public class User implements Loginable {
 
 
 
-
+	/**
+	 * return all available accounts
+	 * @return
+	 */
 	public ArrayList<Account> getAccounts(){ return allAccount; }
+
+	public Transaction getMostRecentTransaction() { return transactions.get(-1); }
 
 	public void setPrimaryCheuqingAccount(ChequingAccount acc){
 		this.primaryaccount = acc;
@@ -129,4 +137,16 @@ public class User implements Loginable {
 	public void addAccount(CreditCardAccount acc){
 		this.creditcards.add(acc);
 	}
+
+
+	/**
+	 * save transaction t to the last index of transactions.
+	 * @param t
+	 */
+	public void saveTransaction(Transaction t) { this.transactions.add(t); }
+
+
+
+
+	public void sendNewAccountRequest(String accounttype){}
 }
