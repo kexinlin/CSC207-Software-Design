@@ -13,7 +13,7 @@ public class User implements Loginable {
 
 	private ArrayList<CreditCardAccount> creditcards = new ArrayList<CreditCardAccount>();
 
-	private ArrayList<ChequingAccount> cheuqing = new ArrayList<>();
+	private ArrayList<ChequingAccount> chequing = new ArrayList<>();
 
 	private ArrayList<LineOfCreditAccount> lineofcredit = new ArrayList<LineOfCreditAccount>();
 
@@ -72,7 +72,7 @@ public class User implements Loginable {
 		for (CreditCardAccount acc:creditcards){
 			total -= acc.getBalance();
 		}
-		for (ChequingAccount acc:cheuqing) {
+		for (ChequingAccount acc:chequing) {
 			total += acc.getBalance();
 		}
 		for (LineOfCreditAccount acc:lineofcredit){
@@ -100,7 +100,7 @@ public class User implements Loginable {
 	public Account getAccount(String accountid) {
 
 		for (Account acc:allAccount) {
-			if (acc.getAccountId() == accountid) {
+			if (acc.getAccountId().equals(accountid)) {
 				return acc;
 			}
 		}
@@ -116,40 +116,23 @@ public class User implements Loginable {
 	 */
 	public ArrayList<Account> getAccounts(){ return allAccount; }
 
-
-
-
 	public Transaction getMostRecentTransaction() { return transactions.get(-1); }
-
-
-
 
 	public void setPrimaryCheuqingAccount(ChequingAccount acc){
 		this.primaryaccount = acc;
 	}
 
-
-
-
 	public void addAccount(ChequingAccount acc){
-		this.cheuqing.add(acc);
+		this.chequing.add(acc);
 	}
-
-
 
 	public void addAccount(SavingAccount acc){
 		this.savings.add(acc);
 	}
 
-
-
-
 	public void addAccount(LineOfCreditAccount acc){
 		this.lineofcredit.add(acc);
 	}
-
-
-
 
 	public void addAccount(CreditCardAccount acc){
 		this.creditcards.add(acc);

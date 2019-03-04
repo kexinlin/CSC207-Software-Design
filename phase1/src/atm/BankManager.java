@@ -36,23 +36,27 @@ public class BankManager implements Loginable {
 
 	public Account createAccount(String accountType, User owner){
 		String accountId = ".........."; 	//generated randomly??
-		if(accountType.equals("CreditCardAccount")){
-			return new CreditCardAccount(0, ATM.date, accountId, owner);
-		}
-		if(accountType.equals("LineOfCreditAccount")){
-			return new LineOfCreditAccount(0, ATM.date, accountId, owner);
-		}
-		if(accountType.equals("ChequingAccount")){
-			return new ChequingAccount(0, ATM.date, accountId, owner);
-		}
-		if(accountType.equals("SavingAccount")){
-			return new SavingAccount(0, ATM.date, accountId, owner);
+		switch (accountType) {
+			case "CreditCardAccount":
+				return new CreditCardAccount(0, ATM.date, accountId, owner);
+
+			case "LineOfCreditAccount":
+				return new LineOfCreditAccount(0, ATM.date, accountId, owner);
+
+			case "ChequingAccount":
+				return new ChequingAccount(0, ATM.date, accountId, owner);
+
+			case "SavingAccount":
+				return new SavingAccount(0, ATM.date, accountId, owner);
+
+			default:
+				return null;
 		}
 	}
 
-    public boolean restockMachine(ATM theATM, int denomination, int number){
-		return theATM.addCash(denomination, number);
-	}
+    //public boolean restockMachine(ATM theATM, int denomination, int number){
+	//	return theATM.addCash(denomination, number);
+	//}
 
     public boolean undoTransaction(Account account){
 		if (account.logEmpty())

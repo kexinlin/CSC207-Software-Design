@@ -27,6 +27,4 @@ public class ChequingAccount extends AssetAccount {
 		return false;
 	}
 
-
-
 }
