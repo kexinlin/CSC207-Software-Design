@@ -1,6 +1,7 @@
 package atm;
 
 import java.io.*;
+import java.util.Collection;
 
 public class CommandLineUI implements UI {
 	private boolean readPasswordFromConsole;
@@ -34,9 +35,12 @@ public class CommandLineUI implements UI {
 		REPL:
 		while (true) {
 			output.print("> ");
-			String command;
+			String command, args;
 			try {
-				command = reader.readLine().trim();
+				String line = reader.readLine().trim();
+				String s[] = line.split("\\s", 2);
+				command = s[0];
+				args = s.length == 1 ? "" : s[1];
 			} catch (IOException e) {
 				error.println("Cannot read command.");
 				break;
@@ -53,6 +57,14 @@ public class CommandLineUI implements UI {
 				case "exit":
 					break REPL;
 
+				case "ls":
+					if (args.length() > 0) {
+						showAccount(args);
+					} else {
+						listAccounts();
+					}
+					break;
+
 				default:
 					error.println("Unknown command: " + command);
 					break;
@@ -61,7 +73,7 @@ public class CommandLineUI implements UI {
 	}
 
 	/**
-	 *
+	 * Prompts the user to enter login info, then log in to the account.
 	 */
 	private void login() {
 		try {
@@ -100,7 +112,41 @@ public class CommandLineUI implements UI {
 	private void help() {
 		output.println(
 			"login\t-\tLog in as a user or admin\n"
-			+ "help\t-\tDisplay this help information\n"
-			+ "exit\t-\tQuit the program\n");
+				+ "help\t-\tDisplay this help information\n"
+				+ "ls\t-\tList accounts\n"
+				+ "exit\t-\tQuit the program\n");
+	}
+
+	/**
+	 * List accounts of current user.
+	 * Must log in as a user to use.
+	 */
+	private void listAccounts() {
+		Loginable loggedIn = machine.currentLoggedIn();
+		if (! (loggedIn instanceof User)) {
+			error.println("The current individual logged in is not a user.");
+			return;
+		}
+
+		User user = (User) loggedIn;
+		Collection<Account> accounts = user.getAccounts();
+		int i = 0;
+		for (Account acc : accounts) {
+			String typeStr = getAccountType(acc);
+			output.println(i + ":\t" + acc.getAccountId() + "\t" + acc.getBalance());
+			++i;
+		}
+	}
+
+	private String getAccountType(Account acc) {
+		return acc.getClass().toString();
+	}
+
+	/**
+	 * Gets the information about a certain account
+	 * @param account the id or order of account
+	 */
+	private void showAccount(String account) {
+		// TODO: should do acc id-order check
 	}
 }
