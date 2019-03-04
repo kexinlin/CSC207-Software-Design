@@ -13,7 +13,7 @@ public class User implements Loginable {
 
 	private ArrayList<CreditCardAccount> creditcards = new ArrayList<CreditCardAccount>();
 
-	private ArrayList<ChequingAccount> chequing;
+	private ArrayList<ChequingAccount> cheuqing = new ArrayList<>();
 
 	private ArrayList<LineOfCreditAccount> lineofcredit = new ArrayList<LineOfCreditAccount>();
 
@@ -24,6 +24,8 @@ public class User implements Loginable {
 	private ChequingAccount primaryaccount;
 
 	public Date date;
+
+	private ArrayList<Transaction> transactions = new ArrayList<>();
 
 	public User(String name, String username, String password) {
 
@@ -76,13 +78,13 @@ public class User implements Loginable {
 			total -= acc.getBalance();
 		}
 		for (ChequingAccount acc:cheuqing) {
-			total += cheuqing.getBalance;
+			total += acc.getBalance();
 		}
 		for (LineOfCreditAccount acc:lineofcredit){
 			total -= acc.getBalance();
 		}
 		for (SavingAccount acc:savings){
-			total += acc.getBalence();
+			total += acc.getBalance();
 		}
 		return total;
 	}
@@ -113,9 +115,7 @@ public class User implements Loginable {
 
 
 
-	public Transaction getMostRecentTransaction(Account acc) {
-		return acc.getMostRecentTransaction;
-	}
+	public Transaction getMostRecentTransaction() { return transactions.get(-1); }
 
 
 
@@ -146,7 +146,18 @@ public class User implements Loginable {
 
 
 
+
 	public void addAccount(CreditCardAccount acc){
 		this.creditcards.add(acc);
 	}
+
+
+
+
+	public void saveTransaction(Transaction t) { this.transactions.add(t); }
+
+
+
+	
+	public void sendNewAccountRequest(String accounttype){}
 }
