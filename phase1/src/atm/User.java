@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Stack;
 
-/**
- *
- */
 public class User implements Loginable {
 	public String name;
 
@@ -16,7 +13,7 @@ public class User implements Loginable {
 
 	private ArrayList<CreditCardAccount> creditcards = new ArrayList<CreditCardAccount>();
 
-	private ArrayList<ChequingAccount> chequing;
+	private ArrayList<ChequingAccount> cheuqing = new ArrayList<>();
 
 	private ArrayList<LineOfCreditAccount> lineofcredit = new ArrayList<LineOfCreditAccount>();
 
@@ -28,12 +25,11 @@ public class User implements Loginable {
 
 	public Date date;
 
-	/**
-	 *
-	 * @param name
-	 * @param username
-	 * @param password
-	 */
+	private ArrayList<Transaction> transactions = new ArrayList<>();
+
+
+
+
 	public User(String name, String username, String password) {
 
 		this.name = name;
@@ -41,13 +37,12 @@ public class User implements Loginable {
 		this.password = password;
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public String getUsername(){
 		return this.username;
 	}
+
+
+
 
 	/**
 	 * Check if the password provided is the same as the one set for the user.
@@ -58,17 +53,6 @@ public class User implements Loginable {
 	public boolean verifyPassword(String password) {
 		return this.password.equals(password); // Can I change like this?
 		//return false;
-	}
-
-
-
-	/**
-	 *
-	 * @param password
-	 * @return
-	 */
-	public boolean checkPassword(String password){
-		return password.equals(this.password);
 	}
 
 
@@ -89,16 +73,17 @@ public class User implements Loginable {
 			total -= acc.getBalance();
 		}
 		for (ChequingAccount acc:cheuqing) {
-			total += cheuqing.getBalance;
+			total += acc.getBalance();
 		}
 		for (LineOfCreditAccount acc:lineofcredit){
 			total -= acc.getBalance();
 		}
 		for (SavingAccount acc:savings){
-			total += acc.getBalence();
+			total += acc.getBalance();
 		}
 		return total;
 	}
+
 
 
 
@@ -107,6 +92,11 @@ public class User implements Loginable {
 
 
 
+	/**
+	 * return specific account by entering accountid
+	 * @param accountid
+	 * @return
+	 */
 	public Account getAccount(String accountid) {
 
 		for (Account acc:allAccount) {
@@ -120,15 +110,16 @@ public class User implements Loginable {
 
 
 
-
+	/**
+	 * return all available accounts
+	 * @return
+	 */
 	public ArrayList<Account> getAccounts(){ return allAccount; }
 
 
 
 
-	public Transaction getMostRecentTransaction(Account acc) {
-		return acc.getMostRecentTransaction;
-	}
+	public Transaction getMostRecentTransaction() { return transactions.get(-1); }
 
 
 
@@ -159,7 +150,20 @@ public class User implements Loginable {
 
 
 
+
 	public void addAccount(CreditCardAccount acc){
 		this.creditcards.add(acc);
 	}
+
+
+	/**
+	 * save transaction t to the last index of transactions.
+	 * @param t
+	 */
+	public void saveTransaction(Transaction t) { this.transactions.add(t); }
+
+
+
+
+	public void sendNewAccountRequest(String accounttype){}
 }
