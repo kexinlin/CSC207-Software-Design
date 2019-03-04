@@ -14,10 +14,11 @@ public abstract class Account {
 
 	/**
 	 * Create an instance of account
-	 * @param balance the balance of the account
+	 *
+	 * @param balance        the balance of the account
 	 * @param dateOfCreation the date of creation
-	 * @param accountId account id
-	 * @param owner owner of the account
+	 * @param accountId      account id
+	 * @param owner          owner of the account
 	 */
 	public Account(double balance, Date dateOfCreation, String accountId, User owner) {
 		this.balance = balance;
@@ -29,6 +30,7 @@ public abstract class Account {
 
 	/**
 	 * Gets the balance of this account.
+	 *
 	 * @return balance of the account
 	 */
 	public double getBalance() {
@@ -37,6 +39,7 @@ public abstract class Account {
 
 	/**
 	 * Gets the account id of this account.
+	 *
 	 * @return account id
 	 */
 	public String getAccountId() {
@@ -45,29 +48,41 @@ public abstract class Account {
 
 	/**
 	 * Gets the date of account creation.
+	 *
 	 * @return date of creation
 	 */
 	public Date getDateOfCreation() {
 		return this.dateOfCreation;
 	}
 
-	// return boolean to indicate whether the action succeeds or not
+	/**
+	 * Gets the owner of the account.
+	 *
+	 * @return the User owner of the account
+	 */
+	public User getOwner() {
+		return owner;
+	}
+
+//	/**
+//	 * Transfer `amount` of money out to another account.
+//	 *
+//	 * @param amount the amount of money to take out.
+//	 * @return true if the operation succeeds, false otherwise.
+//	 */
+//	public abstract boolean takeMoneyOut(Account sourceAcc, double amount);
 
 	/**
 	 * Take `amount` of money out of the account.
+	 *
 	 * @param amount the amount of money to take out.
 	 * @return true if the operation succeeds, false otherwise.
 	 */
 	public abstract boolean takeMoneyOut(double amount);
 
-	// FIXME: In my opinion, this should be the function of
-	// `Transaction`s
-	//public abstract boolean transferOut(Account destinationAccount);
-
-	// increaseBalance always return true
-
 	/**
 	 * Put `amount` of money into the account.
+	 *
 	 * @param amount the amount of money to put in
 	 * @return true if the operation succeeds, false otherwise.
 	 */
@@ -75,11 +90,11 @@ public abstract class Account {
 
 	//public abstract boolean payBill(String nonUserAccount);
 
-	public boolean logEmpty(){
+	public boolean logEmpty() {
 		return this.logs.empty();
 	}
 
-	public boolean undoTrans(){
+	public boolean undoTrans() {
 		this.logs.pop();
 		// also have to deal with the money
 		return true;

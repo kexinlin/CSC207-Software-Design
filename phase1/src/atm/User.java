@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Stack;
 
+/**
+ *
+ */
 public class User implements Loginable {
 	public String name;
 
@@ -25,6 +28,12 @@ public class User implements Loginable {
 
 	public Date date;
 
+	/**
+	 *
+	 * @param name
+	 * @param username
+	 * @param password
+	 */
 	public User(String name, String username, String password) {
 
 		this.name = name;
@@ -32,6 +41,10 @@ public class User implements Loginable {
 		this.password = password;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public String getUsername(){
 		return this.username;
 	}
