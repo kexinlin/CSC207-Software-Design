@@ -7,24 +7,38 @@ public class ChequingAccount extends AssetAccount {
 		super(balance, dateOfCreation, accountId, owner);
 	}
 
+
 	/**
 	 * Take `amount` of money out of the account.
+	 * Note that transferring money out is not allowed for certain type of class,
+	 * and in this case, exception should be raised.
+	 * Exception will also be raised when the amount exceeds what is allowed.
 	 *
 	 * @param amount the amount of money to take out.
-	 * @return true if the operation succeeds, false otherwise.
 	 */
-	public boolean takeMoneyOut(double amount) {
-		return false;
+	@Override
+	public void takeMoneyOut(double amount) {
+		this.balance -= amount;
+		// TODO: raise Exception under certain situations
 	}
+
 
 	/**
 	 * Put `amount` of money into the account.
 	 *
 	 * @param amount the amount of money to put in
-	 * @return true if the operation succeeds, false otherwise.
 	 */
-	public boolean putMoneyIn(double amount) {
-		return false;
+	@Override
+	public void putMoneyIn(double amount) {
+		this.balance += amount;
 	}
 
+
+	/**
+	 *
+	 */
+	@Override
+	public void payBill(String nonUserAccount, double amount) {
+
+	}
 }

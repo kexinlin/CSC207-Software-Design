@@ -28,6 +28,7 @@ public abstract class Account {
 		this.logs = new Stack<Transaction>();
 	}
 
+
 	/**
 	 * Gets the balance of this account.
 	 *
@@ -36,6 +37,7 @@ public abstract class Account {
 	public double getBalance() {
 		return this.balance;
 	}
+
 
 	/**
 	 * Gets the account id of this account.
@@ -46,6 +48,7 @@ public abstract class Account {
 		return accountId;
 	}
 
+
 	/**
 	 * Gets the date of account creation.
 	 *
@@ -54,6 +57,7 @@ public abstract class Account {
 	public Date getDateOfCreation() {
 		return this.dateOfCreation;
 	}
+
 
 	/**
 	 * Gets the owner of the account.
@@ -64,36 +68,51 @@ public abstract class Account {
 		return owner;
 	}
 
-//	/**
-//	 * Transfer `amount` of money out to another account.
-//	 *
-//	 * @param amount the amount of money to take out.
-//	 * @return true if the operation succeeds, false otherwise.
-//	 */
-//	public abstract boolean takeMoneyOut(Account sourceAcc, double amount);
 
 	/**
 	 * Take `amount` of money out of the account.
+	 * Note that transferring money out is not allowed for certain type of class,
+	 * and in this case, exception should be raised.
+	 * Exception will also be raised when the amount exceeds what is allowed.
 	 *
 	 * @param amount the amount of money to take out.
-	 * @return true if the operation succeeds, false otherwise.
 	 */
-	public abstract boolean takeMoneyOut(double amount);
+	public abstract void takeMoneyOut(double amount);
+
 
 	/**
 	 * Put `amount` of money into the account.
 	 *
 	 * @param amount the amount of money to put in
-	 * @return true if the operation succeeds, false otherwise.
 	 */
-	public abstract boolean putMoneyIn(double amount);
+	public abstract void putMoneyIn(double amount);
 
-	//public abstract boolean payBill(String nonUserAccount);
 
+	/**
+	 * Pay `amount` of money to a non-user account.
+	 * Note that transferring money out is not allowed for certain type of class,
+	 * and in this case, exception should be raised.
+	 * Exception will also be raised when the amount exceeds what is allowed.
+	 *
+	 * @param nonUserAccount a non-user account represented by a String
+	 * @param amount         the amount of bill
+	 */
+	public abstract void payBill(String nonUserAccount, double amount);
+
+
+	/**
+	 * Return whether `this.log` contains no transaction
+	 *
+	 * @return return true when `this.log` contains no transaction
+	 */
 	public boolean logEmpty() {
 		return this.logs.empty();
 	}
 
+
+	/**
+	 * @return
+	 */
 	public boolean undoTrans() {
 		this.logs.pop();
 		// also have to deal with the money
