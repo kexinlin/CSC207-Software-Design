@@ -58,11 +58,9 @@ public class BankManager implements Loginable {
 	//	return theATM.addCash(denomination, number);
 	//}
 
-    public boolean undoTransaction(Account account){
-		if (account.logEmpty())
-			return false;
-		else
-			return account.undoTrans();
+    public void undoTransaction(Account account) throws NoTransactionException {
+		Transaction trans = account.getLastTrans();
+		// TODO: deal with money
     }
 
     public boolean setTime(){

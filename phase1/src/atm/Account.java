@@ -1,16 +1,24 @@
 package atm;
 
-import org.omg.IOP.TAG_ALTERNATE_IIOP_ADDRESS;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Stack;
 
 public abstract class Account {
-	protected double balance;
-	protected Date dateOfCreation;
-	protected String accountId;
-	protected User owner;
-	protected Stack<Transaction> logs;
+	double balance;
+	private Date dateOfCreation;
+	private String accountId;
+	private User owner;
+	private ArrayList<Transaction> logs;
+	private static final String PAY_BILL_FILE_NAME = "outgoing.txt";
 
 	/**
 	 * Create an instance of account
@@ -25,7 +33,7 @@ public abstract class Account {
 		this.dateOfCreation = dateOfCreation;
 		this.accountId = accountId;
 		this.owner = owner;
-		this.logs = new Stack<Transaction>();
+		this.logs = new ArrayList<>();
 	}
 
 
@@ -77,7 +85,7 @@ public abstract class Account {
 	 *
 	 * @param amount the amount of money to take out.
 	 */
-	public abstract void takeMoneyOut(double amount);
+	public abstract void takeMoneyOut(double amount) throws Exception;
 
 
 	/**
@@ -85,7 +93,11 @@ public abstract class Account {
 	 *
 	 * @param amount the amount of money to put in
 	 */
-	public abstract void putMoneyIn(double amount);
+	public void putMoneyIn(double amount) {
+		this.balance += amount;
+	}
+
+	;
 
 
 	/**
@@ -93,29 +105,55 @@ public abstract class Account {
 	 * Note that transferring money out is not allowed for certain type of class,
 	 * and in this case, exception should be raised.
 	 * Exception will also be raised when the amount exceeds what is allowed.
+	 * If succeeds, result will be recorded in outgoing.txt.
 	 *
 	 * @param nonUserAccount a non-user account represented by a String
 	 * @param amount         the amount of bill
 	 */
-	public abstract void payBill(String nonUserAccount, double amount);
+	public void payBill(String nonUserAccount, double amount) throws Exception {
+		Writer writer;
+
+		try {
+			writer = new BufferedWriter(new OutputStreamWriter(
+				new FileOutputStream("." + File.separator + "phase1" + File.separator
+					+ PAY_BILL_FILE_NAME),
+				StandardCharsets.UTF_8));
+			writer.write(String.join(",", this.accountId, this.owner.getUsername(),
+				nonUserAccount, String.valueOf(amount)));
+			writer.close();
+		} catch (IOException ex) {
+			/*ignore*/
+		}
+	}
 
 
 	/**
-	 * Return whether `this.log` contains no transaction
+	 * Return whether `this.log` contains no transaction.
 	 *
 	 * @return return true when `this.log` contains no transaction
 	 */
 	public boolean logEmpty() {
-		return this.logs.empty();
+		return this.logs.isEmpty();
 	}
 
 
 	/**
-	 * @return
+	 * Return the most recent Transaction.
+	 * NoTransactionException will be throw if transaction record is empty.
+	 *
+	 * @return the most recently added Transaction into logs
 	 */
-	public boolean undoTrans() {
-		this.logs.pop();
-		// also have to deal with the money
-		return true;
+	public Transaction getLastTrans() throws NoTransactionException {
+		if (!logEmpty()) {
+			return this.logs.get(logs.size() - 1);
+		} else {
+			throw new NoTransactionException("This account does not have transaction record.");
+		}
 	}
+
+	public void addTrans(Transaction trans) {
+		this.logs.add(trans);
+
+	}
+
 }
