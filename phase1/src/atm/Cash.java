@@ -1,12 +1,18 @@
 package atm;
 
-public class Cash {
-	private cashNum num;
 
-	public enum cashNum{
-		FIVE, TEN, TWENTY, FIFTY, HUNDRED;
+public enum Cash {
+
+	FIVE(5),TEN(10),TWENTY(20),FIFTY(30),HUNDRED(100);
+
+	private int numVal;
+
+	private Cash(int num) {
+		this.numVal = num;
 	}
-	private Cash(cashNum num){
-		this.num = num;
+
+	public int getNumVal(){
+		return numVal;
 	}
 }
+

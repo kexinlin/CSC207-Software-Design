@@ -1,17 +1,18 @@
 package atm;
 
+import com.sun.tools.corba.se.idl.InterfaceGen;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 
 public class ATM {
 	static Date currentTime = new Date();
 	ArrayList<User> userList;
 	ArrayList<Account> accountList;
-
+	private int totalCashSum = 0;
+	HashMap<Cash, Integer> billAmount;
 
 	/**
 	 * Constructs an instance of ATM.
@@ -76,21 +77,11 @@ public class ATM {
 	 * Put cash into the machine.
 	 *
 	 * @param cash the collection of cash to put in
-	 * @return true if the operation succeeds, false otherwise.
 	 */
 	public void depositCash(Collection<? extends Cash> cash) {
-
+		// TODO: implement this
 	}
 
-	/**
-	 * Take cash out of the machine.
-	 *
-	 * @param cash the collection of cash to take out
-	 * @return true if the operation succeeds, false otherwise.
-	 */
-	public boolean withdrawCash(Collection<? extends Cash> cash) {
-		return false;
-	}
 
 	/**
 	 * Gets the individual who is currently logged in.
@@ -133,6 +124,35 @@ public class ATM {
 		// add transaction record to both user
 		fromAcc.getOwner().addTransaction(newTrans);
 		toAcc.getOwner().addTransaction(newTrans);
+
+	}
+
+
+	public void withdrawCash(String accId, HashMap<Cash, Integer> amountOfBill)
+		throws AccountNotExistException, InsufficientCashException,  NoEnoughMoneyException {
+		int totalAmount = 0;
+		// TODO: fix here
+
+		if (totalAmount > totalCashSum) {
+			throw new InsufficientCashException("Sorry, this ATM don't have that much cash " +
+				"at this moment.");
+		} else {
+			Account acc = getAccountById(accId);
+			acc.takeMoneyOut(totalAmount);
+			Transaction newTrans = new WithdrawTransaction(totalAmount, acc);
+
+			acc.addTrans(newTrans);
+			acc.getOwner().addTransaction(newTrans);
+		}
+
+	}
+
+	private void calculateBillAmount(HashMap<Cash, Integer> amountOfBill){
+		int sum = 0;
+	}
+
+
+	private void deductCash(HashMap<Cash, Integer> amountOfBill) {
 
 	}
 
