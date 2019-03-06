@@ -24,7 +24,7 @@ public abstract class Account {
 	 * Create an instance of account
 	 *
 	 * @param balance        the balance of the account
-	 * @param dateOfCreation the date of creation
+	 * @param dateOfCreation the currentTime of creation
 	 * @param accountId      account id
 	 * @param owner          owner of the account
 	 */
@@ -58,9 +58,9 @@ public abstract class Account {
 
 
 	/**
-	 * Gets the date of account creation.
+	 * Gets the currentTime of account creation.
 	 *
-	 * @return date of creation
+	 * @return currentTime of creation
 	 */
 	public Date getDateOfCreation() {
 		return this.dateOfCreation;
@@ -85,7 +85,7 @@ public abstract class Account {
 	 *
 	 * @param amount the amount of money to take out.
 	 */
-	public abstract void takeMoneyOut(double amount) throws Exception;
+	public abstract void takeMoneyOut(double amount) throws NoEnoughMoneyException;
 
 
 	/**
@@ -96,8 +96,6 @@ public abstract class Account {
 	public void putMoneyIn(double amount) {
 		this.balance += amount;
 	}
-
-	;
 
 
 	/**
@@ -110,16 +108,16 @@ public abstract class Account {
 	 * @param nonUserAccount a non-user account represented by a String
 	 * @param amount         the amount of bill
 	 */
-	public void payBill(String nonUserAccount, double amount) throws Exception {
+	public void payBill(String nonUserAccount, double amount) throws NoEnoughMoneyException {
 		Writer writer;
 
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(
 				new FileOutputStream("." + File.separator + "phase1" + File.separator
-					+ PAY_BILL_FILE_NAME),
-				StandardCharsets.UTF_8));
+					+ PAY_BILL_FILE_NAME), StandardCharsets.UTF_8));
+			String timeStr = ATM.getCurrentTimeStr();
 			writer.write(String.join(",", this.accountId, this.owner.getUsername(),
-				nonUserAccount, String.valueOf(amount)));
+				nonUserAccount, String.valueOf(amount), timeStr));
 			writer.close();
 		} catch (IOException ex) {
 			/*ignore*/

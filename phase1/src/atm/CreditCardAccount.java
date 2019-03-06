@@ -7,7 +7,7 @@ public class CreditCardAccount extends DebtAccount {
 	 * Create an instance of account
 	 *
 	 * @param balance        the balance of the account
-	 * @param dateOfCreation the date of creation
+	 * @param dateOfCreation the currentTime of creation
 	 * @param accountId      account id
 	 * @param owner          owner of the account
 	 */

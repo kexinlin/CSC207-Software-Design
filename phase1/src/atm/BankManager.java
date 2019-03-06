@@ -38,16 +38,16 @@ public class BankManager implements Loginable {
 		String accountId = ".........."; 	//generated randomly??
 		switch (accountType) {
 			case "CreditCardAccount":
-				return new CreditCardAccount(0, ATM.date, accountId, owner);
+				return new CreditCardAccount(0, ATM.getCurrentTime(), accountId, owner);
 
 			case "LineOfCreditAccount":
-				return new LineOfCreditAccount(0, ATM.date, accountId, owner);
+				return new LineOfCreditAccount(0, ATM.getCurrentTime(), accountId, owner);
 
 			case "ChequingAccount":
-				return new ChequingAccount(0, ATM.date, accountId, owner);
+				return new ChequingAccount(0, ATM.getCurrentTime(), accountId, owner);
 
 			case "SavingAccount":
-				return new SavingAccount(0, ATM.date, accountId, owner);
+				return new SavingAccount(0, ATM.getCurrentTime(), accountId, owner);
 
 			default:
 				return null;
@@ -65,7 +65,7 @@ public class BankManager implements Loginable {
 
     public boolean setTime(){
 		//SimpleDateFormat dateForm = new SimpleDateFormat("Y/MM/dd HH:mm");
-		ATM.date = new Date();
+		ATM.currentTime = new Date();
 		return true;
 	}
 }

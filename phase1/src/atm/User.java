@@ -41,8 +41,9 @@ public class User implements Loginable {
 		return this.username;
 	}
 
-
-
+	public String getPassword() {
+		return password;
+	}
 
 	/**
 	 * Check if the password provided is the same as the one set for the user.

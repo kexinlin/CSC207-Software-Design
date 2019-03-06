@@ -9,7 +9,7 @@ public class SavingAccount extends AssetAccount {
 	 * Create an instance of SavingAccount
 	 *
 	 * @param balance        the balance of the account
-	 * @param dateOfCreation the date of creation
+	 * @param dateOfCreation the currentTime of creation
 	 * @param accountId      account id
 	 * @param owner          owner of the account
 	 */
@@ -42,7 +42,7 @@ public class SavingAccount extends AssetAccount {
 	 * @param amount         the amount of bill
 	 */
 	@Override
-	public void payBill(String nonUserAccount, double amount) throws Exception {
+	public void payBill(String nonUserAccount, double amount) throws NoEnoughMoneyException {
 		takeMoneyOut(amount);
 		super.payBill(nonUserAccount, amount);
 	}
