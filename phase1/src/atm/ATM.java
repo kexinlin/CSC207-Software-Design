@@ -11,8 +11,7 @@ public class ATM {
 	static Date currentTime = new Date();
 	ArrayList<User> userList;
 	ArrayList<Account> accountList;
-	private int totalCashSum = 0;
-	HashMap<Cash, Integer> billAmount;
+	HashMap<Cash, Integer> billAmount = new HashMap<>();
 
 	/**
 	 * Constructs an instance of ATM.
@@ -89,8 +88,10 @@ public class ATM {
 	 * @return the individual who is logged in, or null if none.
 	 */
 	public Loginable currentLoggedIn() {
+		// TODO: implement this
 		return null;
 	}
+
 
 	/**
 	 * Transfer money from one account into another account.
@@ -128,32 +129,83 @@ public class ATM {
 	}
 
 
-	public void withdrawCash(String accId, HashMap<Cash, Integer> amountOfBill)
-		throws AccountNotExistException, InsufficientCashException,  NoEnoughMoneyException {
-		int totalAmount = 0;
-		// TODO: fix here
+	/**
+	 * @param accId          `accountId` input by the user
+	 * @param amountWithdraw a HashMap that record the number of bills for each domination that
+	 *                       the user wants to withdraw
+	 * @throws AccountNotExistException  when account with the input id is not found
+	 * @throws InsufficientCashException when the number of bills of certain domination is less
+	 *                                   than the amount that the user wants to withdraw
+	 * @throws NoEnoughMoneyException    when amount withdrawn from the account exceeds what is allowed
+	 */
+	public void withdrawCash(String accId, HashMap<Cash, Integer> amountWithdraw)
+		throws AccountNotExistException, InsufficientCashException, NoEnoughMoneyException {
 
-		if (totalAmount > totalCashSum) {
-			throw new InsufficientCashException("Sorry, this ATM don't have that much cash " +
-				"at this moment.");
-		} else {
-			Account acc = getAccountById(accId);
-			acc.takeMoneyOut(totalAmount);
-			Transaction newTrans = new WithdrawTransaction(totalAmount, acc);
+		ableToWithdraw(amountWithdraw);
 
-			acc.addTrans(newTrans);
-			acc.getOwner().addTransaction(newTrans);
-		}
+		// calculate the total amount withdrawn
+		int totalAmount = calculateTotalBillAmount(amountWithdraw);
+
+		Account acc = getAccountById(accId); // account may not exist
+		acc.takeMoneyOut(totalAmount); // money in account may not be enough
+
+		deductCash(amountWithdraw);
+
+		Transaction newTrans = new WithdrawTransaction(totalAmount, acc);
+		acc.addTrans(newTrans);
+		acc.getOwner().addTransaction(newTrans);
 
 	}
 
-	private void calculateBillAmount(HashMap<Cash, Integer> amountOfBill){
+
+	/**
+	 * Calculate and return the total sum of money that the user wants to withdraw.
+	 *
+	 * @param amountOfBill a HashMap that record the number of bills for each domination that
+	 *                     the user wants to withdraw
+	 * @return the total sum of money that the user wants to withdraw
+	 */
+	private int calculateTotalBillAmount(HashMap<Cash, Integer> amountOfBill) {
 		int sum = 0;
+		for (Map.Entry<Cash, Integer> entry : amountOfBill.entrySet()) {
+			Cash cash = entry.getKey();
+			Integer num = entry.getValue();
+			sum += cash.getNumVal() * num;
+		}
+		return sum;
 	}
 
 
-	private void deductCash(HashMap<Cash, Integer> amountOfBill) {
+	/**
+	 * Deduct the amount of cash that the user wants to withdraw from the ATM.
+	 *
+	 * @param amountWithdraw a HashMap that record the number of bills for each domination that
+	 *                       the user wants to withdraw
+	 */
+	private void deductCash(HashMap<Cash, Integer> amountWithdraw) {
+		for (Cash cash : amountWithdraw.keySet()) {
+			int oldNum = this.billAmount.get(cash);
+			int newNum = oldNum - amountWithdraw.get(cash);
+			this.billAmount.put(cash, newNum);
+		}
+	}
 
+
+	/**
+	 * Check whether ATM has sufficient amount of bills for the user to withdraw from.
+	 *
+	 * @param amountWithdraw a HashMap that record the number of bills for each domination that
+	 *                       the user wants to withdraw
+	 * @throws InsufficientCashException when the number of bills of certain domination is less
+	 *                                   than the amount that the user wants to withdraw
+	 */
+	private void ableToWithdraw(HashMap<Cash, Integer> amountWithdraw) throws InsufficientCashException {
+		for (Cash cash : amountWithdraw.keySet()) {
+			if (this.billAmount.get(cash) < amountWithdraw.get(cash)) {
+				throw new InsufficientCashException("Sorry, this ATM does not have enough " +
+					cash.getNumVal() + " dollar bills at this moment.");
+			}
+		}
 	}
 
 
