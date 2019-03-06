@@ -101,9 +101,22 @@ public class ATM {
 		return null;
 	}
 
-	// TODO: implement this method
-	public void transferMoney(Account fromAcc, Account toAcc, double amount)
-		throws InvalidOperationException, NoEnoughMoneyException {
+	/**
+	 * Transfer money from one account into another account.
+	 * The two account may or may not belong to the same user.
+	 *
+	 * @param fromAccId `accountId` of the source account of transaction
+	 * @param toAccId   `accountId` of the destination account of transaction
+	 * @param amount    amount of money of transaction
+	 * @throws AccountNotExistException  when account with the input id is not found
+	 * @throws InvalidOperationException when attempting to transfer out from CreditCardAccount
+	 * @throws NoEnoughMoneyException    when amount of money transferred out exceeds what is allowed
+	 */
+	public void transferMoney(String fromAccId, String toAccId, double amount)
+		throws InvalidOperationException, NoEnoughMoneyException, AccountNotExistException {
+		Account fromAcc = getAccountById(fromAccId);
+		Account toAcc = getAccountById(toAccId);
+
 		if (fromAcc instanceof CreditCardAccount) {
 			throw new InvalidOperationException("Sorry, transfer money out of a " +
 				"credit card account is not supported.");
@@ -111,12 +124,34 @@ public class ATM {
 
 		fromAcc.takeMoneyOut(amount);
 		toAcc.putMoneyIn(amount);
-		Transaction newTrans = new Transaction(fromAcc, toAcc, amount);
+		Transaction newTrans = new TransferTransaction(amount, fromAcc, toAcc);
+
+		// add transaction record to both accounts
+		fromAcc.addTrans(newTrans);
+		toAcc.addTrans(newTrans);
+
+		// add transaction record to both user
+		fromAcc.getOwner().addTransaction(newTrans);
+		toAcc.getOwner().addTransaction(newTrans);
 
 	}
 
-	public void createTransaction() {
 
+	/**
+	 * Get the Account object corresponding to the input Account id.
+	 *
+	 * @param id account id
+	 * @return Account object corresponding to the input Account id.
+	 * @throws AccountNotExistException when account with the input id is not found
+	 */
+	Account getAccountById(String id) throws AccountNotExistException {
+		for (Account acc : accountList) {
+			if (acc.getAccountId().equals(id)) {
+				return acc;
+			}
+		}
+		throw new AccountNotExistException("Sorry, can't find this account. " +
+			"Please check your account number again.");
 	}
 
 

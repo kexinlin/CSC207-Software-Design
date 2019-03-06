@@ -1,6 +1,6 @@
 package atm;
 
-public class InvalidOperationException extends Exception{
+public class InvalidOperationException extends Exception {
 
 	/**
 	 * Construct a InvalidOperationException with a message.

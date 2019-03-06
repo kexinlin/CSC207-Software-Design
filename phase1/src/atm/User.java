@@ -28,8 +28,6 @@ public class User implements Loginable {
 	private ArrayList<Transaction> transactions = new ArrayList<>();
 
 
-
-
 	public User(String name, String username, String password) {
 
 		this.name = name;
@@ -37,7 +35,7 @@ public class User implements Loginable {
 		this.password = password;
 	}
 
-	public String getUsername(){
+	public String getUsername() {
 		return this.username;
 	}
 
@@ -47,6 +45,7 @@ public class User implements Loginable {
 
 	/**
 	 * Check if the password provided is the same as the one set for the user.
+	 *
 	 * @param password the password to check.
 	 * @return true if password matches, false otherwise.
 	 */
@@ -57,51 +56,46 @@ public class User implements Loginable {
 	}
 
 
-
-
-	public void changePassword(String password){
+	public void changePassword(String password) {
 
 		this.password = password;
 	}
 
 
-
-
-	public double getNetTotal(){
+	public double getNetTotal() {
 
 		double total = 0;
-		for (CreditCardAccount acc:creditcards){
+		for (CreditCardAccount acc : creditcards) {
 			total -= acc.getBalance();
 		}
-		for (ChequingAccount acc:chequing) {
+		for (ChequingAccount acc : chequing) {
 			total += acc.getBalance();
 		}
-		for (LineOfCreditAccount acc:lineofcredit){
+		for (LineOfCreditAccount acc : lineofcredit) {
 			total -= acc.getBalance();
 		}
-		for (SavingAccount acc:savings){
+		for (SavingAccount acc : savings) {
 			total += acc.getBalance();
 		}
 		return total;
 	}
 
 
-
-
-	public Date getDateOfCreation(){ return date; }
-
-
+	public Date getDateOfCreation() {
+		return date;
+	}
 
 
 	/**
 	 * return specific account by entering accountid
-	 * @param accountid
+	 *
+	 * @param accountId
 	 * @return
 	 */
-	public Account getAccount(String accountid) {
+	public Account getAccount(String accountId) {
 
-		for (Account acc:allAccount) {
-			if (acc.getAccountId().equals(accountid)) {
+		for (Account acc : allAccount) {
+			if (acc.getAccountId().equals(accountId)) {
 				return acc;
 			}
 		}
@@ -109,45 +103,58 @@ public class User implements Loginable {
 	}
 
 
-
-
 	/**
 	 * return all available accounts
+	 *
 	 * @return
 	 */
-	public ArrayList<Account> getAccounts(){ return allAccount; }
+	public ArrayList<Account> getAccounts() {
+		return allAccount;
+	}
 
-	public Transaction getMostRecentTransaction() { return transactions.get(-1); }
+	public boolean logEmpty() {
+		return this.transactions.isEmpty();
+	}
 
-	public void setPrimaryCheuqingAccount(ChequingAccount acc){
+	public Transaction getMostRecentTransaction() throws NoTransactionException {
+		if (!logEmpty()) {
+			return this.transactions.get(transactions.size() - 1);
+		} else {
+			throw new NoTransactionException("This account does not have transaction record.");
+		}
+	}
+
+	public void setPrimaryCheuqingAccount(ChequingAccount acc) {
 		this.primaryaccount = acc;
 	}
 
-	public void addAccount(ChequingAccount acc){
+	public void addAccount(ChequingAccount acc) {
 		this.chequing.add(acc);
 	}
 
-	public void addAccount(SavingAccount acc){
+	public void addAccount(SavingAccount acc) {
 		this.savings.add(acc);
 	}
 
-	public void addAccount(LineOfCreditAccount acc){
+	public void addAccount(LineOfCreditAccount acc) {
 		this.lineofcredit.add(acc);
 	}
 
-	public void addAccount(CreditCardAccount acc){
+	public void addAccount(CreditCardAccount acc) {
 		this.creditcards.add(acc);
 	}
 
 
 	/**
-	 * save transaction t to the last index of transactions.
-	 * @param t
+	 * Save transaction t to the last index of transactions.
+	 *
+	 * @param t a new transaction
 	 */
-	public void saveTransaction(Transaction t) { this.transactions.add(t); }
+	public void addTransaction(Transaction t) {
+		this.transactions.add(t);
+	}
 
 
-
-
-	public void sendNewAccountRequest(String accounttype){}
+	public void sendNewAccountRequest(String accounttype) {
+	}
 }
