@@ -2,25 +2,32 @@ package atm;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.security.SecureRandom;
 //import java.text.SimpleDateFormat;
 
 public class BankManager implements Loginable {
 	private ArrayList<User> users;    // stores all the users.
 	private ATM atm; // the atm that this BankManager manages
 
+	/**
+	 * Construct a BankManager
+	 * @param atm The ATM.
+	 * @param username The username of the bank manager
+	 * @param password the password of the bank manager
+	 */
 	public BankManager(ATM atm, String username, String password) {
+		// TODO more secure way of storing password
 		this.atm = atm;
+		this.managerName = username;
+		this.setPassword(password);
 //		this.users = new ArrayList<User>();
 	}
 
-	/**
-	 * Gets the username of this bank manager.
-	 * @return the username of this bank manager.
-	 */
-	@Override
-	public String getUsername() {
-		return "";
-	}
+	private static final String NUMBERS = "0123456789";		// for random generates;
+	private static SecureRandom rnd = new SecureRandom();	// for random
+	private ArrayList<String> AccountIdDataBase; // stores all the Id number of accounts
+	private String managerName;
+
 
 	/**
 	 * Check if the password provided is the same as the one set for the user.
@@ -29,18 +36,20 @@ public class BankManager implements Loginable {
 	 */
 	@Override
 	public boolean verifyPassword(String password) {
-		// TODO
 		return false;
 	}
 
 	/**
-	 * Set the password to `password`
-	 * @param password the password to change to.
-	 * @return true if password is successfully changed, false otherwise.
+	 * Gets the username of this bank manager.
+	 * @return the username of this bank manager.
 	 */
 	@Override
+	public String getUsername() {
+		return this.managerName;
+	}
+
+	@Override
 	public boolean setPassword(String password) {
-		// TODO
 		return false;
 	}
 
@@ -61,7 +70,7 @@ public class BankManager implements Loginable {
 	}
 
 	public Account createAccount(String accountType, User owner) {
-		String accountId = "..........";    //generated randomly??
+		String accountId = randomString(6);    //generated randomly??
 		switch (accountType) {
 			case "CreditCardAccount":
 				return new CreditCardAccount(0, atm.getCurrentTime(), accountId, owner);
@@ -80,6 +89,25 @@ public class BankManager implements Loginable {
 		}
 	}
 
+
+	private String randomString(int length){
+		StringBuilder stringbuilder = new StringBuilder(length);
+		do{
+			for(int i=0;i<length;i++)
+				stringbuilder.append(NUMBERS.charAt(rnd.nextInt(NUMBERS.length())));
+			String temp = stringbuilder.toString();
+			boolean flag = true;
+			for(String str: this.AccountIdDataBase){
+				if (str.equals(temp))
+					flag = false;
+			}
+			if (flag)
+				break;
+		}while (true);
+		this.AccountIdDataBase.add(stringbuilder.toString());
+		return stringbuilder.toString();
+	}
+
 	//public boolean restockMachine(ATM theATM, int denomination, int number){
 	//	return theATM.addCash(denomination, number);
 	//}
@@ -92,6 +120,6 @@ public class BankManager implements Loginable {
 	public boolean setTime() {
 		//SimpleDateFormat dateForm = new SimpleDateFormat("Y/MM/dd HH:mm");
 		//atm.currentTime = new Date();
-		return false;
+		return true;
 	}
 }
