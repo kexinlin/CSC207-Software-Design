@@ -5,13 +5,14 @@ package atm;
  */
 public class Main {
 	public static void main(String[] args) {
-		ATM m = new ATM();
+		String recordFileName = "data/records";
+		ATM m = new ATM(recordFileName);
 		UI ui = new CommandLineUI(m,
 			System.in,
 			System.out,
 			System.err,
 			false);
 		ui.mainLoop();
-
+		m.close();
 	}
 }

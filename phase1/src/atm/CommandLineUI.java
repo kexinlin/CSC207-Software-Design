@@ -96,11 +96,9 @@ public class CommandLineUI implements UI {
 				error.println("Error: console not found");
 				return null;
 			} else {
-				output.println(prompt);
 				password = new String(console.readPassword());
 			}
 		} else {
-			output.println(prompt);
 			// FIXME: potentially dangerous.
 			// Oracle suggests using char[].
 			try {

@@ -28,7 +28,7 @@ public class User implements Loginable {
 	private ArrayList<Transaction> transactions = new ArrayList<>();
 
 
-	public User(String name, String username, String password) {
+	public User(ATM atm, String name, String username, String password) {
 
 		this.name = name;
 		this.username = username;

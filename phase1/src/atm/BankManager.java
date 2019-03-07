@@ -8,7 +8,7 @@ public class BankManager implements Loginable {
 	private ArrayList<User> users;    // stores all the users.
 	private ATM atm; // the atm that this BankManager manages
 
-	public BankManager(ATM atm) {
+	public BankManager(ATM atm, String username, String password) {
 		this.atm = atm;
 //		this.users = new ArrayList<User>();
 	}
@@ -45,7 +45,7 @@ public class BankManager implements Loginable {
 	}
 
 	public User createUser(String name, String username, String password) {
-		User u = new User(name, username, password);
+		User u = new User(atm, name, username, password);
 
 		this.users.add(u);
 		return u;

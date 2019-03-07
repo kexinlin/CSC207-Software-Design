@@ -14,11 +14,12 @@ public class ATM {
 	private HashMap<Cash, Integer> billAmount;
 	private static final String DEPOSIT_FILE_NAME = "deposits.txt";
 	private Loginable loggedIn;
+	private String recordFileName;
 
 	/**
 	 * Constructs an instance of ATM.
 	 */
-	public ATM() {
+	public ATM(String recordFileName) {
 		this.currentTime = new Date();
 		this.billAmount = new HashMap<>();
 		billAmount.put(Cash.FIVE, 0);
@@ -32,6 +33,8 @@ public class ATM {
 		this.loginables = new ArrayList<>();
 		this.accounts = new ArrayList<>();
 
+		this.recordFileName = recordFileName;
+		readRecordsFromFile();
 		/*int counter =0;
 		File x = new File("Desktop:..");
 		private Scanner x;
@@ -47,7 +50,25 @@ public class ATM {
 */
 	}
 
+	/**
+	 * read records from file.
+	 */
+	private void readRecordsFromFile() {
+		// TODO
+		this.loginables.add(new BankManager(this, "mgr1", "lolol"));
+		this.loginables.add(new User(this, "Foo Bar", "u1", "xxx"));
+	}
 
+	/**
+	 * save records to file.
+	 */
+	private void saveRecordsToFile() {
+		// TODO
+	}
+
+	public void close() {
+		saveRecordsToFile();
+	}
 	/**
 	 * Get current time of ATM.
 	 *
@@ -279,8 +300,7 @@ public class ATM {
 	 * @return the individual who is logged in, or null if none.
 	 */
 	public Loginable currentLoggedIn() {
-		// TODO: implement this
-		return null;
+		return loggedIn;
 	}
 
 
