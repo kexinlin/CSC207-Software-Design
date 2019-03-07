@@ -2,6 +2,7 @@ package atm;
 
 import com.sun.tools.corba.se.idl.InterfaceGen;
 
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,6 +18,19 @@ public class ATM {
 	 * Constructs an instance of ATM.
 	 */
 	public ATM() {
+		/*int counter =0;
+		File x = new File("Desktop:..");
+		private Scanner x;
+		try{
+			x = new Scanner(x);
+		}
+		catch(Expection e){
+			System.out.println("could not find file");
+		}
+
+		while(x.hasNext()){
+		}
+*/
 	}
 
 
@@ -28,6 +42,7 @@ public class ATM {
 	public static Date getCurrentTime() {
 		return currentTime;
 	}
+
 
 	/**
 	 * Set a new current time for this ATM.
@@ -79,6 +94,51 @@ public class ATM {
 	 */
 	public void depositCash(Collection<? extends Cash> cash) {
 		// TODO: implement this
+		/*
+		File x = new File("Desktop:..");
+		private Scanner x;
+		try{
+			x = new Scanner(x);
+		}
+		catch(Expection e){
+			System.out.println("could not find file");
+		}
+
+		while(x.hasNext()){
+			String toAccID = x.next();
+			double value = double(x.next());
+
+
+		}
+		Account toAcc = getAccountById(toAccId);
+
+		toAcc.putMoneyIn(value);
+		Transaction newTrans = new Transaction(value);
+		toAcc.balance += value;
+
+		// add transaction record to both accounts
+		toAcc.addTrans(newTrans);
+
+		// add transaction record to both user
+		toAcc.getOwner().addTransaction(newTrans);
+
+		/*File y = new File("Desktop:..");
+		private Scanner y;
+		try{
+			y = new Scanner(x);
+		}
+		catch(Expection e){
+			System.out.println("could not find file");
+		}
+
+		while(y.hasNext()){
+
+
+
+		}
+		x = new Formatter("chinese.txt");
+		x.format("%s%s",)
+*/
 	}
 
 
