@@ -1,8 +1,5 @@
 package atm;
 
-import com.sun.tools.corba.se.idl.InterfaceGen;
-
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
