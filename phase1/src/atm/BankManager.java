@@ -11,6 +11,7 @@ public class BankManager implements Loginable {
 	private static final String NUMBERS = "0123456789";		// for random generates;
 	private static SecureRandom rnd = new SecureRandom();	// for random
 	private ArrayList<String> AccountIdDataBase; // stores all the Id number of accounts
+	private String ManagerName;
 
 	/**
 	 * Check if the password provided is the same as the one set for the user.
@@ -22,10 +23,21 @@ public class BankManager implements Loginable {
 		return false;
 	}
 
+	@Override
+	public String getUsername() {
+		return this.ManagerName;
+	}
+
+	@Override
+	public boolean setPassword(String password) {
+		return false;
+	}
+
 	public BankManager(ATM atm) {
 		this.atm = atm;
 //		this.users = new ArrayList<User>();
 		this.AccountIdDataBase = new ArrayList<String>();
+		this.ManagerName = "BankManager1";
 	}
 
 	public User createUser(String name, String username, String password) {
@@ -79,6 +91,7 @@ public class BankManager implements Loginable {
 			if (flag)
 				break;
 		}while (true);
+		this.AccountIdDataBase.add(stringbuilder.toString());
 		return stringbuilder.toString();
 	}
 
@@ -93,7 +106,7 @@ public class BankManager implements Loginable {
 
 	public boolean setTime() {
 		//SimpleDateFormat dateForm = new SimpleDateFormat("Y/MM/dd HH:mm");
-		atm.currentTime = new Date();
+		//atm.currentTime = new Date();
 		return true;
 	}
 }
