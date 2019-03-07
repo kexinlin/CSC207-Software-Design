@@ -308,6 +308,9 @@ public class ATM {
 		}
 	}
 
+	public void addCash(HashMap<Cash, Integer> amountAdd){
+	//	for(Cash cash: amountAdd.keySet())
+	}
 
 	/**
 	 * Check whether ATM has sufficient amount of bills for the user to withdraw from.
