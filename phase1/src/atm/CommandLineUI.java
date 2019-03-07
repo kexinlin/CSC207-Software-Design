@@ -115,7 +115,7 @@ public class CommandLineUI implements UI {
 	 */
 	private void login() {
 		String username, password;
-		output.println("Enter username: ");
+		output.print("Enter username: ");
 		try {
 			username = reader.readLine();
 		} catch (IOException e) {
@@ -298,7 +298,7 @@ public class CommandLineUI implements UI {
 			}
 			// users can only change *their* password
 			if (loggedIn instanceof User
-				&& !username.equals(personToChangePassword.getUsername())) {
+				&& !username.equals(loggedIn.getUsername())) {
 				error.println("You cannot change other user's password.");
 				return;
 			}

@@ -8,6 +8,7 @@ import java.security.SecureRandom;
 public class BankManager implements Loginable {
 	private ArrayList<User> users;    // stores all the users.
 	private ATM atm; // the atm that this BankManager manages
+	private String password;
 
 	/**
 	 * Construct a BankManager
@@ -36,7 +37,7 @@ public class BankManager implements Loginable {
 	 */
 	@Override
 	public boolean verifyPassword(String password) {
-		return false;
+		return this.password.equals(password);
 	}
 
 	/**
@@ -50,7 +51,8 @@ public class BankManager implements Loginable {
 
 	@Override
 	public boolean setPassword(String password) {
-		return false;
+		this.password = password;
+		return true;
 	}
 
 	public User createUser(String name, String username, String password) {
