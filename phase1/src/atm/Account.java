@@ -85,7 +85,7 @@ public abstract class Account {
 	 *
 	 * @param amount the amount of money to take out.
 	 */
-	public abstract void takeMoneyOut(double amount) throws NoEnoughMoneyException;
+	public abstract void takeMoneyOut(double amount) throws NoEnoughMoneyException, InvalidOperationException;
 
 
 	/**
@@ -108,7 +108,7 @@ public abstract class Account {
 	 * @param nonUserAccount a non-user account represented by a String
 	 * @param amount         the amount of bill
 	 */
-	public void payBill(String nonUserAccount, double amount) throws NoEnoughMoneyException {
+	public void payBill(String nonUserAccount, double amount) throws NoEnoughMoneyException, InvalidOperationException {
 		Writer writer;
 
 		try {
