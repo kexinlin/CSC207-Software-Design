@@ -1,5 +1,7 @@
 package atm;
 
+import java.util.Date;
+
 public class WithdrawTransaction extends Transaction{
 	private Account acc;
 
@@ -7,10 +9,11 @@ public class WithdrawTransaction extends Transaction{
 	 * Construct a new WithdrawTransaction.
 	 *
 	 * @param amount  the amount of withdrawal
+	 * @param time the time of transaction
 	 * @param acc the source account of withdrawal
 	 */
-	WithdrawTransaction(double amount, Account acc) {
-		super(amount);
+	WithdrawTransaction(double amount, Date time, Account acc) {
+		super(amount, time);
 		this.acc = acc;
 	}
 

@@ -5,17 +5,16 @@ import java.util.Date;
 public class Transaction {
 	private double amount;
 	private Date transTime;
-	private ATM atm;
 
 	/**
 	 * Construct a new TransferTransaction.
 	 *
 	 * @param amount the amount of transaction
+	 * @param time the time of transaction
 	 */
-	public Transaction(double amount) {
+	public Transaction(double amount, Date time) {
 		this.amount = amount;
-		this.atm = atm;
-		this.transTime = atm.getCurrentTime();
+		this.transTime = time;
 	}
 
 	public double getAmount() {

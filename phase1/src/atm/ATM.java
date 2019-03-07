@@ -8,11 +8,12 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ATM {
-	Date currentTime;
-	ArrayList<User> userList;
-	ArrayList<Account> accountList;
-	HashMap<Cash, Integer> billAmount;
+	private Date currentTime;
+	private ArrayList<Loginable> loginables;
+	private ArrayList<Account> accounts;
+	private HashMap<Cash, Integer> billAmount;
 	private static final String DEPOSIT_FILE_NAME = "deposits.txt";
+	private Loginable loggedIn;
 
 	/**
 	 * Constructs an instance of ATM.
@@ -25,6 +26,11 @@ public class ATM {
 		billAmount.put(Cash.TWENTY, 0);
 		billAmount.put(Cash.FIFTY, 0);
 		billAmount.put(Cash.HUNDRED, 0);
+
+		loggedIn = null;
+
+		this.loginables = new ArrayList<>();
+		this.accounts = new ArrayList<>();
 
 		/*int counter =0;
 		File x = new File("Desktop:..");
@@ -78,6 +84,19 @@ public class ATM {
 		return dateFormat.format(date);
 	}
 
+	/**
+	 * Get the user or admin with `username`
+	 * @param username the username of wanted person
+	 * @return a `Loginable` corresponding to that person, or null if not found
+	 */
+	public Loginable getLoginable(String username) {
+		for (Loginable curPerson : loginables) {
+			if (curPerson.getUsername().equals(username)) {
+				return curPerson;
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Log in a user or admin.
@@ -87,10 +106,10 @@ public class ATM {
 	 * @return true if the operation succeeds, false otherwise.
 	 */
 	public boolean login(String username, String password) {
-		for (User u : userList) {
-			if (u.getUsername().equals(username)) {
-				return u.getPassword().equals(password);
-			}
+		Loginable person = getLoginable(username);
+		if (person != null && person.verifyPassword(password)) {
+			loggedIn = person;
+			return true;
 		}
 		return false;
 	}
@@ -177,7 +196,7 @@ public class ATM {
 
 		acc.putMoneyIn(amount);
 
-		Transaction newTrans = new DepositTransaction(amount, acc);
+		Transaction newTrans = new DepositTransaction(amount, this.currentTime, acc);
 		acc.addTrans(newTrans);
 		acc.getOwner().addTransaction(newTrans);
 	}
@@ -236,7 +255,7 @@ public class ATM {
 		int amount = calculateTotalBillAmount(numOfBill);
 		acc.putMoneyIn(amount);
 
-		Transaction newTrans = new DepositTransaction(amount, acc);
+		Transaction newTrans = new DepositTransaction(amount, this.currentTime, acc);
 		acc.addTrans(newTrans);
 		acc.getOwner().addTransaction(newTrans);
 
@@ -285,7 +304,7 @@ public class ATM {
 
 		fromAcc.takeMoneyOut(amount);
 		toAcc.putMoneyIn(amount);
-		Transaction newTrans = new TransferTransaction(amount, fromAcc, toAcc);
+		Transaction newTrans = new TransferTransaction(amount, getCurrentTime(), fromAcc, toAcc);
 
 		// add transaction record to both accounts
 		fromAcc.addTrans(newTrans);
@@ -318,7 +337,7 @@ public class ATM {
 
 		deductCash(amountWithdraw);
 
-		Transaction newTrans = new WithdrawTransaction(totalAmount, acc);
+		Transaction newTrans = new WithdrawTransaction(totalAmount, getCurrentTime(), acc);
 		acc.addTrans(newTrans);
 		acc.getOwner().addTransaction(newTrans);
 
@@ -384,7 +403,7 @@ public class ATM {
 	 * @throws AccountNotExistException when account with the input id is not found
 	 */
 	Account getAccountById(String id) throws AccountNotExistException {
-		for (Account acc : accountList) {
+		for (Account acc : accounts) {
 			if (acc.getAccountId().equals(id)) {
 				return acc;
 			}
