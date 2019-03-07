@@ -1,8 +1,12 @@
-package atm;
+package model.persons;
+
+import controller.ATM;
+import model.accounts.*;
+import model.exceptions.NoTransactionException;
+import model.transactions.Transaction;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Stack;
 
 public class User implements Loginable {
 	public String name;

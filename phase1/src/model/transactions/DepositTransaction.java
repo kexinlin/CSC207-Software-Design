@@ -1,4 +1,6 @@
-package atm;
+package model.transactions;
+
+import model.accounts.Account;
 
 import java.util.Date;
 
@@ -12,7 +14,7 @@ public class DepositTransaction extends Transaction{
 	 * @param time the time of transaction
 	 * @param acc the source account of deposit
 	 */
-	DepositTransaction(double amount, Date time, Account acc) {
+	public DepositTransaction(double amount, Date time, Account acc) {
 		super(amount, time);
 		this.acc = acc;
 	}

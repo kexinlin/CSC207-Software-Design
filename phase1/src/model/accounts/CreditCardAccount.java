@@ -1,4 +1,8 @@
-package atm;
+package model.accounts;
+
+import model.exceptions.InvalidOperationException;
+import model.exceptions.NoEnoughMoneyException;
+import model.persons.User;
 
 import java.util.Date;
 
@@ -26,7 +30,7 @@ public class CreditCardAccount extends DebtAccount {
 	 * @param amount the amount of money to take out.
 	 */
 	@Override
-	public void takeMoneyOut(double amount) throws InvalidOperationException{
+	public void takeMoneyOut(double amount) throws InvalidOperationException {
 		throw new InvalidOperationException("Sorry, operation failed. " +
 			"This is not a valid account.");
 	}
@@ -51,7 +55,7 @@ public class CreditCardAccount extends DebtAccount {
 	 * @param nonUserAccount a non-user account represented by a String
 	 * @param amount         the amount of bill
 	 */
-	public void payBill(String nonUserAccount, double amount) throws NoEnoughMoneyException{
+	public void payBill(String nonUserAccount, double amount) throws NoEnoughMoneyException {
 		this.balance += amount;
 		super.payBill(nonUserAccount, amount);
 	}

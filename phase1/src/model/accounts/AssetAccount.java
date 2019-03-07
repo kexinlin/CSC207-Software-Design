@@ -1,4 +1,6 @@
-package atm;
+package model.accounts;
+
+import model.persons.User;
 
 import java.util.Date;
 

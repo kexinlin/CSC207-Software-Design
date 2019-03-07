@@ -1,4 +1,4 @@
-package atm;
+package model.transactions;
 
 import java.util.Date;
 

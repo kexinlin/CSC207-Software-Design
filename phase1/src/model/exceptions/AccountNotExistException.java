@@ -1,4 +1,4 @@
-package atm;
+package model.exceptions;
 
 public class AccountNotExistException extends Exception{
 	/**

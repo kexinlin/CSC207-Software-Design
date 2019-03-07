@@ -1,4 +1,4 @@
-package atm;
+package model;
 
 
 public enum Cash {

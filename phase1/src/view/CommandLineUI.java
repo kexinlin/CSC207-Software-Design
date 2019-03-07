@@ -1,4 +1,13 @@
-package atm;
+package view;
+
+import controller.ATM;
+import model.accounts.Account;
+import model.persons.BankManager;
+import model.persons.Loginable;
+import model.persons.User;
+import model.exceptions.AccountNotExistException;
+import model.exceptions.InvalidOperationException;
+import model.exceptions.NoEnoughMoneyException;
 
 import java.io.*;
 import java.util.Collection;

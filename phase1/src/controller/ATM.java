@@ -1,4 +1,19 @@
-package atm;
+package controller;
+
+import model.*;
+import model.accounts.Account;
+import model.accounts.CreditCardAccount;
+import model.exceptions.AccountNotExistException;
+import model.exceptions.InsufficientCashException;
+import model.exceptions.InvalidOperationException;
+import model.exceptions.NoEnoughMoneyException;
+import model.persons.BankManager;
+import model.persons.Loginable;
+import model.persons.User;
+import model.transactions.DepositTransaction;
+import model.transactions.Transaction;
+import model.transactions.TransferTransaction;
+import model.transactions.WithdrawTransaction;
 
 import java.io.*;
 
@@ -346,7 +361,7 @@ public class ATM {
 	 * @throws NoEnoughMoneyException    when amount withdrawn from the account exceeds what is allowed
 	 */
 	public void withdrawCash(Account acc, HashMap<Cash, Integer> amountWithdraw)
-		throws InsufficientCashException, NoEnoughMoneyException {
+		throws InsufficientCashException, NoEnoughMoneyException, InvalidOperationException {
 
 		ableToWithdraw(amountWithdraw);
 
@@ -425,7 +440,7 @@ public class ATM {
 	 * @return Account object corresponding to the input Account id.
 	 * @throws AccountNotExistException when account with the input id is not found
 	 */
-	Account getAccountById(String id) throws AccountNotExistException {
+	public Account getAccountById(String id) throws AccountNotExistException {
 		for (Account acc : accounts) {
 			if (acc.getAccountId().equals(id)) {
 				return acc;

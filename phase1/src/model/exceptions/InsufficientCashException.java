@@ -1,9 +1,9 @@
-package atm;
+package model.exceptions;
 
 public class InsufficientCashException extends Exception {
 
 
-	InsufficientCashException(String msg){
+	public InsufficientCashException(String msg){
 		super(msg);
 	}
 }

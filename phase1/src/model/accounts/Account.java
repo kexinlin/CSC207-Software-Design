@@ -1,4 +1,11 @@
-package atm;
+package model.accounts;
+
+import controller.ATM;
+import model.exceptions.InvalidOperationException;
+import model.exceptions.NoEnoughMoneyException;
+import model.exceptions.NoTransactionException;
+import model.transactions.Transaction;
+import model.persons.User;
 
 import java.io.BufferedWriter;
 import java.io.File;

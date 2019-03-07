@@ -1,4 +1,6 @@
-package atm;
+package model.transactions;
+
+import model.accounts.Account;
 
 import java.util.Date;
 
@@ -15,7 +17,7 @@ public class TransferTransaction extends Transaction {
 	 * @param fromAcc the source account of transaction
 	 * @param toAcc   the destination account of transaction
 	 */
-	TransferTransaction(double amount, Date time, Account fromAcc, Account toAcc) {
+	public TransferTransaction(double amount, Date time, Account fromAcc, Account toAcc) {
 		super(amount, time);
 		this.fromAcc = fromAcc;
 		this.toAcc = toAcc;

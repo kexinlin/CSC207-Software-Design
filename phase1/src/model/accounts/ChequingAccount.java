@@ -1,33 +1,38 @@
-package atm;
+package model.accounts;
+
+import model.exceptions.NoEnoughMoneyException;
+import model.persons.User;
 
 import java.util.Date;
 
-public class SavingAccount extends AssetAccount {
-	private static final double INTEREST = 0.1;
-
+public class ChequingAccount extends AssetAccount {
 	/**
-	 * Create an instance of SavingAccount
+	 * Create an instance of ChequingAccount
 	 *
 	 * @param balance        the balance of the account
 	 * @param dateOfCreation the currentTime of creation
 	 * @param accountId      account id
 	 * @param owner          owner of the account
 	 */
-	public SavingAccount(double balance, Date dateOfCreation, String accountId, User owner) {
+	public ChequingAccount(double balance, Date dateOfCreation, String accountId, User owner) {
 		super(balance, dateOfCreation, accountId, owner);
 	}
 
+
 	/**
 	 * Take `amount` of money out of the account.
-	 * NonEnoughMoneyException will also be raised if the amount will result in a negative balance.
+	 * NoEnoughMoneyException will also be raised when the amount exceeds what is allowed.
 	 *
 	 * @param amount the amount of money to take out.
 	 */
 	@Override
 	public void takeMoneyOut(double amount) throws NoEnoughMoneyException {
-		if (this.balance - amount < 0) {
+		if (this.balance < 0) {
 			throw new NoEnoughMoneyException("Sorry, operation failed. " +
-				"The amount exceeds existing balance in this account");
+				"Your balance in this account is negative.");
+		} else if (this.balance - amount < -100) {
+			throw new NoEnoughMoneyException("Sorry, operation failed. " +
+				"Your balance cannot decrease below -$100.");
 		}
 		this.balance -= amount;
 	}
@@ -45,13 +50,5 @@ public class SavingAccount extends AssetAccount {
 	public void payBill(String nonUserAccount, double amount) throws NoEnoughMoneyException {
 		takeMoneyOut(amount);
 		super.payBill(nonUserAccount, amount);
-	}
-
-
-	/**
-	 * Increase the saving account balance bt a factor of 0.1%.
-	 */
-	public void increasInterest() {
-		this.balance *= (1 + INTEREST / 100);
 	}
 }

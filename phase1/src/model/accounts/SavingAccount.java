@@ -1,35 +1,36 @@
-package atm;
+package model.accounts;
+
+import model.exceptions.NoEnoughMoneyException;
+import model.persons.User;
 
 import java.util.Date;
 
-public class ChequingAccount extends AssetAccount {
+public class SavingAccount extends AssetAccount {
+	private static final double INTEREST = 0.1;
+
 	/**
-	 * Create an instance of ChequingAccount
+	 * Create an instance of SavingAccount
 	 *
 	 * @param balance        the balance of the account
 	 * @param dateOfCreation the currentTime of creation
 	 * @param accountId      account id
 	 * @param owner          owner of the account
 	 */
-	public ChequingAccount(double balance, Date dateOfCreation, String accountId, User owner) {
+	public SavingAccount(double balance, Date dateOfCreation, String accountId, User owner) {
 		super(balance, dateOfCreation, accountId, owner);
 	}
 
-
 	/**
 	 * Take `amount` of money out of the account.
-	 * NoEnoughMoneyException will also be raised when the amount exceeds what is allowed.
+	 * NonEnoughMoneyException will also be raised if the amount will result in a negative balance.
 	 *
 	 * @param amount the amount of money to take out.
 	 */
 	@Override
 	public void takeMoneyOut(double amount) throws NoEnoughMoneyException {
-		if (this.balance < 0) {
+		if (this.balance - amount < 0) {
 			throw new NoEnoughMoneyException("Sorry, operation failed. " +
-				"Your balance in this account is negative.");
-		} else if (this.balance - amount < -100) {
-			throw new NoEnoughMoneyException("Sorry, operation failed. " +
-				"Your balance cannot decrease below -$100.");
+				"The amount exceeds existing balance in this account");
 		}
 		this.balance -= amount;
 	}
@@ -47,5 +48,13 @@ public class ChequingAccount extends AssetAccount {
 	public void payBill(String nonUserAccount, double amount) throws NoEnoughMoneyException {
 		takeMoneyOut(amount);
 		super.payBill(nonUserAccount, amount);
+	}
+
+
+	/**
+	 * Increase the saving account balance bt a factor of 0.1%.
+	 */
+	public void increasInterest() {
+		this.balance *= (1 + INTEREST / 100);
 	}
 }
