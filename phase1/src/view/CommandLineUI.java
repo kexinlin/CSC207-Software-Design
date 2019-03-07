@@ -82,6 +82,10 @@ public class CommandLineUI implements UI {
 					changePassword(args);
 					break;
 
+				case "deposit":
+					deposit(args);
+					break;
+
 				default:
 					error.println("Unknown command: " + command);
 					break;
@@ -154,6 +158,7 @@ public class CommandLineUI implements UI {
 				+ "mv  \t-\tTransfer between your accounts\n"
 				+ "passwd\t-\tChange password\n"
 				+ "exit\t-\tQuit the program\n"
+				+ "deposit\t-\tDeposit cash or cheque\n"
 				+ "Enter `help COMMAND` for a detailed description for that command.\n");
 	}
 
@@ -290,7 +295,8 @@ public class CommandLineUI implements UI {
 	}
 
 	/**
-	 * Change
+	 * Change password for this person, or another person if the current
+	 * logged-in individual is a bank manager.
 	 */
 	private void changePassword(String username) {
 		Loginable loggedIn = machine.currentLoggedIn();
@@ -331,5 +337,33 @@ public class CommandLineUI implements UI {
 
 		personToChangePassword.setPassword(password);
 		output.println("Password changed successfully.");
+	}
+
+	/**
+	 * Deposits the cash or cheque in the deposit file into the
+	 * account specified by `query`
+	 * @param query the query string for the account
+	 */
+	private void deposit(String query) {
+		User user = checkUserLogin();
+		if (user == null) {
+			error.println("You are not logged in.");
+			return;
+		}
+		Account acc = searchAccount(query);
+		if (acc.getOwner() != user) {
+			error.println("You can only deposit into your own account.");
+			return;
+		}
+		try {
+			machine.depositMoney(acc);
+		} catch (IOException e) {
+			error.println("Cannot read deposit file.");
+			return;
+		} catch (InvalidOperationException e) {
+			error.println("Error making a deposit: " + e);
+			return;
+		}
+		output.println("Deposit successful.");
 	}
 }

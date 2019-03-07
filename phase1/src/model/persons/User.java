@@ -43,10 +43,6 @@ public class User implements Loginable {
 		return this.username;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
 	/**
 	 * Check if the password provided is the same as the one set for the user.
 	 *
@@ -55,8 +51,7 @@ public class User implements Loginable {
 	 */
 	@Override
 	public boolean verifyPassword(String password) {
-		return this.password.equals(password); // Can I change like this?
-		//return false;
+		return this.password.equals(password);
 	}
 
 
