@@ -207,12 +207,16 @@ public class CommandLineUI implements UI {
 		// after all checking, do the transaction
 		Transaction tx = new TransferTransaction(amount, source, dest);
 
-		machine.proceedTransaction(tx);
+		if (machine.proceedTransaction(tx)) {
+			output.println("Transaction succeeded.");
+		} else {
+			error.println("Transaction failed.");
+		}
 	}
 
 	/**
 	 * Search for `query` in all accounts.
-	 * @param query Account ID.
+	 * @param query Account ID. TODO add account code for searching
 	 * @return the account matches `query`.
 	 */
 	private Account searchAccount(String query) {
