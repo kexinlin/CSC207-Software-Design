@@ -187,7 +187,7 @@ public class ATM {
 			}
 			acc.putMoneyIn(amount);
 
-			Transaction newTrans = new DepositTransaction(amount, acc);
+			Transaction newTrans = new DepositTransaction(amount, getCurrentTime(), acc);
 			acc.addTrans(newTrans);
 
 			acc.getOwner().addTransaction(newTrans);
@@ -236,7 +236,7 @@ public class ATM {
 
 		fromAcc.takeMoneyOut(amount);
 		toAcc.putMoneyIn(amount);
-		Transaction newTrans = new TransferTransaction(amount, fromAcc, toAcc);
+		Transaction newTrans = new TransferTransaction(amount, getCurrentTime(), fromAcc, toAcc);
 
 		// add transaction record to both accounts
 		fromAcc.addTrans(newTrans);
@@ -269,7 +269,7 @@ public class ATM {
 
 		deductCash(amountWithdraw);
 
-		Transaction newTrans = new WithdrawTransaction(totalAmount, acc);
+		Transaction newTrans = new WithdrawTransaction(totalAmount, getCurrentTime(), acc);
 		acc.addTrans(newTrans);
 		acc.getOwner().addTransaction(newTrans);
 

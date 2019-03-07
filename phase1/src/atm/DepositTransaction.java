@@ -1,5 +1,7 @@
 package atm;
 
+import java.util.Date;
+
 public class DepositTransaction extends Transaction{
 	private Account acc;
 
@@ -7,10 +9,11 @@ public class DepositTransaction extends Transaction{
 	 * Construct a new DepositTransaction.
 	 *
 	 * @param amount  the amount of deposit
+	 * @param time the time of transaction
 	 * @param acc the source account of deposit
 	 */
-	DepositTransaction(double amount, Account acc) {
-		super(amount);
+	DepositTransaction(double amount, Date time, Account acc) {
+		super(amount, time);
 		this.acc = acc;
 	}
 
