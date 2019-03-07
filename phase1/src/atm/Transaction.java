@@ -2,7 +2,7 @@ package atm;
 
 import java.util.Date;
 
-public abstract class Transaction {
+public class Transaction {
 	private double amount;
 	private Date transTime;
 

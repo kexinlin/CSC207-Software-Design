@@ -56,9 +56,14 @@ public class User implements Loginable {
 	}
 
 
-	public void changePassword(String password) {
-
+	/**
+	 * Change the password of this user to `password`.
+	 * @param password the password to change to.
+	 * @return true if succeeds, false otherwise.
+	 */
+	public boolean setPassword(String password) {
 		this.password = password;
+		return true;
 	}
 
 
