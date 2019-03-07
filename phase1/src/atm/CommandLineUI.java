@@ -166,10 +166,22 @@ public class CommandLineUI implements UI {
 
 	/**
 	 * Gets the information about a certain account
-	 * @param account the id or order of account
+	 * @param query the id or order of account
 	 */
-	private void showAccount(String account) {
+	private void showAccount(String query) {
+		User u = checkUserLogin();
+		if (u == null) {
+			return;
+		}
 		// TODO: should do acc id-order check
+		Account acc = searchAccount(query);
+		if (acc == null) {
+			error.println("No such account found.");
+			return;
+		}
+
+		output.println(acc.getAccountId() + ": " + getAccountType(acc)
+			+ ": " + acc.getBalance());
 	}
 
 	/**
