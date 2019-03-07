@@ -1,7 +1,7 @@
 package atm;
 
-
 import java.io.*;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -339,6 +339,16 @@ public class ATM {
 		}
 		throw new AccountNotExistException("Sorry, can't find this account. " +
 			"Please check your account number again.");
+	}
+
+	/**
+	 * Proceed the transaction. Put it into transaction history. Deduct and
+	 * Add fund to accounts.
+	 * @param tx the transaction to proceed.
+	 * @return true if succeeds, false otherwise.
+	 */
+	public boolean proceedTransaction(Transaction tx) {
+		return false;
 	}
 
 

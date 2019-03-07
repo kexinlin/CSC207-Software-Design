@@ -71,5 +71,40 @@ public class CommandLineUITest {
 		assertNotEquals("", errStream.toString());
 	}
 
+	@Test()
+	public void testTransferMoney() throws AccountNotExistException {
+		User u = mock(User.class);
+		when(machine.currentLoggedIn()).thenReturn(u);
+
+		Account source = mock(Account.class);
+		when(source.getAccountId()).thenReturn("0a");
+		when(source.getOwner()).thenReturn(u);
+		Account dest = mock(Account.class);
+		when(dest.getAccountId()).thenReturn("8b");
+		when(dest.getOwner()).thenReturn(u);
+
+		when(machine.getAccountById("0a")).thenReturn(source);
+		when(machine.getAccountById("8b")).thenReturn(dest);
+		when(machine.proceedTransaction(any(TransferTransaction.class))).then(
+			(x) -> {
+				TransferTransaction tx = x.getArgumentAt(0, TransferTransaction.class);
+				Account s = tx.getFromAcc();
+				Account d = tx.getToAcc();
+				if (s.getAccountId().equals("0a") && d.getAccountId().equals("8b")) {
+					return true;
+				} else {
+					return false;
+				}
+			});
+
+		input = new ByteArrayInputStream("mv 0a 8b 20\nexit\n".getBytes());
+
+		createUI();
+
+		ui.mainLoop();
+		error.flush();
+		// we should see no error here
+		assertEquals("", errStream.toString());
+	}
 
 }
