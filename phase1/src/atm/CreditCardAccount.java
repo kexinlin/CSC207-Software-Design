@@ -16,7 +16,7 @@ public class CreditCardAccount extends DebtAccount {
 	}
 
 	public double getBalance() {
-		return 0;
+		return this.balance;
 
 	}
 
@@ -27,6 +27,8 @@ public class CreditCardAccount extends DebtAccount {
 	 */
 	@Override
 	public void takeMoneyOut(double amount) {
+		//throw new InvalidOperationException("Sorry, operation failed. " +
+		//	"This is not a valid account.");
 	}
 
 	/**
@@ -36,6 +38,7 @@ public class CreditCardAccount extends DebtAccount {
 	 */
 	@Override
 	public void putMoneyIn(double amount) {
+		this.balance += amount;
 
 	}
 
@@ -50,6 +53,8 @@ public class CreditCardAccount extends DebtAccount {
 	 */
 	public void payBill(String nonUserAccount, double amount) {
 		// TODO
+		//throw new InvalidOperationException("Sorry, operation failed. " +
+		//	"This is not a valid account.");
 	}
 
 }
