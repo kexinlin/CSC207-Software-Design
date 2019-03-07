@@ -1,7 +1,7 @@
 package view;
 
 import controller.ATM;
-import model.accounts.Account;
+import model.accounts.*;
 import model.persons.BankManager;
 import model.persons.Loginable;
 import model.persons.User;
@@ -10,7 +10,11 @@ import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CommandLineUI implements UI {
 	private boolean readPasswordFromConsole;
@@ -19,6 +23,7 @@ public class CommandLineUI implements UI {
 	private InputStream input;
 	private PrintStream output;
 	private PrintStream error;
+	private ArrayList<Account> curAccounts;
 
 	/**
 	 * Constructs a new Command Line UI.
@@ -196,12 +201,17 @@ public class CommandLineUI implements UI {
 		if (user == null) {
 			return;
 		}
-		Collection<Account> accounts = user.getAccounts();
+
+		ArrayList<Account> accounts = user.getAccounts();
+		// to be thread-safe
+		curAccounts = accounts;
+
 		int i = 0;
+		output.println("Type & Order\tID\tBalance");
 		for (Account acc : accounts) {
 			String typeStr = getAccountType(acc);
 			// TODO cache the codes
-			output.println(typeStr + i + ":\t"
+			output.println(typeStr + i + "\t\t"
 				+ acc.getAccountId() + "\t" + acc.getBalance());
 			++i;
 		}
@@ -213,7 +223,12 @@ public class CommandLineUI implements UI {
 	 * @return the type of `acc`
 	 */
 	private String getAccountType(Account acc) {
-		return acc.getClass().getName();
+		HashMap<Class, String> nameMap = new HashMap<>();
+		nameMap.put(ChequingAccount.class, "chq");
+		nameMap.put(SavingAccount.class, "sav");
+		nameMap.put(CreditCardAccount.class, "cre");
+		nameMap.put(LineOfCreditAccount.class, "loc");
+		return nameMap.get(acc.getClass());
 	}
 
 	/**
@@ -285,13 +300,24 @@ public class CommandLineUI implements UI {
 	 * @return the account matches `query`.
 	 */
 	private Account searchAccount(String query) {
-		Account res;
+		Pattern regex = Pattern.compile("^([a-z]{3})(\\d+)$");
+		Matcher matcher = regex.matcher(query);
+		if (matcher.matches()) { // looks like a `type-order`
+			try {
+				Account acc = curAccounts.get(Integer.valueOf(matcher.group(2)));
+				if (getAccountType(acc).equals(matcher.group(1))) {
+					// we found it
+					return acc;
+				}
+			} catch(IndexOutOfBoundsException e) {
+				return null;
+			}
+		}
 		try {
-			res = machine.getAccountById(query);
+			return machine.getAccountById(query);
 		} catch (AccountNotExistException e) {
 			return null;
 		}
-		return res;
 	}
 
 	/**
@@ -351,7 +377,11 @@ public class CommandLineUI implements UI {
 			return;
 		}
 		Account acc = searchAccount(query);
-		if (acc.getOwner() != user) {
+		if (acc == null) {
+			error.println("No such account.");
+			return;
+		}
+		if (! user.equals(acc.getOwner())) {
 			error.println("You can only deposit into your own account.");
 			return;
 		}

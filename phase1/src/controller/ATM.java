@@ -2,6 +2,7 @@ package controller;
 
 import model.*;
 import model.accounts.Account;
+import model.accounts.ChequingAccount;
 import model.accounts.CreditCardAccount;
 import model.exceptions.AccountNotExistException;
 import model.exceptions.InsufficientCashException;
@@ -63,6 +64,14 @@ public class ATM {
 	}
 
 	/**
+	 * Gets the deposit file name.
+	 * @return the deposit file name.
+	 */
+	public String getDepositFileName() {
+		return depositFileName;
+	}
+
+	/**
 	 * Sets the cash controller for this atm.
 	 * @param cashController the cash controller to set.
 	 */
@@ -71,12 +80,24 @@ public class ATM {
 	}
 
 	/**
+	 * Gets the cash controller for this atm.
+	 * @return the cash controller.
+	 */
+	public CashController getCashController() {
+		return cashController;
+	}
+
+	/**
 	 * read records from file.
 	 */
 	private void readRecordsFromFile() {
-		// TODO
+		// FIXME replace this with actual file-reading
 		this.loginables.add(new BankManager(this, "mgr1", "lolol"));
-		this.loginables.add(new User(this, "Foo Bar", "u1", "xxx"));
+		User foobar = new User(this, "Foo Bar", "u1", "xxx");
+		Account chq = new ChequingAccount(0, new Date(), "127", foobar);
+		foobar.addAccount(chq);
+		this.loginables.add(foobar);
+
 	}
 
 	/**
@@ -408,5 +429,11 @@ public class ATM {
 			"Please check your account number again.");
 	}
 
-
+	/**
+	 * Add the account `acc`
+	 * @param acc the account to add
+	 */
+	public void addAccount(Account acc) {
+		accounts.add(acc);
+	}
 }
