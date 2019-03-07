@@ -26,9 +26,9 @@ public class CreditCardAccount extends DebtAccount {
 	 * @param amount the amount of money to take out.
 	 */
 	@Override
-	public void takeMoneyOut(double amount) {
-		//throw new InvalidOperationException("Sorry, operation failed. " +
-		//	"This is not a valid account.");
+	public void takeMoneyOut(double amount) throws InvalidOperationException{
+		throw new InvalidOperationException("Sorry, operation failed. " +
+			"This is not a valid account.");
 	}
 
 	/**
@@ -51,10 +51,10 @@ public class CreditCardAccount extends DebtAccount {
 	 * @param nonUserAccount a non-user account represented by a String
 	 * @param amount         the amount of bill
 	 */
-	public void payBill(String nonUserAccount, double amount) {
+	public void payBill(String nonUserAccount, double amount) throws InvalidOperationException{
 		// TODO
-		//throw new InvalidOperationException("Sorry, operation failed. " +
-		//	"This is not a valid account.");
+		throw new InvalidOperationException("Sorry, operation failed. " +
+			"This is not a valid account.");
 	}
 
 }
