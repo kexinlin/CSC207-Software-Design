@@ -1,20 +1,31 @@
 package atm;
 
+import java.io.*;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ATM {
-	Date currentTime = new Date();
+	Date currentTime;
 	ArrayList<User> userList;
 	ArrayList<Account> accountList;
-	HashMap<Cash, Integer> billAmount = new HashMap<>();
+	HashMap<Cash, Integer> billAmount;
+	private static final String DEPOSIT_FILE_NAME = "deposits.txt";
 
 	/**
 	 * Constructs an instance of ATM.
 	 */
 	public ATM() {
+		this.currentTime = new Date();
+		this.billAmount = new HashMap<>();
+		billAmount.put(Cash.FIVE, 0);
+		billAmount.put(Cash.TEN, 0);
+		billAmount.put(Cash.TWENTY, 0);
+		billAmount.put(Cash.FIFTY, 0);
+		billAmount.put(Cash.HUNDRED, 0);
+
 		/*int counter =0;
 		File x = new File("Desktop:..");
 		private Scanner x;
@@ -84,58 +95,109 @@ public class ATM {
 		return false;
 	}
 
-	/**
-	 * Put cash into the machine.
-	 *
-	 * @param cash the collection of cash to put in
-	 */
-	public void depositCash(Collection<? extends Cash> cash) {
-		// TODO: implement this
-		/*
-		File x = new File("Desktop:..");
-		private Scanner x;
-		try{
-			x = new Scanner(x);
+//	/**
+//	 * Put cash into the machine.
+//	 *
+//	 * @param cash the collection of cash to put in
+//	 */
+//	public void depositCash(Collection<? extends Cash> cash) {
+//
+//
+//		/*
+//		File x = new File("Desktop:..");
+//		private Scanner x;
+//		try{
+//			x = new Scanner(x);
+//		}
+//		catch(Expection e){
+//			System.out.println("could not find file");
+//		}
+//
+//		while(x.hasNext()){
+//			String toAccID = x.next();
+//			double value = double(x.next());
+//
+//
+//		}
+//		Account toAcc = getAccountById(toAccId);
+//
+//		toAcc.putMoneyIn(value);
+//		Transaction newTrans = new Transaction(value);
+//		toAcc.balance += value;
+//
+//		// add transaction record to both accounts
+//		toAcc.addTrans(newTrans);
+//
+//		// add transaction record to both user
+//		toAcc.getOwner().addTransaction(newTrans);
+//
+//		/*File y = new File("Desktop:..");
+//		private Scanner y;
+//		try{
+//			y = new Scanner(x);
+//		}
+//		catch(Expection e){
+//			System.out.println("could not find file");
+//		}
+//
+//		while(y.hasNext()){
+//
+//
+//
+//		}
+//		x = new Formatter("chinese.txt");
+//		x.format("%s%s",)
+//*/
+//	}
+
+	private void depositMoney() throws IOException, InvalidOperationException,
+		AccountNotExistException {
+		// when this method is called, only the first line of the file will be read
+		// each line of the input file should be formatted as either:
+		// ==============================
+		// cheque, <<accountId>>, 30.25
+		// ==============================
+		// or
+		// =============================================
+		// cash, <<accountId>>, 5 3, 10 25, 100 3
+		// =============================================
+		// where the first number is domination and the second is number of bills
+
+		File file = new File(DEPOSIT_FILE_NAME);
+		BufferedReader br = new BufferedReader(new FileReader(file));
+
+		String st;
+		String[] data;
+		String accId;
+		st = br.readLine(); // only read the first line of file
+
+		data = st.split(",");
+		if (data.length < 3) {
+			throw new InvalidOperationException("Sorry, your deposit file is not in " +
+				"correct format.");
+		} else if (data[0].equals("cheque")) {
+			accId = data[1];
+			Account acc = getAccountById(accId);
+			double amount;
+			try {
+				amount = Double.valueOf(data[3]);
+			} catch (NumberFormatException e) {
+				throw new InvalidOperationException("Sorry, " +
+					"your deposit file is not in correct format.");
+			}
+			acc.putMoneyIn(amount);
+
+		} else if (data[0].equals("cash")) {
+			accId = data[1];
+			Account acc = getAccountById(accId);
+
+
+		} else {
+			throw new InvalidOperationException("Sorry, your deposit file is not in " +
+				"correct format.");
 		}
-		catch(Expection e){
-			System.out.println("could not find file");
-		}
-
-		while(x.hasNext()){
-			String toAccID = x.next();
-			double value = double(x.next());
 
 
-		}
-		Account toAcc = getAccountById(toAccId);
-
-		toAcc.putMoneyIn(value);
-		Transaction newTrans = new Transaction(value);
-		toAcc.balance += value;
-
-		// add transaction record to both accounts
-		toAcc.addTrans(newTrans);
-
-		// add transaction record to both user
-		toAcc.getOwner().addTransaction(newTrans);
-
-		/*File y = new File("Desktop:..");
-		private Scanner y;
-		try{
-			y = new Scanner(x);
-		}
-		catch(Expection e){
-			System.out.println("could not find file");
-		}
-
-		while(y.hasNext()){
-
-
-
-		}
-		x = new Formatter("chinese.txt");
-		x.format("%s%s",)
-*/
 	}
 
 
@@ -154,17 +216,15 @@ public class ATM {
 	 * Transfer money from one account into another account.
 	 * The two account may or may not belong to the same user.
 	 *
-	 * @param fromAccId `accountId` of the source account of transaction
-	 * @param toAccId   `accountId` of the destination account of transaction
-	 * @param amount    amount of money of transaction
+	 * @param fromAcc the source account of transaction
+	 * @param toAcc   the destination account of transaction
+	 * @param amount  amount of money of transaction
 	 * @throws AccountNotExistException  when account with the input id is not found
 	 * @throws InvalidOperationException when attempting to transfer out from CreditCardAccount
 	 * @throws NoEnoughMoneyException    when amount of money transferred out exceeds what is allowed
 	 */
-	public void transferMoney(String fromAccId, String toAccId, double amount)
+	public void transferMoney(Account fromAcc, Account toAcc, double amount)
 		throws InvalidOperationException, NoEnoughMoneyException, AccountNotExistException {
-		Account fromAcc = getAccountById(fromAccId);
-		Account toAcc = getAccountById(toAccId);
 
 		if (fromAcc instanceof CreditCardAccount) {
 			throw new InvalidOperationException("Sorry, transfer money out of a " +
@@ -187,23 +247,21 @@ public class ATM {
 
 
 	/**
-	 * @param accId          `accountId` input by the user
+	 * @param acc            account of the user for withdrawal
 	 * @param amountWithdraw a HashMap that record the number of bills for each domination that
 	 *                       the user wants to withdraw
-	 * @throws AccountNotExistException  when account with the input id is not found
 	 * @throws InsufficientCashException when the number of bills of certain domination is less
 	 *                                   than the amount that the user wants to withdraw
 	 * @throws NoEnoughMoneyException    when amount withdrawn from the account exceeds what is allowed
 	 */
-	public void withdrawCash(String accId, HashMap<Cash, Integer> amountWithdraw)
-		throws AccountNotExistException, InsufficientCashException, NoEnoughMoneyException {
+	public void withdrawCash(Account acc, HashMap<Cash, Integer> amountWithdraw)
+		throws InsufficientCashException, NoEnoughMoneyException {
 
 		ableToWithdraw(amountWithdraw);
 
 		// calculate the total amount withdrawn
 		int totalAmount = calculateTotalBillAmount(amountWithdraw);
 
-		Account acc = getAccountById(accId); // account may not exist
 		acc.takeMoneyOut(totalAmount); // money in account may not be enough
 
 		deductCash(amountWithdraw);
@@ -286,11 +344,13 @@ public class ATM {
 	/**
 	 * Proceed the transaction. Put it into transaction history. Deduct and
 	 * Add fund to accounts.
+	 *
 	 * @param tx the transaction to proceed.
 	 * @return true if succeeds, false otherwise.
 	 */
 	public boolean proceedTransaction(Transaction tx) {
 		return false;
 	}
+
 
 }
