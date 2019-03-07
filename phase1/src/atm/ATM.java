@@ -180,12 +180,17 @@ public class ATM {
 			Account acc = getAccountById(accId);
 			double amount;
 			try {
-				amount = Double.valueOf(data[3]);
+				amount = Double.valueOf(data[2]);
 			} catch (NumberFormatException e) {
 				throw new InvalidOperationException("Sorry, " +
 					"your deposit file is not in correct format.");
 			}
 			acc.putMoneyIn(amount);
+
+			Transaction newTrans = new DepositTransaction(amount, acc);
+			acc.addTrans(newTrans);
+
+			acc.getOwner().addTransaction(newTrans);
 
 		} else if (data[0].equals("cash")) {
 			accId = data[1];
@@ -196,8 +201,6 @@ public class ATM {
 			throw new InvalidOperationException("Sorry, your deposit file is not in " +
 				"correct format.");
 		}
-
-
 	}
 
 
@@ -224,7 +227,7 @@ public class ATM {
 	 * @throws NoEnoughMoneyException    when amount of money transferred out exceeds what is allowed
 	 */
 	public void transferMoney(Account fromAcc, Account toAcc, double amount)
-		throws InvalidOperationException, NoEnoughMoneyException, AccountNotExistException {
+		throws InvalidOperationException, NoEnoughMoneyException {
 
 		if (fromAcc instanceof CreditCardAccount) {
 			throw new InvalidOperationException("Sorry, transfer money out of a " +
