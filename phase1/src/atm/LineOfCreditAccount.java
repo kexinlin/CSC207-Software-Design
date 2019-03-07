@@ -9,13 +9,17 @@ public class LineOfCreditAccount extends DebtAccount {
 
 	@Override
 	public void putMoneyIn(double amount) {
+		this.balance -= amount;
 	}
 
 	@Override
 	public void takeMoneyOut(double amount) {
+		this.balance += amount;
 	}
 
 	@Override
-	public void payBill(String nonUserAccount, double amount) {
+	public void payBill(String nonUserAccount, double amount) throws NoEnoughMoneyException{
+		this.balance += amount;
+		super.payBill(nonUserAccount, amount);
 	}
 }
