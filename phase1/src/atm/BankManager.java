@@ -8,6 +8,20 @@ public class BankManager implements Loginable {
 	private ArrayList<User> users;    // stores all the users.
 	private ATM atm; // the atm that this BankManager manages
 
+	public BankManager(ATM atm) {
+		this.atm = atm;
+//		this.users = new ArrayList<User>();
+	}
+
+	/**
+	 * Gets the username of this bank manager.
+	 * @return the username of this bank manager.
+	 */
+	@Override
+	public String getUsername() {
+		return "";
+	}
+
 	/**
 	 * Check if the password provided is the same as the one set for the user.
 	 * @param password the password to check.
@@ -15,12 +29,19 @@ public class BankManager implements Loginable {
 	 */
 	@Override
 	public boolean verifyPassword(String password) {
+		// TODO
 		return false;
 	}
 
-	public BankManager(ATM atm) {
-		this.atm = atm;
-//		this.users = new ArrayList<User>();
+	/**
+	 * Set the password to `password`
+	 * @param password the password to change to.
+	 * @return true if password is successfully changed, false otherwise.
+	 */
+	@Override
+	public boolean setPassword(String password) {
+		// TODO
+		return false;
 	}
 
 	public User createUser(String name, String username, String password) {
@@ -70,7 +91,7 @@ public class BankManager implements Loginable {
 
 	public boolean setTime() {
 		//SimpleDateFormat dateForm = new SimpleDateFormat("Y/MM/dd HH:mm");
-		atm.currentTime = new Date();
-		return true;
+		//atm.currentTime = new Date();
+		return false;
 	}
 }

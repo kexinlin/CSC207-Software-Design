@@ -69,6 +69,10 @@ public class CommandLineUI implements UI {
 					moveMoney(args);
 					break;
 
+				case "passwd":
+					changePassword(args);
+					break;
+
 				default:
 					error.println("Unknown command: " + command);
 					break;
@@ -77,36 +81,58 @@ public class CommandLineUI implements UI {
 	}
 
 	/**
+	 * Read password from console, or `input` if there is no console and
+	 * we allow to read from things other than a console
+	 * @param prompt The string to prompt the individual to input a password
+	 * @return the password we have read
+	 */
+
+	private String readPassword(String prompt) {
+		String password;
+		Console console = System.console();
+		output.print(prompt);
+		if (readPasswordFromConsole) {
+			if (console == null) {
+				error.println("Error: console not found");
+				return null;
+			} else {
+				output.println(prompt);
+				password = new String(console.readPassword());
+			}
+		} else {
+			output.println(prompt);
+			// FIXME: potentially dangerous.
+			// Oracle suggests using char[].
+			try {
+				password = reader.readLine();
+			} catch (IOException e) {
+				password = null;
+			}
+		}
+		return password;
+	}
+
+	/**
 	 * Prompts the user to enter login info, then log in to the account.
 	 */
 	private void login() {
+		String username, password;
+		output.println("Enter username: ");
 		try {
-			Console console = System.console();
-			String username, password;
-			output.println("Enter username:");
 			username = reader.readLine();
-
-			if (readPasswordFromConsole) {
-				if (console == null) {
-					error.println("Error: console not found");
-					return;
-				} else {
-					output.println("Enter password:");
-					password = new String(console.readPassword());
-				}
-			} else {
-				output.println("Enter password:");
-				// FIXME: potentially dangerous.
-				// Oracle suggests using char[].
-				password = reader.readLine();
-			}
-			if (machine.login(username, password)) {
-				output.println("Login successful.");
-			} else {
-				error.println("Login failed.");
-			}
 		} catch (IOException e) {
-			error.println("Cannot read username and/or password.");
+			error.println("Cannot read username.");
+			return;
+		}
+		password = readPassword("Enter password: ");
+		if (password == null) {
+			error.println("Cannot read password.");
+			return;
+		}
+		if (machine.login(username, password)) {
+			output.println("Login successful.");
+		} else {
+			error.println("Login failed.");
 		}
 	}
 
@@ -119,6 +145,7 @@ public class CommandLineUI implements UI {
 				+ "help\t-\tDisplay this help information\n"
 				+ "ls  \t-\tList accounts\n"
 				+ "mv  \t-\tTransfer between your accounts\n"
+				+ "passwd\t-\tChange password\n"
 				+ "exit\t-\tQuit the program\n"
 				+ "Enter `help COMMAND` for a detailed description for that command.\n");
 	}
@@ -135,6 +162,19 @@ public class CommandLineUI implements UI {
 		}
 		return (User)loggedIn;
 	}
+
+	/**
+	 *
+	 */
+	private BankManager checkBankManagerLogin() {
+		Loginable loggedIn = machine.currentLoggedIn();
+		if (! (loggedIn instanceof BankManager)) {
+			error.println("The current individual logged in is not a bank manager.");
+			return null;
+		}
+		return (BankManager)loggedIn;
+	}
+
 	/**
 	 * List accounts of current user.
 	 * Must log in as a user to use.
@@ -240,5 +280,49 @@ public class CommandLineUI implements UI {
 			return null;
 		}
 		return res;
+	}
+
+	/**
+	 * Change
+	 */
+	private void changePassword(String username) {
+		Loginable loggedIn = machine.currentLoggedIn();
+		if (loggedIn == null) {
+			error.println("You are not logged in.");
+			return;
+		}
+		Loginable personToChangePassword = loggedIn;
+		if (username.length() > 0) {
+			personToChangePassword = machine.getLoginable(username);
+			if (personToChangePassword == null) {
+				error.println("No user named `" + username + "' exists.");
+				return;
+			}
+			// users can only change *their* password
+			if (loggedIn instanceof User
+				&& !username.equals(personToChangePassword.getUsername())) {
+				error.println("You cannot change other user's password.");
+				return;
+			}
+		}
+
+		String password = readPassword("Enter password: ");
+		if (password == null) {
+			error.println("Cannot read password.");
+			return;
+		}
+		String confPass = readPassword("Repeat password: ");
+		if (confPass == null) {
+			error.println("Cannot read password.");
+			return;
+		}
+
+		if (! password.equals(confPass)) {
+			error.println("Passwords do not match.");
+			return;
+		}
+
+		personToChangePassword.setPassword(password);
+		output.println("Password changed successfully.");
 	}
 }
