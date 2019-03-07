@@ -108,7 +108,7 @@ public abstract class Account {
 	 * @param nonUserAccount a non-user account represented by a String
 	 * @param amount         the amount of bill
 	 */
-	public void payBill(String nonUserAccount, double amount) throws NoEnoughMoneyException, InvalidOperationException {
+	public void payBill(String nonUserAccount, double amount) throws NoEnoughMoneyException{
 		Writer writer;
 
 		try {

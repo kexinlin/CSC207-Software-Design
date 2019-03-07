@@ -38,7 +38,7 @@ public class CreditCardAccount extends DebtAccount {
 	 */
 	@Override
 	public void putMoneyIn(double amount) {
-		this.balance += amount;
+		this.balance -= amount;
 
 	}
 
@@ -51,10 +51,9 @@ public class CreditCardAccount extends DebtAccount {
 	 * @param nonUserAccount a non-user account represented by a String
 	 * @param amount         the amount of bill
 	 */
-	public void payBill(String nonUserAccount, double amount) throws InvalidOperationException{
-		// TODO
-		throw new InvalidOperationException("Sorry, operation failed. " +
-			"This is not a valid account.");
+	public void payBill(String nonUserAccount, double amount) throws NoEnoughMoneyException{
+		this.balance += amount;
+		super.payBill(nonUserAccount, amount);
 	}
 
 }
