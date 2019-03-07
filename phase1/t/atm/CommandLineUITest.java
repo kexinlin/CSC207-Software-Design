@@ -2,6 +2,7 @@ package atm;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.AdditionalAnswers;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -72,7 +73,9 @@ public class CommandLineUITest {
 	}
 
 	@Test()
-	public void testTransferMoney() throws AccountNotExistException, NoEnoughMoneyException {
+	public void testTransferMoney() throws AccountNotExistException, NoEnoughMoneyException
+		, InvalidOperationException
+	{
 		User u = mock(User.class);
 		when(machine.currentLoggedIn()).thenReturn(u);
 
@@ -85,17 +88,19 @@ public class CommandLineUITest {
 
 		when(machine.getAccountById("0a")).thenReturn(source);
 		when(machine.getAccountById("8b")).thenReturn(dest);
-		when(machine.transferMoney(any(Account.class), any(Account.class), anyDouble())).then(
-			(x) -> {
-				TransferTransaction tx = x.getArgumentAt(0, TransferTransaction.class);
-				Account s = tx.getFromAcc();
-				Account d = tx.getToAcc();
+
+		doAnswer(
+			x -> {
+				Account s = x.getArgumentAt(0, Account.class);
+				Account d = x.getArgumentAt(1, Account.class);
 				if (s.getAccountId().equals("0a") && d.getAccountId().equals("8b")) {
-					return true;
+
 				} else {
 					throw new NoEnoughMoneyException("");
 				}
-			});
+				return null;
+			})
+			.when(machine).transferMoney(any(Account.class), any(Account.class), anyDouble());
 
 		input = new ByteArrayInputStream("mv 0a 8b 20\nexit\n".getBytes());
 

@@ -220,8 +220,10 @@ public class CommandLineUI implements UI {
 		try {
 			machine.transferMoney(source, dest, amount);
 			output.println("Transaction succeeded.");
+		} catch (InvalidOperationException e) {
+			error.println("Transaction failed. " + e);
 		} catch (NoEnoughMoneyException e) {
-			error.println("Transaction failed.");
+			error.println("Transaction failed. " + e);
 		}
 	}
 
