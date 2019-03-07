@@ -152,7 +152,7 @@ public class ATM {
 
 	private void depositMoney() throws IOException, InvalidOperationException,
 		AccountNotExistException {
-		// when this method is called, only the first line will be read
+		// when this method is called, only the first line of the file will be read
 		// each line of the input file should be formatted as either:
 		// ==============================
 		// cheque, <<accountId>>, 30.25
@@ -173,15 +173,19 @@ public class ATM {
 
 		data = st.split(",");
 		if (data.length < 3) {
+			throw new InvalidOperationException("Sorry, your deposit file is not in " +
+				"correct format.");
 		} else if (data[0].equals("cheque")) {
 			accId = data[1];
 			Account acc = getAccountById(accId);
+			double amount;
 			try {
-				acc.putMoneyIn(Double.valueOf(data[3]));
+				amount = Double.valueOf(data[3]);
 			} catch (NumberFormatException e) {
 				throw new InvalidOperationException("Sorry, " +
 					"your deposit file is not in correct format.");
 			}
+			acc.putMoneyIn(amount);
 
 		} else if (data[0].equals("cash")) {
 			accId = data[1];
@@ -212,17 +216,15 @@ public class ATM {
 	 * Transfer money from one account into another account.
 	 * The two account may or may not belong to the same user.
 	 *
-	 * @param fromAccId `accountId` of the source account of transaction
-	 * @param toAccId   `accountId` of the destination account of transaction
-	 * @param amount    amount of money of transaction
+	 * @param fromAcc the source account of transaction
+	 * @param toAcc   the destination account of transaction
+	 * @param amount  amount of money of transaction
 	 * @throws AccountNotExistException  when account with the input id is not found
 	 * @throws InvalidOperationException when attempting to transfer out from CreditCardAccount
 	 * @throws NoEnoughMoneyException    when amount of money transferred out exceeds what is allowed
 	 */
-	public void transferMoney(String fromAccId, String toAccId, double amount)
+	public void transferMoney(Account fromAcc, Account toAcc, double amount)
 		throws InvalidOperationException, NoEnoughMoneyException, AccountNotExistException {
-		Account fromAcc = getAccountById(fromAccId);
-		Account toAcc = getAccountById(toAccId);
 
 		if (fromAcc instanceof CreditCardAccount) {
 			throw new InvalidOperationException("Sorry, transfer money out of a " +
@@ -245,23 +247,21 @@ public class ATM {
 
 
 	/**
-	 * @param accId          `accountId` input by the user
+	 * @param acc            account of the user for withdrawal
 	 * @param amountWithdraw a HashMap that record the number of bills for each domination that
 	 *                       the user wants to withdraw
-	 * @throws AccountNotExistException  when account with the input id is not found
 	 * @throws InsufficientCashException when the number of bills of certain domination is less
 	 *                                   than the amount that the user wants to withdraw
 	 * @throws NoEnoughMoneyException    when amount withdrawn from the account exceeds what is allowed
 	 */
-	public void withdrawCash(String accId, HashMap<Cash, Integer> amountWithdraw)
-		throws AccountNotExistException, InsufficientCashException, NoEnoughMoneyException {
+	public void withdrawCash(Account acc, HashMap<Cash, Integer> amountWithdraw)
+		throws InsufficientCashException, NoEnoughMoneyException {
 
 		ableToWithdraw(amountWithdraw);
 
 		// calculate the total amount withdrawn
 		int totalAmount = calculateTotalBillAmount(amountWithdraw);
 
-		Account acc = getAccountById(accId); // account may not exist
 		acc.takeMoneyOut(totalAmount); // money in account may not be enough
 
 		deductCash(amountWithdraw);
@@ -344,6 +344,7 @@ public class ATM {
 	/**
 	 * Proceed the transaction. Put it into transaction history. Deduct and
 	 * Add fund to accounts.
+	 *
 	 * @param tx the transaction to proceed.
 	 * @return true if succeeds, false otherwise.
 	 */
