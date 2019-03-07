@@ -239,5 +239,14 @@ public class ATM {
 			"Please check your account number again.");
 	}
 
+	/**
+	 * Proceed the transaction. Put it into transaction history. Deduct and
+	 * Add fund to accounts.
+	 * @param tx the transaction to proceed.
+	 * @return true if succeeds, false otherwise.
+	 */
+	public boolean proceedTransaction(Transaction tx) {
+		return false;
+	}
 
 }
