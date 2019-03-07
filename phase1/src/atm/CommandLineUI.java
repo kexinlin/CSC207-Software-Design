@@ -217,11 +217,10 @@ public class CommandLineUI implements UI {
 		}
 
 		// after all checking, do the transaction
-		Transaction tx = new TransferTransaction(amount, source, dest);
-
-		if (machine.proceedTransaction(tx)) {
+		try {
+			machine.transferMoney(source, dest, amount);
 			output.println("Transaction succeeded.");
-		} else {
+		} catch (NoEnoughMoneyException e) {
 			error.println("Transaction failed.");
 		}
 	}

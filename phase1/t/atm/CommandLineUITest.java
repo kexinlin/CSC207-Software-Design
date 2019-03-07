@@ -72,7 +72,7 @@ public class CommandLineUITest {
 	}
 
 	@Test()
-	public void testTransferMoney() throws AccountNotExistException {
+	public void testTransferMoney() throws AccountNotExistException, NoEnoughMoneyException {
 		User u = mock(User.class);
 		when(machine.currentLoggedIn()).thenReturn(u);
 
@@ -85,7 +85,7 @@ public class CommandLineUITest {
 
 		when(machine.getAccountById("0a")).thenReturn(source);
 		when(machine.getAccountById("8b")).thenReturn(dest);
-		when(machine.proceedTransaction(any(TransferTransaction.class))).then(
+		when(machine.transferMoney(any(Account.class), any(Account.class), anyDouble())).then(
 			(x) -> {
 				TransferTransaction tx = x.getArgumentAt(0, TransferTransaction.class);
 				Account s = tx.getFromAcc();
@@ -93,7 +93,7 @@ public class CommandLineUITest {
 				if (s.getAccountId().equals("0a") && d.getAccountId().equals("8b")) {
 					return true;
 				} else {
-					return false;
+					throw new NoEnoughMoneyException("");
 				}
 			});
 
