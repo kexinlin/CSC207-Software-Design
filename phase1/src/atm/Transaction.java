@@ -5,6 +5,7 @@ import java.util.Date;
 public class Transaction {
 	private double amount;
 	private Date transTime;
+	private ATM atm;
 
 	/**
 	 * Construct a new TransferTransaction.
@@ -13,7 +14,8 @@ public class Transaction {
 	 */
 	public Transaction(double amount) {
 		this.amount = amount;
-		this.transTime = ATM.getCurrentTime();
+		this.atm = atm;
+		this.transTime = atm.getCurrentTime();
 	}
 
 	public double getAmount() {

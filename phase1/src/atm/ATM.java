@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ATM {
-	static Date currentTime = new Date();
+	Date currentTime = new Date();
 	ArrayList<User> userList;
 	ArrayList<Account> accountList;
 	HashMap<Cash, Integer> billAmount = new HashMap<>();
@@ -39,8 +39,8 @@ public class ATM {
 	 *
 	 * @return current time of ATM
 	 */
-	public static Date getCurrentTime() {
-		return currentTime;
+	public Date getCurrentTime() {
+		return this.currentTime;
 	}
 
 
@@ -49,12 +49,12 @@ public class ATM {
 	 *
 	 * @param newTime The new time set for this ATM.
 	 */
-	public static void setCurrentTime(String newTime) {
+	public void setCurrentTime(String newTime) {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = sdf.parse(newTime);
 			long timeInMillis = date.getTime();
-			currentTime = new Date(timeInMillis);
+			this.currentTime = new Date(timeInMillis);
 		} catch (ParseException e) {
 		}
 	}
@@ -64,7 +64,7 @@ public class ATM {
 	 *
 	 * @return string representation of `currentTime` in this ATM
 	 */
-	public static String getCurrentTimeStr() {
+	public String getCurrentTimeStr() {
 		Date date = getCurrentTime();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return dateFormat.format(date);
