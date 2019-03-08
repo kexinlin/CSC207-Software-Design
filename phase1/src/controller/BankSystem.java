@@ -27,7 +27,6 @@ public class BankSystem {
 	private Date currentTime;
 	private HashMap<String, Loginable> loginables;
 	private HashMap<String, Account> accounts;
-	private Loginable loggedIn;
 	private String recordFileName;
 	private ArrayList<Request> requests;
 	private BillController billController;
@@ -41,13 +40,13 @@ public class BankSystem {
 	public BankSystem(String recordFileName) {
 		this.currentTime = new Date();
 
-		loggedIn = null;
-
 		this.loginables = new HashMap<>();
 		this.accounts = new HashMap<>();
 
 		this.recordFileName = recordFileName;
 		this.billController = new FileBillController(this);
+
+		this.requests = new ArrayList<>();
 
 		readRecordsFromFile();
 	}
