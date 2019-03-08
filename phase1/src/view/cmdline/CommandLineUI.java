@@ -25,6 +25,7 @@ public class CommandLineUI implements UI {
 	private PrintStream output;
 	private PrintStream error;
 	private ArrayList<Account> curAccounts;
+	private HelpCmd helpCmd;
 
 	/**
 	 * Constructs a new Command Line UI.
@@ -44,6 +45,19 @@ public class CommandLineUI implements UI {
 		this.error = error;
 		this.readPasswordFromConsole = readPasswordFromConsole;
 		this.curAccounts = new ArrayList<>();
+		this.helpCmd = new HelpCmd(this);
+	}
+
+	public InputStream getInput() {
+		return input;
+	}
+
+	public PrintStream getOutput() {
+		return output;
+	}
+
+	public PrintStream getError() {
+		return error;
 	}
 
 	/**
@@ -77,7 +91,7 @@ public class CommandLineUI implements UI {
 					break;
 
 				case "help":
-					help();
+					helpCmd.help(args);
 					break;
 
 				case "exit":
@@ -169,25 +183,10 @@ public class CommandLineUI implements UI {
 	}
 
 	/**
-	 * Displays help information.
-	 */
-	private void help() {
-		output.println(
-			"login\t-\tLog in as a user or admin\n"
-				+ "help\t-\tDisplay this help information\n"
-				+ "ls  \t-\tList accounts\n"
-				+ "mv  \t-\tTransfer between your accounts\n"
-				+ "passwd\t-\tChange password\n"
-				+ "exit\t-\tQuit the program\n"
-				+ "deposit\t-\tDeposit cash or cheque\n"
-				+ "Enter `help COMMAND` for a detailed description for that command.\n");
-	}
-
-	/**
 	 * Check whether a user has logged in.
 	 * @return the currently logged-in user, or null if no user is logged in.
 	 */
-	private User checkUserLogin() {
+	User checkUserLogin() {
 		Loginable loggedIn = machine.currentLoggedIn();
 		if (! (loggedIn instanceof User)) {
 			error.println("The current individual logged in is not a user.");
@@ -197,9 +196,11 @@ public class CommandLineUI implements UI {
 	}
 
 	/**
-	 *
+	 * Check whether a bank manager has logged in.
+	 * @return the currently logged-in bank manager, or null if no bank manager
+	 * is logged in.
 	 */
-	private BankManager checkBankManagerLogin() {
+	BankManager checkBankManagerLogin() {
 		Loginable loggedIn = machine.currentLoggedIn();
 		if (! (loggedIn instanceof BankManager)) {
 			error.println("The current individual logged in is not a bank manager.");
