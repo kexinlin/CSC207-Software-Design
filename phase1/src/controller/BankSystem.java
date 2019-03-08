@@ -1,5 +1,6 @@
 package controller;
 
+import model.Request;
 import controller.transactions.BillController;
 import controller.transactions.FileBillController;
 import model.accounts.Account;
@@ -10,13 +11,11 @@ import model.accounts.LineOfCreditAccount;
 import model.exceptions.AccountNotExistException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
+import model.exceptions.NoTransactionException;
 import model.persons.BankManager;
 import model.persons.Loginable;
 import model.persons.User;
-import model.transactions.PayBillTransaction;
-import model.transactions.Transaction;
-import model.transactions.TransferTransaction;
-import model.Request;
+import model.transactions.*;
 
 import java.security.SecureRandom;
 import java.text.DateFormat;
@@ -28,13 +27,12 @@ public class BankSystem {
 	private Date currentTime;
 	private HashMap<String, Loginable> loginables;
 	private HashMap<String, Account> accounts;
-	private Loginable loggedIn;
 	private String recordFileName;
 	private ArrayList<Request> requests;
+	private BillController billController;
 
 	private static final String NUMBERS = "0123456789";  // for randomly generating accountId;
 	private static SecureRandom rnd = new SecureRandom(); // for randomly generating accountId;
-	private BillController billController;
 
 	/**
 	 * Constructs an instance of BankSystem.
@@ -42,13 +40,13 @@ public class BankSystem {
 	public BankSystem(String recordFileName) {
 		this.currentTime = new Date();
 
-		loggedIn = null;
-
 		this.loginables = new HashMap<>();
 		this.accounts = new HashMap<>();
 
 		this.recordFileName = recordFileName;
 		this.billController = new FileBillController(this);
+
+		this.requests = new ArrayList<>();
 
 		readRecordsFromFile();
 	}
@@ -116,6 +114,7 @@ public class BankSystem {
 
 	/**
 	 * Get the user or admin with `username`
+	 *
 	 * @param username the username of wanted person
 	 * @return a `Loginable` corresponding to that person, or null if not found
 	 */
@@ -202,9 +201,81 @@ public class BankSystem {
 		accounts.put(accountId, newAccount);
 	}
 
-	public void undoTransaction() {
-		//TODO
+	/**
+	 * Undo the input account's most recent transaction, except for paying bills.
+	 *
+	 * @param account the account that for undoing transaction
+	 * @throws NoTransactionException    when there is no transaction recorded for this account
+	 * @throws InvalidOperationException when certain invalid operation is done
+	 * @throws NoEnoughMoneyException    when the account taken money out does not have enough money
+	 */
+	public void undoTransaction(Account account) throws NoTransactionException,
+		InvalidOperationException, NoEnoughMoneyException {
+		Transaction lastTrans = account.getLastTrans();
+		if (lastTrans instanceof PayBillTransaction) {
+			throw new InvalidOperationException("Sorry, you cannot undo a transaction " +
+				"for paying bill.");
+		} else if (lastTrans instanceof TransferTransaction) {
+			undoTransfer((TransferTransaction) lastTrans);
+		} else if (lastTrans instanceof WithdrawTransaction) {
+			undoWithdraw((WithdrawTransaction) lastTrans);
+		} else if (lastTrans instanceof DepositTransaction) {
+			undoDeposit((DepositTransaction) lastTrans);
+		}
 	}
+
+	/**
+	 * Undo a transfer transaction. A helper function for undoTransaction.
+	 *
+	 * @param lastTrans the transaction that needs to be undone
+	 * @throws NoEnoughMoneyException    when the account taken money out does not have enough money
+	 * @throws InvalidOperationException when certain invalid operation is done
+	 */
+	private void undoTransfer(TransferTransaction lastTrans) throws NoEnoughMoneyException,
+		InvalidOperationException {
+		double amount = lastTrans.getAmount();
+		Account source = (lastTrans).getFromAcc();
+		Account destin = (lastTrans).getToAcc();
+		destin.takeMoneyOut(amount);
+		source.putMoneyIn(amount);
+		Transaction newTrans = new TransferTransaction(amount, getCurrentTime(), destin, source);
+		destin.addTrans(newTrans);
+		destin.getOwner().addTransaction(newTrans);
+		source.addTrans(newTrans);
+		source.getOwner().addTransaction(newTrans);
+	}
+
+	/**
+	 * Undo a withdraw transaction. A helper function for undoTransaction.
+	 *
+	 * @param lastTrans the transaction that needs to be undone
+	 */
+	private void undoWithdraw(WithdrawTransaction lastTrans) {
+		double amount = lastTrans.getAmount();
+		Account acc = (lastTrans).getAcc();
+		acc.putMoneyIn(amount);
+		Transaction newTrans = new DepositTransaction(amount, getCurrentTime(), acc);
+		acc.addTrans(newTrans);
+		acc.getOwner().addTransaction(newTrans);
+	}
+
+	/**
+	 * Undo a deposit transaction. A helper function for undoTransaction.
+	 *
+	 * @param lastTrans the transaction that needs to be undone
+	 * @throws NoEnoughMoneyException    when the account taken money out does not have enough money
+	 * @throws InvalidOperationException when certain invalid operation is done
+	 */
+	private void undoDeposit(DepositTransaction lastTrans) throws NoEnoughMoneyException,
+		InvalidOperationException {
+		double amount = lastTrans.getAmount();
+		Account acc = (lastTrans).getAcc();
+		acc.takeMoneyOut(amount);
+		Transaction newTrans = new WithdrawTransaction(amount, getCurrentTime(), acc);
+		acc.addTrans(newTrans);
+		acc.getOwner().addTransaction(newTrans);
+	}
+
 
 	/**
 	 * Transfer money from one account into another account.
@@ -234,7 +305,7 @@ public class BankSystem {
 
 		// add transaction record to both user
 		fromAcc.getOwner().addTransaction(newTrans);
-		if (! fromAcc.getOwner().equals(toAcc.getOwner())) {
+		if (!fromAcc.getOwner().equals(toAcc.getOwner())) {
 			toAcc.getOwner().addTransaction(newTrans);
 		}
 
@@ -264,12 +335,13 @@ public class BankSystem {
 		accounts.put(acc.getAccountId(), acc);
 	}
 
-	public void addLoginable(Loginable loginable){
+	public void addLoginable(Loginable loginable) {
 		loginables.put(loginable.getUsername(), loginable);
 	}
 
 	/**
 	 * Sets the bill controller for this bank system.
+	 *
 	 * @param billController the bill controller
 	 */
 	public void setBillController(BillController billController) {
@@ -278,6 +350,7 @@ public class BankSystem {
 
 	/**
 	 * Gets the bill controller for this bank system.
+	 *
 	 * @return the bill controller
 	 */
 	public BillController getBillController() {
@@ -286,10 +359,11 @@ public class BankSystem {
 
 	/**
 	 * Records payment of `amount` from `acc` to `destinationName`
-	 * @param acc the account to take money from
+	 *
+	 * @param acc       the account to take money from
 	 * @param payeeName the name of the payee
-	 * @param amount the amount of money
-	 * @throws NoEnoughMoneyException if `acc` does not have enough money to withdraw
+	 * @param amount    the amount of money
+	 * @throws NoEnoughMoneyException    if `acc` does not have enough money to withdraw
 	 * @throws InvalidOperationException
 	 */
 	public void payBill(Account acc, String payeeName, double amount)
