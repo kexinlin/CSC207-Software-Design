@@ -136,6 +136,7 @@ public class ATM {
 		}
 	}
 
+
 	/**
 	 * Check whether BankSystem has sufficient amount of bills for the user to withdraw from.
 	 *

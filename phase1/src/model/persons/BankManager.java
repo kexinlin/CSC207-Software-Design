@@ -1,15 +1,17 @@
 package model.persons;
 
 import controller.BankSystem;
+import model.Request;
 import model.exceptions.NoTransactionException;
 import model.accounts.*;
 import model.transactions.Transaction;
-
+import java.util.Queue;
+import java.util.LinkedList;
 
 public class BankManager implements Loginable {
 	private BankSystem bankSystem; // the view that this BankManager manages
 	private String password;
-
+	static private Queue<Request> Inbox = new LinkedList<>();	// stores all the requests from Users
 	private String managerName;
 
 
@@ -55,4 +57,19 @@ public class BankManager implements Loginable {
 		return true;
 	}
 
+	public static boolean addRequest(Request r){
+		Inbox.add(r);
+		return true;
+	}
+
+	/**
+	 * deal with the request in the queue/
+	 */
+	public void responseRequest(){
+		if (Inbox.peek() == null)
+			return; 	// no requests to do
+		Request r = Inbox.poll();
+		//System.out.println("Whether to create the account? Y/N?"); // Todo: change this in CL UI
+		this.bankSystem.createAccount(r);
+	}
 }

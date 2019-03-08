@@ -1,6 +1,7 @@
 package model.persons;
 
 import controller.BankSystem;
+import model.Request;
 import model.accounts.*;
 import model.exceptions.NoTransactionException;
 import model.transactions.Transaction;
@@ -108,6 +109,8 @@ public class User implements Loginable {
 	}
 
 
-	public void sendNewAccountRequest(String accounttype) {
+	public void sendNewAccountRequest(String accountType) {
+		Request r = new Request(this, accountType, "want to create account");	// ERROR!!
+		BankManager.addRequest(r);
 	}
 }
