@@ -2,15 +2,15 @@ package view.cmdline;
 
 import java.util.HashMap;
 
-public class HelpCmd {
-	HashMap<String, String> commandHelp;
-	CommandLineUI ui;
+class HelpCmd {
+	private HashMap<String, String> commandHelp;
+	private CommandLineUI ui;
 
 	/**
 	 * Constructs the help command
 	 * @param ui the ui to use
 	 */
-	public HelpCmd(CommandLineUI ui) {
+	HelpCmd(CommandLineUI ui) {
 		this.ui = ui;
 		commandHelp = new HashMap<>();
 

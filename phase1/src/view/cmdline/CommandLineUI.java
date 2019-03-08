@@ -7,13 +7,10 @@ import model.persons.BankManager;
 import model.persons.Loginable;
 import model.persons.User;
 import model.exceptions.AccountNotExistException;
-import model.exceptions.InvalidOperationException;
-import model.exceptions.NoEnoughMoneyException;
 import view.UI;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +23,9 @@ public class CommandLineUI implements UI {
 	private PrintStream error;
 	private ArrayList<Account> curAccounts;
 	private HelpCmd helpCmd;
+	private PersonsCmd personsCmd;
+	private AccountsCmd accountsCmd;
+	private TxCmd txCmd;
 
 	/**
 	 * Constructs a new Command Line UI.
@@ -46,6 +46,9 @@ public class CommandLineUI implements UI {
 		this.readPasswordFromConsole = readPasswordFromConsole;
 		this.curAccounts = new ArrayList<>();
 		this.helpCmd = new HelpCmd(this);
+		this.personsCmd = new PersonsCmd(this);
+		this.accountsCmd = new AccountsCmd(this);
+		this.txCmd = new TxCmd(this);
 	}
 
 	public InputStream getInput() {
@@ -60,11 +63,27 @@ public class CommandLineUI implements UI {
 		return error;
 	}
 
+	public BufferedReader getReader() {
+		return reader;
+	}
+
+	public ATM getATM() {
+		return machine;
+	}
+
+	public ArrayList<Account> getCurAccounts() {
+		return curAccounts;
+	}
+
+	public void setCurAccounts(ArrayList<Account> curAccounts) {
+		this.curAccounts = curAccounts;
+	}
+
 	/**
 	 * Gets the bank system for this UI.
 	 * @return the bank system.
 	 */
-	private BankSystem getBankSystem() {
+	BankSystem getBankSystem() {
 		return this.machine.getBankSystem();
 	}
 	/**
@@ -87,7 +106,7 @@ public class CommandLineUI implements UI {
 			}
 			switch (command) {
 				case "login":
-					login();
+					personsCmd.login();
 					break;
 
 				case "help":
@@ -99,26 +118,26 @@ public class CommandLineUI implements UI {
 
 				case "ls":
 					if (args.length() > 0) {
-						showAccount(args);
+						accountsCmd.showAccount(args);
 					} else {
-						listAccounts();
+						accountsCmd.listAccounts();
 					}
 					break;
 
 				case "mv":
-					moveMoney(args);
+					txCmd.moveMoney(args);
 					break;
 
 				case "passwd":
-					changePassword(args);
+					personsCmd.changePassword(args);
 					break;
 
 				case "deposit":
-					deposit(args);
+					txCmd.deposit(args, this);
 					break;
 
 				case "paybill":
-					payBill(args);
+					txCmd.payBill(args, this);
 					break;
 
 				default:
@@ -135,7 +154,7 @@ public class CommandLineUI implements UI {
 	 * @return the password we have read
 	 */
 
-	private String readPassword(String prompt) {
+	String readPassword(String prompt) {
 		String password;
 		Console console = System.console();
 		output.print(prompt);
@@ -156,30 +175,6 @@ public class CommandLineUI implements UI {
 			}
 		}
 		return password;
-	}
-
-	/**
-	 * Prompts the user to enter login info, then log in to the account.
-	 */
-	private void login() {
-		String username, password;
-		output.print("Enter username: ");
-		try {
-			username = reader.readLine();
-		} catch (IOException e) {
-			error.println("Cannot read username.");
-			return;
-		}
-		password = readPassword("Enter password: ");
-		if (password == null) {
-			error.println("Cannot read password.");
-			return;
-		}
-		if (machine.login(username, password)) {
-			output.println("Login successful.");
-		} else {
-			error.println("Login failed.");
-		}
 	}
 
 	/**
@@ -210,119 +205,17 @@ public class CommandLineUI implements UI {
 	}
 
 	/**
-	 * List accounts of current user.
-	 * Must log in as a user to use.
-	 */
-	private void listAccounts() {
-		User user = checkUserLogin();
-		if (user == null) {
-			return;
-		}
-
-		ArrayList<Account> accounts = user.getAccounts();
-		// to be thread-safe
-		curAccounts = accounts;
-
-		int i = 0;
-		output.println("Type & Order\tID\tBalance");
-		for (Account acc : accounts) {
-			String typeStr = getAccountType(acc);
-			// TODO cache the codes
-			output.println(typeStr + i + "\t\t"
-				+ acc.getAccountId() + "\t" + acc.getBalance());
-			++i;
-		}
-	}
-
-	/**
-	 * Gets the account type for `acc`
-	 * @param acc the account
-	 * @return the type of `acc`
-	 */
-	private String getAccountType(Account acc) {
-		HashMap<Class, String> nameMap = new HashMap<>();
-		nameMap.put(ChequingAccount.class, "chq");
-		nameMap.put(SavingAccount.class, "sav");
-		nameMap.put(CreditCardAccount.class, "cre");
-		nameMap.put(LineOfCreditAccount.class, "loc");
-		return nameMap.get(acc.getClass());
-	}
-
-	/**
-	 * Gets the information about a certain account
-	 * @param query the id or order of account
-	 */
-	private void showAccount(String query) {
-		User u = checkUserLogin();
-		if (u == null) {
-			return;
-		}
-		// TODO: should do acc id-order check
-		Account acc = searchAccount(query);
-		if (acc == null) {
-			error.println("No such account found.");
-			return;
-		}
-
-		output.println(acc.getAccountId() + ": " + getAccountType(acc)
-			+ ": " + acc.getBalance());
-	}
-
-	/**
-	 * Transfer money from one account to another.
-	 * @param args the arguments from the command line.
-	 */
-	private void moveMoney(String args) {
-		User user = checkUserLogin();
-		if (user == null) {
-			return;
-		}
-		String[] arr = args.split("\\s+", 3);
-		if (arr.length < 3) {
-			error.println("Not enough arguments. Type `help mv` for detailed usage.");
-			return;
-		}
-		Account source = searchAccount(arr[0]);
-		Account dest = searchAccount(arr[1]);
-		double amount = Double.valueOf(arr[2]);
-		if (source == null) {
-			error.println("Source account not found.");
-			return;
-		}
-		if (dest == null) {
-			error.println("Destination account not found.");
-			return;
-		}
-
-		// make sure the account belongs to the user
-		if (! source.getOwner().equals(user)) {
-			error.println("The source account must be yours.");
-			return;
-		}
-
-		// after all checking, do the transaction
-		try {
-			getBankSystem().transferMoney(source, dest, amount);
-			output.println("Transaction succeeded.");
-		} catch (InvalidOperationException e) {
-			error.println("Transaction failed. " + e);
-		} catch (NoEnoughMoneyException e) {
-			error.println("Transaction failed. " + e);
-		}
-	}
-
-	/**
 	 * Search for `query` in all accounts.
 	 * @param query Account ID. TODO add account code for searching
 	 * @return the account matches `query`.
 	 */
-	private Account searchAccount(String query) {
+	Account searchAccount(String query) {
 		Pattern regex = Pattern.compile("^([a-z]{3})(\\d+)$");
 		Matcher matcher = regex.matcher(query);
 		if (matcher.matches()) { // looks like a `type-order`
 			try {
 				Account acc = curAccounts.get(Integer.valueOf(matcher.group(2)));
-				if (getAccountType(acc).equals(matcher.group(1))) {
+				if (accountsCmd.getAccountType(acc).equals(matcher.group(1))) {
 					// we found it
 					return acc;
 				}
@@ -337,115 +230,4 @@ public class CommandLineUI implements UI {
 		}
 	}
 
-	/**
-	 * Change password for this person, or another person if the current
-	 * logged-in individual is a bank manager.
-	 */
-	private void changePassword(String username) {
-		Loginable loggedIn = machine.currentLoggedIn();
-		if (loggedIn == null) {
-			error.println("You are not logged in.");
-			return;
-		}
-		Loginable personToChangePassword = loggedIn;
-		if (username.length() > 0) {
-			personToChangePassword = getBankSystem().getLoginable(username);
-			if (personToChangePassword == null) {
-				error.println("No user named `" + username + "' exists.");
-				return;
-			}
-			// users can only change *their* password
-			if (loggedIn instanceof User
-				&& !username.equals(loggedIn.getUsername())) {
-				error.println("You cannot change other user's password.");
-				return;
-			}
-		}
-
-		String password = readPassword("Enter password: ");
-		if (password == null) {
-			error.println("Cannot read password.");
-			return;
-		}
-		String confPass = readPassword("Repeat password: ");
-		if (confPass == null) {
-			error.println("Cannot read password.");
-			return;
-		}
-
-		if (! password.equals(confPass)) {
-			error.println("Passwords do not match.");
-			return;
-		}
-
-		personToChangePassword.setPassword(password);
-		output.println("Password changed successfully.");
-	}
-
-	/**
-	 * Deposits the cash or cheque in the transactions file into the
-	 * account specified by `query`
-	 * @param query the query string for the account
-	 */
-	private void deposit(String query) {
-		User user = checkUserLogin();
-		if (user == null) {
-			return;
-		}
-		Account acc = searchAccount(query);
-		if (acc == null) {
-			error.println("No such account.");
-			return;
-		}
-		if (! user.equals(acc.getOwner())) {
-			error.println("You can only deposit into your own account.");
-			return;
-		}
-		try {
-			machine.getDepositController().depositMoney(acc);
-		} catch (InvalidOperationException e) {
-			error.println("Error making a deposit: " + e);
-			return;
-		}
-		output.println("Deposit successful.");
-	}
-
-	private void payBill(String args) {
-		User user = checkUserLogin();
-		if (user == null) {
-			return;
-		}
-
-		String[] d = args.split("\\s+");
-		if (d.length != 3) {
-			error.println("Error: wrong number of arguments.");
-			return;
-		}
-
-		Account acc = searchAccount(d[0]);
-		if (acc == null) {
-			error.println("Error: Account not found.");
-			return;
-		}
-		if (! user.equals(acc.getOwner())) {
-			error.println("Error: the account is not yours.");
-			return;
-		}
-		String payeeName = d[1];
-		double amount;
-		try {
-			amount = Double.valueOf(d[2]);
-		} catch (NumberFormatException e) {
-			error.println("Error: value is not valid.");
-			return;
-		}
-		try {
-			getBankSystem().payBill(acc, payeeName, amount);
-			output.println("Payment succeeded.");
-		} catch (NoEnoughMoneyException e) {
-			error.println("Error: Your account does not have enough money.");
-		} catch (InvalidOperationException e) {
-			error.println("Error: " + e);
-		}
-	}
 }
