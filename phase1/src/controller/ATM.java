@@ -85,6 +85,14 @@ public class ATM {
 	}
 
 	/**
+	 * Gets the bill amount in this ATM.
+	 * @return the bill amount.
+	 */
+	public HashMap<Cash, Integer> getBillAmount() {
+		return billAmount;
+	}
+
+	/**
 	 * Log in a user or admin.
 	 *
 	 * @param username the username of that person

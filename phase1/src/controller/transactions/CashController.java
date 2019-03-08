@@ -10,6 +10,7 @@ import model.transactions.DepositTransaction;
 import model.transactions.Transaction;
 import model.transactions.WithdrawTransaction;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import java.util.Map;
  */
 public class CashController {
 	private ATM machine;
+	private ArrayList<HashMap<Cash, Integer>>
 
 	/**
 	 * Constructs a cash controller.
@@ -25,6 +27,18 @@ public class CashController {
 	 */
 	public CashController(ATM atm) {
 		this.machine = atm;
+	}
+
+	private HashMap<Cash, Integer> getCashToWithdraw(double amount) {
+		HashMap<Cash, Integer> cashToWithdraw = new HashMap<>();
+		HashMap<Cash, Integer> cashPool = machine.getBillAmount();
+
+		Cash workingCashType = Cash.HUNDRED;
+
+		boolean running = true;
+		while (running) {
+			if (workingCashType.getNumVal() <= )
+		}
 	}
 
 	/**
