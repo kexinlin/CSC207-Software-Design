@@ -2,9 +2,7 @@ package controller;
 
 import controller.deposit.CashController;
 import model.*;
-import model.accounts.Account;
-import model.accounts.ChequingAccount;
-import model.accounts.CreditCardAccount;
+import model.accounts.*;
 import model.exceptions.AccountNotExistException;
 import model.exceptions.InsufficientCashException;
 import model.exceptions.InvalidOperationException;
@@ -16,6 +14,7 @@ import model.transactions.Transaction;
 import model.transactions.TransferTransaction;
 import model.transactions.WithdrawTransaction;
 
+import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,10 +22,14 @@ import java.util.*;
 
 public class BankSystem {
 	private Date currentTime;
-	private ArrayList<Loginable> loginables;
-	private ArrayList<Account> accounts;
+	private HashMap<String, Loginable> loginables;
+	private HashMap<String, Account> accounts;
 	private Loginable loggedIn;
 	private String recordFileName;
+	private ArrayList<Request> requests;
+
+	private static final String NUMBERS = "0123456789";  // for randomly generating accountId;
+	private static SecureRandom rnd = new SecureRandom(); // for randomly generating accountId;
 
 	/**
 	 * Constructs an instance of BankSystem.
@@ -36,8 +39,8 @@ public class BankSystem {
 
 		loggedIn = null;
 
-		this.loginables = new ArrayList<>();
-		this.accounts = new ArrayList<>();
+		this.loginables = new HashMap<>();
+		this.accounts = new HashMap<>();
 
 		this.recordFileName = recordFileName;
 
@@ -49,11 +52,11 @@ public class BankSystem {
 	 */
 	private void readRecordsFromFile() {
 		// FIXME replace this with actual file-reading
-		this.loginables.add(new BankManager(this, "mgr1", "lolol"));
+		this.loginables.put("mgr1", new BankManager(this, "mgr1", "lolol"));
 		User foobar = new User(this, "Foo Bar", "u1", "xxx");
 		Account chq = new ChequingAccount(0, new Date(), "127", foobar);
 		foobar.addAccount(chq);
-		this.loginables.add(foobar);
+		this.loginables.put("u1", foobar);
 
 	}
 
@@ -67,6 +70,7 @@ public class BankSystem {
 	public void close() {
 		saveRecordsToFile();
 	}
+
 	/**
 	 * Get current time of BankSystem.
 	 *
@@ -105,16 +109,95 @@ public class BankSystem {
 
 	/**
 	 * Get the user or admin with `username`
+	 *
 	 * @param username the username of wanted person
 	 * @return a `Loginable` corresponding to that person, or null if not found
 	 */
 	public Loginable getLoginable(String username) {
-		for (Loginable curPerson : loginables) {
-			if (curPerson.getUsername().equals(username)) {
-				return curPerson;
-			}
+		return loginables.getOrDefault(username, null);
+	}
+
+	/**
+	 * Create a new User and save into `this.loginables`.
+	 *
+	 * @param name     the name of the user
+	 * @param username the username of the user
+	 * @param password the password of the user
+	 * @throws InvalidOperationException when the username is already taken
+	 */
+	public void createUser(String name, String username, String password) throws InvalidOperationException {
+		if (this.loginables.containsKey(username)) {
+			throw new InvalidOperationException("Sorry, " +
+				"your username is already taken. Please try another one.");
 		}
-		return null;
+		User u = new User(this, name, username, password);
+
+		this.loginables.put(username, u);
+	}
+
+	/**
+	 * Randomly generate an `accountId`.
+	 *
+	 * @param length the length of the String generated
+	 * @return the generated String
+	 */
+	private String randomString(int length) {
+		StringBuilder stringbuilder = new StringBuilder(length);
+		do {
+			for (int i = 0; i < length; i++)
+				stringbuilder.append(NUMBERS.charAt(rnd.nextInt(NUMBERS.length())));
+			String temp = stringbuilder.toString();
+			boolean flag = !accounts.containsKey(temp);
+			if (flag)
+				break;
+		} while (true);
+		return stringbuilder.toString();
+	}
+
+	/**
+	 * @return a ArrayList that contain all the requests for creating accounts from User,
+	 * which haven't yet been verified by BankManager
+	 */
+	public ArrayList<Request> getRequests() {
+		return requests;
+	}
+
+
+	/**
+	 * Create an account based on the input Request.
+	 *
+	 * @param request a request from a User containing the information for creating an account,
+	 *                which has been verified by a BankManager.
+	 */
+	public void createAccount(Request request) {
+		User owner = request.getUser();
+		String accountType = request.getAccountType();
+		Account newAccount;
+
+		String accountId = randomString(6);   //generated randomly
+		switch (accountType) {
+			case "chq":
+				newAccount = new CreditCardAccount(0, getCurrentTime(), accountId, owner);
+				break;
+			case "sav":
+				newAccount = new SavingAccount(0, getCurrentTime(), accountId, owner);
+				break;
+			case "cre":
+				newAccount = new CreditCardAccount(0, getCurrentTime(), accountId, owner);
+				break;
+			case "loc":
+				newAccount = new LineOfCreditAccount(0, getCurrentTime(), accountId, owner);
+				break;
+			default:
+				newAccount = null;
+				break;
+		}
+		owner.addAccount(newAccount);
+		accounts.put(accountId, newAccount);
+	}
+
+	public void undoTransaction() {
+		//TODO
 	}
 
 	/**
@@ -157,20 +240,19 @@ public class BankSystem {
 	 * @throws AccountNotExistException when account with the input id is not found
 	 */
 	public Account getAccountById(String id) throws AccountNotExistException {
-		for (Account acc : accounts) {
-			if (acc.getAccountId().equals(id)) {
-				return acc;
-			}
+		if (!accounts.containsKey(id)) {
+			throw new AccountNotExistException("Sorry, can't find this account. " +
+				"Please check your account number again.");
 		}
-		throw new AccountNotExistException("Sorry, can't find this account. " +
-			"Please check your account number again.");
+		return accounts.get(id);
 	}
 
 	/**
 	 * Add the account `acc`
+	 *
 	 * @param acc the account to add
 	 */
 	public void addAccount(Account acc) {
-		accounts.add(acc);
+		accounts.put(acc.getAccountId(), acc);
 	}
 }

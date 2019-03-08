@@ -5,37 +5,32 @@ import model.exceptions.NoTransactionException;
 import model.accounts.*;
 import model.transactions.Transaction;
 
-import java.util.ArrayList;
-import java.security.SecureRandom;
-//import java.text.SimpleDateFormat;
 
 public class BankManager implements Loginable {
-	private ArrayList<User> users;    // stores all the users.
 	private BankSystem bankSystem; // the view that this BankManager manages
 	private String password;
 
+	private String managerName;
+
+
 	/**
 	 * Construct a BankManager
+	 *
 	 * @param bankSystem The BankSystem.
-	 * @param username The username of the bank manager
-	 * @param password the password of the bank manager
+	 * @param username   The username of the bank manager
+	 * @param password   the password of the bank manager
 	 */
 	public BankManager(BankSystem bankSystem, String username, String password) {
 		// TODO more secure way of storing password
 		this.bankSystem = bankSystem;
 		this.managerName = username;
 		this.setPassword(password);
-//		this.users = new ArrayList<User>();
 	}
-
-	private static final String NUMBERS = "0123456789";		// for random generates;
-	private static SecureRandom rnd = new SecureRandom();	// for random
-	private ArrayList<String> AccountIdDataBase; // stores all the Id number of accounts
-	private String managerName;
 
 
 	/**
 	 * Check if the password provided is the same as the one set for the user.
+	 *
 	 * @param password the password to check.
 	 * @return true if password matches, false otherwise.
 	 */
@@ -46,6 +41,7 @@ public class BankManager implements Loginable {
 
 	/**
 	 * Gets the username of this bank manager.
+	 *
 	 * @return the username of this bank manager.
 	 */
 	@Override
@@ -59,73 +55,4 @@ public class BankManager implements Loginable {
 		return true;
 	}
 
-	public User createUser(String name, String username, String password) {
-		User u = new User(bankSystem, name, username, password);
-
-		this.users.add(u);
-		return u;
-	}
-
-	public Object responseToRequest(String accountType, User owner) {
-		// input: Accept the request of creating the account or not
-		if (false)    // communicate with UI.!!!
-			return false;    // if not
-		else {
-			return createAccount(accountType, owner);
-		}
-	}
-
-	public Account createAccount(String accountType, User owner) {
-		String accountId = randomString(6);    //generated randomly??
-		switch (accountType) {
-			case "CreditCardAccount":
-				return new CreditCardAccount(0, bankSystem.getCurrentTime(), accountId, owner);
-
-			case "LineOfCreditAccount":
-				return new LineOfCreditAccount(0, bankSystem.getCurrentTime(), accountId, owner);
-
-			case "ChequingAccount":
-				return new ChequingAccount(0, bankSystem.getCurrentTime(), accountId, owner);
-
-			case "SavingAccount":
-				return new SavingAccount(0, bankSystem.getCurrentTime(), accountId, owner);
-
-			default:
-				return null;
-		}
-	}
-
-
-	private String randomString(int length){
-		StringBuilder stringbuilder = new StringBuilder(length);
-		do{
-			for(int i=0;i<length;i++)
-				stringbuilder.append(NUMBERS.charAt(rnd.nextInt(NUMBERS.length())));
-			String temp = stringbuilder.toString();
-			boolean flag = true;
-			for(String str: this.AccountIdDataBase){
-				if (str.equals(temp))
-					flag = false;
-			}
-			if (flag)
-				break;
-		}while (true);
-		this.AccountIdDataBase.add(stringbuilder.toString());
-		return stringbuilder.toString();
-	}
-
-	//public boolean restockMachine(BankSystem theATM, int denomination, int number){
-	//	return theATM.addCash(denomination, number);
-	//}
-
-	public void undoTransaction(Account account) throws NoTransactionException {
-		Transaction trans = account.getLastTrans();
-		// TODO: deal with money
-	}
-
-	public boolean setTime() {
-		//SimpleDateFormat dateForm = new SimpleDateFormat("Y/MM/dd HH:mm");
-		//view.currentTime = new Date();
-		return true;
-	}
 }
