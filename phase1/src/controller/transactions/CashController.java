@@ -19,7 +19,6 @@ import java.util.Map;
  */
 public class CashController {
 	private ATM machine;
-	private ArrayList<HashMap<Cash, Integer>>
 
 	/**
 	 * Constructs a cash controller.
@@ -39,6 +38,7 @@ public class CashController {
 		/*while (running) {
 			if (workingCashType.getNumVal() <= )
 		}*/
+		return cashToWithdraw;
 	}
 
 	/**
