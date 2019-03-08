@@ -100,9 +100,7 @@ public abstract class Account {
 	 *
 	 * @param amount the amount of money to put in
 	 */
-	public void putMoneyIn(double amount) {
-		this.balance += amount;
-	}
+	public abstract void putMoneyIn(double amount);
 
 
 	/**
@@ -115,7 +113,7 @@ public abstract class Account {
 	 * @param nonUserAccount a non-user account represented by a String
 	 * @param amount         the amount of bill
 	 */
-	public void payBill(String nonUserAccount, double amount) throws NoEnoughMoneyException{
+	public void payBill(String nonUserAccount, double amount) throws NoEnoughMoneyException {
 		Writer writer;
 
 		try {
@@ -166,6 +164,7 @@ public abstract class Account {
 	 * This value is 1 if a positive balance means the account holder
 	 * has money while a negative balance means the holder owes money.
 	 * It should be -1 otherwise.
+	 *
 	 * @return the balance factor of this account
 	 */
 	public abstract int balanceFactor();
