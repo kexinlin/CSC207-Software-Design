@@ -36,9 +36,9 @@ public class CashController {
 		Cash workingCashType = Cash.HUNDRED;
 
 		boolean running = true;
-		while (running) {
+		/*while (running) {
 			if (workingCashType.getNumVal() <= )
-		}
+		}*/
 	}
 
 	/**
