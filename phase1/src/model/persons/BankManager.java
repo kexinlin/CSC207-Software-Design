@@ -64,10 +64,12 @@ public class BankManager implements Loginable {
 
 	/**
 	 * deal with the request in the queue/
-	 * @return whether to create the account
 	 */
-	public boolean responseRequest(){
+	public void responseRequest(){
+		if (Inbox.peek() == null)
+			return; 	// no requests to do
+		Request r = Inbox.poll();
 		//System.out.println("Whether to create the account? Y/N?"); // Todo: change this in CL UI
-
+		this.bankSystem.createAccount(r);
 	}
 }
