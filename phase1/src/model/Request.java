@@ -17,7 +17,7 @@ public class Request {
 	 * @param accountType the type of account User wants to create
 	 * @param msg the message that the User sends to BankManager
 	 */
-	Request(User user, String accountType, String msg){
+	public Request(User user, String accountType, String msg){
 		this.user = user;
 		this.accountType = accountType;
 		this.msg = msg;
