@@ -154,6 +154,11 @@ public abstract class Account {
 		}
 	}
 
+	/**
+	 * Add a Transaction into `this.logs`.
+	 *
+	 * @param trans a Transaction by this User
+	 */
 	public void addTrans(Transaction trans) {
 		this.logs.add(trans);
 

@@ -2,7 +2,7 @@ package model.transactions;
 
 import java.util.Date;
 
-public class Transaction {
+public abstract class Transaction {
 	private double amount;
 	private Date transTime;
 
@@ -21,7 +21,4 @@ public class Transaction {
 		return amount;
 	}
 
-	public Date getTransTime() {
-		return transTime;
-	}
 }

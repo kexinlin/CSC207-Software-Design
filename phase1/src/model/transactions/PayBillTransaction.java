@@ -21,5 +21,7 @@ public class PayBillTransaction extends Transaction {
 		this.payeeName = payeeName;
 	}
 
-
+	public Account getSource() {
+		return source;
+	}
 }
