@@ -1,6 +1,7 @@
 package view;
 
 import controller.ATM;
+import controller.BankSystem;
 import model.accounts.*;
 import model.persons.BankManager;
 import model.persons.Loginable;
@@ -11,7 +12,6 @@ import model.exceptions.NoEnoughMoneyException;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,23 +27,34 @@ public class CommandLineUI implements UI {
 
 	/**
 	 * Constructs a new Command Line UI.
-	 * @param machine the ATM to handle
+	 * @param atm the machine to handle
 	 * @param input the input stream
 	 * @param output the output stream
 	 * @param error the error stream
 	 * @param readPasswordFromConsole whether to read password only from a console
 	 */
-	public CommandLineUI(ATM machine, InputStream input,
+	public CommandLineUI(ATM atm, InputStream input,
 						 PrintStream output, PrintStream error,
 						 boolean readPasswordFromConsole) {
-		this.machine = machine;
+		this.machine = atm;
 		this.input = input;
 		this.reader = new BufferedReader(new InputStreamReader(this.input));
 		this.output = output;
 		this.error = error;
 		this.readPasswordFromConsole = readPasswordFromConsole;
+		this.curAccounts = new ArrayList<>();
 	}
 
+	/**
+	 * Gets the bank system for this UI.
+	 * @return the bank system.
+	 */
+	private BankSystem getBankSystem() {
+		return this.machine.getBankSystem();
+	}
+	/**
+	 * Starts the main loop.
+	 */
 	public void mainLoop() {
 		output.println("Welcome. Please enter `help` for help, `exit` to quit.");
 		REPL:
@@ -52,7 +63,7 @@ public class CommandLineUI implements UI {
 			String command, args;
 			try {
 				String line = reader.readLine().trim();
-				String s[] = line.split("\\s", 2);
+				String[] s = line.split("\\s", 2);
 				command = s[0];
 				args = s.length == 1 ? "" : s[1];
 			} catch (IOException e) {
@@ -285,7 +296,7 @@ public class CommandLineUI implements UI {
 
 		// after all checking, do the transaction
 		try {
-			machine.transferMoney(source, dest, amount);
+			getBankSystem().transferMoney(source, dest, amount);
 			output.println("Transaction succeeded.");
 		} catch (InvalidOperationException e) {
 			error.println("Transaction failed. " + e);
@@ -314,7 +325,7 @@ public class CommandLineUI implements UI {
 			}
 		}
 		try {
-			return machine.getAccountById(query);
+			return getBankSystem().getAccountById(query);
 		} catch (AccountNotExistException e) {
 			return null;
 		}
@@ -332,7 +343,7 @@ public class CommandLineUI implements UI {
 		}
 		Loginable personToChangePassword = loggedIn;
 		if (username.length() > 0) {
-			personToChangePassword = machine.getLoginable(username);
+			personToChangePassword = getBankSystem().getLoginable(username);
 			if (personToChangePassword == null) {
 				error.println("No user named `" + username + "' exists.");
 				return;
@@ -386,10 +397,7 @@ public class CommandLineUI implements UI {
 			return;
 		}
 		try {
-			machine.depositMoney(acc);
-		} catch (IOException e) {
-			error.println("Cannot read deposit file.");
-			return;
+			machine.getDepositController().depositMoney(acc);
 		} catch (InvalidOperationException e) {
 			error.println("Error making a deposit: " + e);
 			return;

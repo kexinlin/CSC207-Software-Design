@@ -1,6 +1,6 @@
 package model.persons;
 
-import controller.ATM;
+import controller.BankSystem;
 import model.exceptions.NoTransactionException;
 import model.accounts.*;
 import model.transactions.Transaction;
@@ -11,18 +11,18 @@ import java.security.SecureRandom;
 
 public class BankManager implements Loginable {
 	private ArrayList<User> users;    // stores all the users.
-	private ATM atm; // the view that this BankManager manages
+	private BankSystem bankSystem; // the view that this BankManager manages
 	private String password;
 
 	/**
 	 * Construct a BankManager
-	 * @param atm The ATM.
+	 * @param bankSystem The BankSystem.
 	 * @param username The username of the bank manager
 	 * @param password the password of the bank manager
 	 */
-	public BankManager(ATM atm, String username, String password) {
+	public BankManager(BankSystem bankSystem, String username, String password) {
 		// TODO more secure way of storing password
-		this.atm = atm;
+		this.bankSystem = bankSystem;
 		this.managerName = username;
 		this.setPassword(password);
 //		this.users = new ArrayList<User>();
@@ -60,7 +60,7 @@ public class BankManager implements Loginable {
 	}
 
 	public User createUser(String name, String username, String password) {
-		User u = new User(atm, name, username, password);
+		User u = new User(bankSystem, name, username, password);
 
 		this.users.add(u);
 		return u;
@@ -79,16 +79,16 @@ public class BankManager implements Loginable {
 		String accountId = randomString(6);    //generated randomly??
 		switch (accountType) {
 			case "CreditCardAccount":
-				return new CreditCardAccount(0, atm.getCurrentTime(), accountId, owner);
+				return new CreditCardAccount(0, bankSystem.getCurrentTime(), accountId, owner);
 
 			case "LineOfCreditAccount":
-				return new LineOfCreditAccount(0, atm.getCurrentTime(), accountId, owner);
+				return new LineOfCreditAccount(0, bankSystem.getCurrentTime(), accountId, owner);
 
 			case "ChequingAccount":
-				return new ChequingAccount(0, atm.getCurrentTime(), accountId, owner);
+				return new ChequingAccount(0, bankSystem.getCurrentTime(), accountId, owner);
 
 			case "SavingAccount":
-				return new SavingAccount(0, atm.getCurrentTime(), accountId, owner);
+				return new SavingAccount(0, bankSystem.getCurrentTime(), accountId, owner);
 
 			default:
 				return null;
@@ -114,7 +114,7 @@ public class BankManager implements Loginable {
 		return stringbuilder.toString();
 	}
 
-	//public boolean restockMachine(ATM theATM, int denomination, int number){
+	//public boolean restockMachine(BankSystem theATM, int denomination, int number){
 	//	return theATM.addCash(denomination, number);
 	//}
 
