@@ -11,12 +11,11 @@ import model.accounts.LineOfCreditAccount;
 import model.exceptions.AccountNotExistException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
+import model.exceptions.NoTransactionException;
 import model.persons.BankManager;
 import model.persons.Loginable;
 import model.persons.User;
-import model.transactions.PayBillTransaction;
-import model.transactions.Transaction;
-import model.transactions.TransferTransaction;
+import model.transactions.*;
 
 import java.security.SecureRandom;
 import java.text.DateFormat;
@@ -203,9 +202,81 @@ public class BankSystem {
 		accounts.put(accountId, newAccount);
 	}
 
-	public void undoTransaction() {
-		//TODO
+	/**
+	 * Undo the input account's most recent transaction, except for paying bills.
+	 *
+	 * @param account the account that for undoing transaction
+	 * @throws NoTransactionException    when there is no transaction recorded for this account
+	 * @throws InvalidOperationException when certain invalid operation is done
+	 * @throws NoEnoughMoneyException    when the account taken money out does not have enough money
+	 */
+	public void undoTransaction(Account account) throws NoTransactionException,
+		InvalidOperationException, NoEnoughMoneyException {
+		Transaction lastTrans = account.getLastTrans();
+		if (lastTrans instanceof PayBillTransaction) {
+			throw new InvalidOperationException("Sorry, you cannot undo a transaction " +
+				"for paying bill.");
+		} else if (lastTrans instanceof TransferTransaction) {
+			undoTransfer((TransferTransaction) lastTrans);
+		} else if (lastTrans instanceof WithdrawTransaction) {
+			undoWithdraw((WithdrawTransaction) lastTrans);
+		} else if (lastTrans instanceof DepositTransaction) {
+			undoDeposit((DepositTransaction) lastTrans);
+		}
 	}
+
+	/**
+	 * Undo a transfer transaction. A helper function for undoTransaction.
+	 *
+	 * @param lastTrans the transaction that needs to be undone
+	 * @throws NoEnoughMoneyException    when the account taken money out does not have enough money
+	 * @throws InvalidOperationException when certain invalid operation is done
+	 */
+	private void undoTransfer(TransferTransaction lastTrans) throws NoEnoughMoneyException,
+		InvalidOperationException {
+		double amount = lastTrans.getAmount();
+		Account source = (lastTrans).getFromAcc();
+		Account destin = (lastTrans).getToAcc();
+		destin.takeMoneyOut(amount);
+		source.putMoneyIn(amount);
+		Transaction newTrans = new TransferTransaction(amount, getCurrentTime(), destin, source);
+		destin.addTrans(newTrans);
+		destin.getOwner().addTransaction(newTrans);
+		source.addTrans(newTrans);
+		source.getOwner().addTransaction(newTrans);
+	}
+
+	/**
+	 * Undo a withdraw transaction. A helper function for undoTransaction.
+	 *
+	 * @param lastTrans the transaction that needs to be undone
+	 */
+	private void undoWithdraw(WithdrawTransaction lastTrans) {
+		double amount = lastTrans.getAmount();
+		Account acc = (lastTrans).getAcc();
+		acc.putMoneyIn(amount);
+		Transaction newTrans = new DepositTransaction(amount, getCurrentTime(), acc);
+		acc.addTrans(newTrans);
+		acc.getOwner().addTransaction(newTrans);
+	}
+
+	/**
+	 * Undo a deposit transaction. A helper function for undoTransaction.
+	 *
+	 * @param lastTrans the transaction that needs to be undone
+	 * @throws NoEnoughMoneyException    when the account taken money out does not have enough money
+	 * @throws InvalidOperationException when certain invalid operation is done
+	 */
+	private void undoDeposit(DepositTransaction lastTrans) throws NoEnoughMoneyException,
+		InvalidOperationException {
+		double amount = lastTrans.getAmount();
+		Account acc = (lastTrans).getAcc();
+		acc.takeMoneyOut(amount);
+		Transaction newTrans = new WithdrawTransaction(amount, getCurrentTime(), acc);
+		acc.addTrans(newTrans);
+		acc.getOwner().addTransaction(newTrans);
+	}
+
 
 	/**
 	 * Transfer money from one account into another account.
