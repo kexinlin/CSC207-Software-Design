@@ -1,4 +1,8 @@
-package atm;
+package controller;
+
+import controller.ATM;
+import view.CommandLineUI;
+import view.UI;
 
 /**
  * The entrance to the whole program.

@@ -1,8 +1,13 @@
-package atm;
+package model.accounts;
+
+import model.exceptions.NoEnoughMoneyException;
+import model.persons.User;
 
 import java.util.Date;
 
 public class ChequingAccount extends AssetAccount {
+	private double maximumOverdraftLimit;
+	private double beforeOverdraftLimit;
 	/**
 	 * Create an instance of ChequingAccount
 	 *
@@ -13,6 +18,8 @@ public class ChequingAccount extends AssetAccount {
 	 */
 	public ChequingAccount(double balance, Date dateOfCreation, String accountId, User owner) {
 		super(balance, dateOfCreation, accountId, owner);
+		beforeOverdraftLimit = 0;
+		maximumOverdraftLimit = -100;
 	}
 
 
@@ -24,10 +31,10 @@ public class ChequingAccount extends AssetAccount {
 	 */
 	@Override
 	public void takeMoneyOut(double amount) throws NoEnoughMoneyException {
-		if (this.balance < 0) {
+		if (this.balance < this.beforeOverdraftLimit) {
 			throw new NoEnoughMoneyException("Sorry, operation failed. " +
 				"Your balance in this account is negative.");
-		} else if (this.balance - amount < -100) {
+		} else if (this.balance - amount < this.maximumOverdraftLimit) {
 			throw new NoEnoughMoneyException("Sorry, operation failed. " +
 				"Your balance cannot decrease below -$100.");
 		}

@@ -1,4 +1,7 @@
-package atm;
+package model.accounts;
+
+import model.exceptions.NoEnoughMoneyException;
+import model.persons.User;
 
 import java.util.Date;
 
@@ -18,7 +21,7 @@ public class LineOfCreditAccount extends DebtAccount {
 	}
 
 	@Override
-	public void payBill(String nonUserAccount, double amount) throws NoEnoughMoneyException{
+	public void payBill(String nonUserAccount, double amount) throws NoEnoughMoneyException {
 		this.balance += amount;
 		super.payBill(nonUserAccount, amount);
 	}

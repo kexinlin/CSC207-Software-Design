@@ -1,4 +1,4 @@
-package atm;
+package model.exceptions;
 
 public class NoEnoughMoneyException extends Exception {
 

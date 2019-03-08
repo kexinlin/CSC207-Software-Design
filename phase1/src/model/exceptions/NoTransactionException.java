@@ -1,4 +1,4 @@
-package atm;
+package model.exceptions;
 
 public class NoTransactionException extends Exception {
 	/**

@@ -1,4 +1,20 @@
-package atm;
+package controller;
+
+import model.*;
+import model.accounts.Account;
+import model.accounts.ChequingAccount;
+import model.accounts.CreditCardAccount;
+import model.exceptions.AccountNotExistException;
+import model.exceptions.InsufficientCashException;
+import model.exceptions.InvalidOperationException;
+import model.exceptions.NoEnoughMoneyException;
+import model.persons.BankManager;
+import model.persons.Loginable;
+import model.persons.User;
+import model.transactions.DepositTransaction;
+import model.transactions.Transaction;
+import model.transactions.TransferTransaction;
+import model.transactions.WithdrawTransaction;
 
 import java.io.*;
 
@@ -12,9 +28,10 @@ public class ATM {
 	private ArrayList<Loginable> loginables;
 	private ArrayList<Account> accounts;
 	private HashMap<Cash, Integer> billAmount;
-	private static final String DEPOSIT_FILE_NAME = "deposits.txt";
+	private String depositFileName = "deposits.txt";
 	private Loginable loggedIn;
 	private String recordFileName;
+	private CashController cashController;
 
 	/**
 	 * Constructs an instance of ATM.
@@ -22,11 +39,10 @@ public class ATM {
 	public ATM(String recordFileName) {
 		this.currentTime = new Date();
 		this.billAmount = new HashMap<>();
-		billAmount.put(Cash.FIVE, 0);
-		billAmount.put(Cash.TEN, 0);
-		billAmount.put(Cash.TWENTY, 0);
-		billAmount.put(Cash.FIFTY, 0);
-		billAmount.put(Cash.HUNDRED, 0);
+		// init the num of each kind of cash to zero
+		for (Cash x : Cash.values()) {
+			billAmount.put(x, 0);
+		}
 
 		loggedIn = null;
 
@@ -34,29 +50,54 @@ public class ATM {
 		this.accounts = new ArrayList<>();
 
 		this.recordFileName = recordFileName;
-		readRecordsFromFile();
-		/*int counter =0;
-		File x = new File("Desktop:..");
-		private Scanner x;
-		try{
-			x = new Scanner(x);
-		}
-		catch(Expection e){
-			System.out.println("could not find file");
-		}
 
-		while(x.hasNext()){
-		}
-*/
+		this.cashController = new CashController(this);
+		readRecordsFromFile();
+	}
+
+	/**
+	 * Sets the deposit file name.
+	 * @param depositFileName the file name to set to.
+	 */
+	public void setDepositFileName(String depositFileName) {
+		this.depositFileName = depositFileName;
+	}
+
+	/**
+	 * Gets the deposit file name.
+	 * @return the deposit file name.
+	 */
+	public String getDepositFileName() {
+		return depositFileName;
+	}
+
+	/**
+	 * Sets the cash controller for this atm.
+	 * @param cashController the cash controller to set.
+	 */
+	public void setCashController(CashController cashController) {
+		this.cashController = cashController;
+	}
+
+	/**
+	 * Gets the cash controller for this atm.
+	 * @return the cash controller.
+	 */
+	public CashController getCashController() {
+		return cashController;
 	}
 
 	/**
 	 * read records from file.
 	 */
 	private void readRecordsFromFile() {
-		// TODO
+		// FIXME replace this with actual file-reading
 		this.loginables.add(new BankManager(this, "mgr1", "lolol"));
-		this.loginables.add(new User(this, "Foo Bar", "u1", "xxx"));
+		User foobar = new User(this, "Foo Bar", "u1", "xxx");
+		Account chq = new ChequingAccount(0, new Date(), "127", foobar);
+		foobar.addAccount(chq);
+		this.loginables.add(foobar);
+
 	}
 
 	/**
@@ -107,7 +148,6 @@ public class ATM {
 
 	/**
 	 * Get the user or admin with `username`
-	 *
 	 * @param username the username of wanted person
 	 * @return a `Loginable` corresponding to that person, or null if not found
 	 */
@@ -144,47 +184,45 @@ public class ATM {
 	 * When this method is called, only the first line of the file will be read
 	 * that line of the input file should be formatted as either:
 	 * -------------------------------------------------------
-	 * cheque,<<accountId>>,<<amount of cheque (double)>>
+	 * cheque,<<amount of cheque (double)>>
 	 * -------------------------------------------------------
 	 * or
 	 * -----------------------------------------------------------------------------------------
-	 * cash,<<accountId>>,<<denomination>> <<num of bills>>,<<denomination>> <<num of bills>>
+	 * cash,<<denomination>> <<num of bills>>,<<denomination>> <<num of bills>>
 	 * -----------------------------------------------------------------------------------------
 	 * <p>
 	 * example for cheque deposit:
 	 * ----------------------------------
-	 * cheque,183774393138,1231.56
+	 * cheque,1231.56
 	 * ----------------------------------
 	 * <p>
 	 * example for cash deposit:
 	 * ------------------------------------------
-	 * cash,183017437813,5 10,20 3,100 6
+	 * cash,5 10,20 3,100 6
 	 * ------------------------------------------
 	 *
+	 * @param acc The account to deposit into.
 	 * @throws IOException               when file is deleted while reading or other IO problems
 	 * @throws InvalidOperationException when the format of data is incorrect
-	 * @throws AccountNotExistException  when the `accountId` does not exist
 	 */
-	public void depositMoney() throws IOException, InvalidOperationException,
-		AccountNotExistException {
+	public void depositMoney(Account acc)
+		throws IOException, InvalidOperationException {
 
-		File file = new File("." + File.separator + "phase1" + File.separator
-			+ DEPOSIT_FILE_NAME);
+		File file = new File(depositFileName);
 		BufferedReader br = new BufferedReader(new FileReader(file));
 
 		String st;
 		String[] data;
 		st = br.readLine(); // only read the first line of file
 
-		data = st.split(",");
-		if (data.length < 3) {
+		data = st.split(",", 2);
+		if (data.length < 2) {
 			throw new InvalidOperationException("Sorry, your deposit file is not in " +
 				"correct format.");
 		} else if (data[0].equals("cheque")) {
-			depositCheque(data);
-
+			depositCheque(acc, data[1]);
 		} else if (data[0].equals("cash")) {
-			depositCash(data);
+			depositCash(acc, data[1]);
 		} else {
 			throw new InvalidOperationException("Sorry, your deposit file is not in " +
 				"correct format.");
@@ -196,22 +234,14 @@ public class ATM {
 	 * Given a String array storing information of accountId and amount of cheque, increase
 	 * balance of account
 	 *
-	 * @param data a String array storing information of accountId and amount of cheque
+	 * @param acc The account to deposit into.
+	 * @param data a String storing information of accountId and amount of cheque.
 	 * @throws InvalidOperationException when the format of data is incorrect
-	 * @throws AccountNotExistException  when the `accountId` does not exist
 	 */
-	private void depositCheque(String[] data) throws InvalidOperationException,
-		AccountNotExistException {
-		String accId;
-		if (data.length != 3) {
-			throw new InvalidOperationException("Sorry, your deposit file is not in " +
-				"correct format.");
-		}
-		accId = data[1];
-		Account acc = getAccountById(accId);
+	private void depositCheque(Account acc, String data) throws InvalidOperationException {
 		double amount;
 		try {
-			amount = Double.valueOf(data[2]);
+			amount = Double.valueOf(data);
 		} catch (NumberFormatException e) {
 			throw new InvalidOperationException("Sorry, " +
 				"your deposit file is not in correct format.");
@@ -228,51 +258,13 @@ public class ATM {
 	 * Given a String array storing information of accountId and number of bills, stock
 	 * corresponding cash into ATM and increase balance of account
 	 *
+	 * @param acc the account to deposit into.
 	 * @param data a String array storing information of accountId and number of bills
 	 * @throws InvalidOperationException when the format of data is incorrect
-	 * @throws AccountNotExistException  when the `accountId` does not exist
 	 */
-	private void depositCash(String[] data) throws InvalidOperationException, AccountNotExistException {
-		String accId = data[1];
-		Account acc = getAccountById(accId);
-		HashMap<Cash, Integer> numOfBill = new HashMap<>();
-		for (String valPair : Arrays.copyOfRange(data, 2, data.length - 1)) {
-			String[] valData = valPair.split("\\s+");
-			if (valData.length != 2) {
-				throw new InvalidOperationException("Sorry, your deposit file is " +
-					"not in correct format.");
-			}
-			String denominationStr = valData[0];
-			Cash bill;
-			int billNum;
-			try {
-				billNum = Integer.valueOf(valData[1]);
-			} catch (NumberFormatException e) {
-				throw new InvalidOperationException("Sorry, your deposit file is " +
-					"not in correct format.");
-			}
-			switch (denominationStr) {
-				case "5":
-					bill = Cash.FIVE;
-					break;
-				case "10":
-					bill = Cash.TEN;
-					break;
-				case "20":
-					bill = Cash.TWENTY;
-					break;
-				case "50":
-					bill = Cash.FIFTY;
-					break;
-				case "100":
-					bill = Cash.HUNDRED;
-					break;
-				default:
-					throw new InvalidOperationException("Sorry, the bill denomination" +
-						" in your input file does not exist.");
-			}
-			numOfBill.put(bill, numOfBill.get(bill) + billNum);
-		}
+	private void depositCash(Account acc, String data)
+		throws InvalidOperationException {
+		HashMap<Cash, Integer> numOfBill = cashController.getCashMapForDeposit(data);
 		stockCash(numOfBill);
 
 		int amount = calculateTotalBillAmount(numOfBill);
@@ -398,8 +390,8 @@ public class ATM {
 		}
 	}
 
-	public void addCash(HashMap<Cash, Integer> amountAdd) {
-		//	for(Cash cash: amountAdd.keySet())
+	public void addCash(HashMap<Cash, Integer> amountAdd){
+	//	for(Cash cash: amountAdd.keySet())
 	}
 
 	/**
@@ -427,7 +419,7 @@ public class ATM {
 	 * @return Account object corresponding to the input Account id.
 	 * @throws AccountNotExistException when account with the input id is not found
 	 */
-	Account getAccountById(String id) throws AccountNotExistException {
+	public Account getAccountById(String id) throws AccountNotExistException {
 		for (Account acc : accounts) {
 			if (acc.getAccountId().equals(id)) {
 				return acc;
@@ -437,5 +429,11 @@ public class ATM {
 			"Please check your account number again.");
 	}
 
-
+	/**
+	 * Add the account `acc`
+	 * @param acc the account to add
+	 */
+	public void addAccount(Account acc) {
+		accounts.add(acc);
+	}
 }

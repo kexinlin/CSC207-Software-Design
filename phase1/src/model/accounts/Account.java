@@ -1,4 +1,11 @@
-package atm;
+package model.accounts;
+
+import controller.ATM;
+import model.exceptions.InvalidOperationException;
+import model.exceptions.NoEnoughMoneyException;
+import model.exceptions.NoTransactionException;
+import model.transactions.Transaction;
+import model.persons.User;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -154,4 +161,12 @@ public abstract class Account {
 
 	}
 
+	/**
+	 * Return the balance factor for this account.
+	 * This value is 1 if a positive balance means the account holder
+	 * has money while a negative balance means the holder owes money.
+	 * It should be -1 otherwise.
+	 * @return the balance factor of this account
+	 */
+	public abstract int balanceFactor();
 }

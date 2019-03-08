@@ -1,4 +1,7 @@
-package atm;
+package model.accounts;
+
+import model.exceptions.NoEnoughMoneyException;
+import model.persons.User;
 
 import java.util.Date;
 

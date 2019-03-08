@@ -1,35 +1,26 @@
-package atm;
+package model.persons;
+
+import controller.ATM;
+import model.accounts.*;
+import model.exceptions.NoTransactionException;
+import model.transactions.Transaction;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Stack;
 
 public class User implements Loginable {
-	public String name;
-
-	public String username;
-
+	private String name;
+	private String username;
+	private ATM machine;
 	private String password;
-
-	private ArrayList<CreditCardAccount> creditcards = new ArrayList<CreditCardAccount>();
-
-	private ArrayList<ChequingAccount> chequing = new ArrayList<>();
-
-	private ArrayList<LineOfCreditAccount> lineofcredit = new ArrayList<LineOfCreditAccount>();
-
-	private ArrayList<SavingAccount> savings = new ArrayList<SavingAccount>();
-
-	private ArrayList<Account> allAccount = new ArrayList<Account>();
-
-	private ChequingAccount primaryaccount;
-
-	public Date date;
-
+	private ArrayList<Account> accounts = new ArrayList<>();
+	private ChequingAccount primaryAccount;
+	private Date date;
 	private ArrayList<Transaction> transactions = new ArrayList<>();
 
 
 	public User(ATM atm, String name, String username, String password) {
-
+		this.machine = atm;
 		this.name = name;
 		this.username = username;
 		this.password = password;
@@ -37,10 +28,6 @@ public class User implements Loginable {
 
 	public String getUsername() {
 		return this.username;
-	}
-
-	public String getPassword() {
-		return password;
 	}
 
 	/**
@@ -51,8 +38,7 @@ public class User implements Loginable {
 	 */
 	@Override
 	public boolean verifyPassword(String password) {
-		return this.password.equals(password); // Can I change like this?
-		//return false;
+		return this.password.equals(password);
 	}
 
 
@@ -67,22 +53,14 @@ public class User implements Loginable {
 	}
 
 
+	/**
+	 * Gets the net balance of this user
+	 * @return net balance
+	 */
 	public double getNetTotal() {
-
-		double total = 0;
-		for (CreditCardAccount acc : creditcards) {
-			total -= acc.getBalance();
-		}
-		for (ChequingAccount acc : chequing) {
-			total += acc.getBalance();
-		}
-		for (LineOfCreditAccount acc : lineofcredit) {
-			total -= acc.getBalance();
-		}
-		for (SavingAccount acc : savings) {
-			total += acc.getBalance();
-		}
-		return total;
+		return accounts.stream()
+			.mapToDouble(acc -> acc.getBalance() * acc.balanceFactor())
+			.sum();
 	}
 
 
@@ -92,29 +70,12 @@ public class User implements Loginable {
 
 
 	/**
-	 * return specific account by entering accountid
-	 *
-	 * @param accountId
-	 * @return
-	 */
-	public Account getAccount(String accountId) {
-
-		for (Account acc : allAccount) {
-			if (acc.getAccountId().equals(accountId)) {
-				return acc;
-			}
-		}
-		return null;
-	}
-
-
-	/**
 	 * return all available accounts
 	 *
 	 * @return
 	 */
 	public ArrayList<Account> getAccounts() {
-		return allAccount;
+		return accounts;
 	}
 
 	public boolean logEmpty() {
@@ -130,25 +91,13 @@ public class User implements Loginable {
 	}
 
 	public void setPrimaryCheuqingAccount(ChequingAccount acc) {
-		this.primaryaccount = acc;
+		this.primaryAccount = acc;
 	}
 
-	public void addAccount(ChequingAccount acc) {
-		this.chequing.add(acc);
+	public void addAccount(Account acc) {
+		this.accounts.add(acc);
+		this.machine.addAccount(acc);
 	}
-
-	public void addAccount(SavingAccount acc) {
-		this.savings.add(acc);
-	}
-
-	public void addAccount(LineOfCreditAccount acc) {
-		this.lineofcredit.add(acc);
-	}
-
-	public void addAccount(CreditCardAccount acc) {
-		this.creditcards.add(acc);
-	}
-
 
 	/**
 	 * Save transaction t to the last index of transactions.

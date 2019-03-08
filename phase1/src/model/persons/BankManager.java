@@ -1,13 +1,17 @@
-package atm;
+package model.persons;
+
+import controller.ATM;
+import model.exceptions.NoTransactionException;
+import model.accounts.*;
+import model.transactions.Transaction;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.security.SecureRandom;
 //import java.text.SimpleDateFormat;
 
 public class BankManager implements Loginable {
 	private ArrayList<User> users;    // stores all the users.
-	private ATM atm; // the atm that this BankManager manages
+	private ATM atm; // the view that this BankManager manages
 	private String password;
 
 	/**
@@ -121,7 +125,7 @@ public class BankManager implements Loginable {
 
 	public boolean setTime() {
 		//SimpleDateFormat dateForm = new SimpleDateFormat("Y/MM/dd HH:mm");
-		//atm.currentTime = new Date();
+		//view.currentTime = new Date();
 		return true;
 	}
 }
