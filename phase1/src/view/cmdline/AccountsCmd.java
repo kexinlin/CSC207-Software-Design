@@ -40,6 +40,8 @@ public class AccountsCmd {
 				+ acc.getAccountId() + "\t" + acc.getBalance());
 			++i;
 		}
+		ui.getOutput().println("\n" +
+			"Summary -- Net Total: " + user.getNetTotal());
 	}
 
 	/**
@@ -72,6 +74,7 @@ public class AccountsCmd {
 			return;
 		}
 
+		ui.getOutput().println("Acc Id\tType\tBalance");
 		ui.getOutput().println(acc.getAccountId() + ": " + getAccountType(acc)
 			+ ": " + acc.getBalance());
 	}

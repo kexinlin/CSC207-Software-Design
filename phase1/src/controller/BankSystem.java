@@ -58,11 +58,13 @@ public class BankSystem {
 		// FIXME replace this with actual file-reading
 		this.loginables.put("mgr1", new BankManager(this, "mgr1", "lolol"));
 		User foobar = new User(this, "Foo Bar", "u1", "xxx");
-		Account chq = new ChequingAccount(0, new Date(), "127", foobar);
+		Account chq = new ChequingAccount(50, new Date(), "127", foobar);
+		Account cred = new CreditCardAccount(20, new Date(), "939", foobar);
 		foobar.addAccount(chq);
+		foobar.addAccount(cred);
 		this.addLoginable(foobar);
 		this.addAccount(chq);
-
+		this.addAccount(cred);
 	}
 
 	/**
