@@ -1,6 +1,7 @@
 package view;
 
 import controller.ATM;
+import controller.BankSystem;
 import model.accounts.Account;
 import model.persons.User;
 import model.exceptions.AccountNotExistException;
@@ -18,6 +19,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class CommandLineUITest {
+	BankSystem sys;
 	ATM machine;
 	InputStream input;
 	PrintStream output;
@@ -27,6 +29,7 @@ public class CommandLineUITest {
 	@Before
 	public void setUp() {
 		machine = mock(ATM.class);
+		sys = mock(BankSystem.class);
 		input = mock(InputStream.class);
 		output = mock(PrintStream.class);
 		errStream = new ByteArrayOutputStream();
@@ -91,8 +94,8 @@ public class CommandLineUITest {
 		when(dest.getAccountId()).thenReturn("8b");
 		when(dest.getOwner()).thenReturn(u);
 
-		when(machine.getAccountById("0a")).thenReturn(source);
-		when(machine.getAccountById("8b")).thenReturn(dest);
+		when(sys.getAccountById("0a")).thenReturn(source);
+		when(sys.getAccountById("8b")).thenReturn(dest);
 
 		doAnswer(
 			x -> {
@@ -105,7 +108,7 @@ public class CommandLineUITest {
 				}
 				return null;
 			})
-			.when(machine).transferMoney(any(Account.class), any(Account.class), anyDouble());
+			.when(sys).transferMoney(any(Account.class), any(Account.class), anyDouble());
 
 		input = new ByteArrayInputStream("mv 0a 8b 20\nexit\n".getBytes());
 

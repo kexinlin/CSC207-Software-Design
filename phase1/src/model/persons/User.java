@@ -1,6 +1,6 @@
 package model.persons;
 
-import controller.ATM;
+import controller.BankSystem;
 import model.accounts.*;
 import model.exceptions.NoTransactionException;
 import model.transactions.Transaction;
@@ -11,7 +11,7 @@ import java.util.Date;
 public class User implements Loginable {
 	private String name;
 	private String username;
-	private ATM machine;
+	private BankSystem machine;
 	private String password;
 	private ArrayList<Account> accounts = new ArrayList<>();
 	private ChequingAccount primaryAccount;
@@ -19,8 +19,8 @@ public class User implements Loginable {
 	private ArrayList<Transaction> transactions = new ArrayList<>();
 
 
-	public User(ATM atm, String name, String username, String password) {
-		this.machine = atm;
+	public User(BankSystem bankSystem, String name, String username, String password) {
+		this.machine = bankSystem;
 		this.name = name;
 		this.username = username;
 		this.password = password;

@@ -1,6 +1,5 @@
 package controller;
 
-import controller.ATM;
 import view.CommandLineUI;
 import view.UI;
 
@@ -10,13 +9,14 @@ import view.UI;
 public class Main {
 	public static void main(String[] args) {
 		String recordFileName = "data/records";
-		ATM m = new ATM(recordFileName);
-		UI ui = new CommandLineUI(m,
+		BankSystem sys = new BankSystem(recordFileName);
+		ATM atm = new ATM(sys);
+		UI ui = new CommandLineUI(atm,
 			System.in,
 			System.out,
 			System.err,
 			false);
 		ui.mainLoop();
-		m.close();
+		sys.close();
 	}
 }

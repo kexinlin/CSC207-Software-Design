@@ -1,6 +1,6 @@
 package model.accounts;
 
-import controller.ATM;
+import controller.BankSystem;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
 import model.exceptions.NoTransactionException;
@@ -24,7 +24,7 @@ public abstract class Account {
 	private String accountId;
 	private User owner;
 	private ArrayList<Transaction> logs;
-	private ATM atm;
+	private BankSystem bankSystem;
 	private static final String PAY_BILL_FILE_NAME = "outgoing.txt";
 
 	/**
@@ -122,7 +122,7 @@ public abstract class Account {
 			writer = new BufferedWriter(new OutputStreamWriter(
 				new FileOutputStream("." + File.separator + "phase1" + File.separator
 					+ PAY_BILL_FILE_NAME), StandardCharsets.UTF_8));
-			String timeStr = atm.getCurrentTimeStr();
+			String timeStr = bankSystem.getCurrentTimeStr();
 			writer.write(String.join(",", this.accountId, this.owner.getUsername(),
 				nonUserAccount, String.valueOf(amount), timeStr));
 			writer.close();
