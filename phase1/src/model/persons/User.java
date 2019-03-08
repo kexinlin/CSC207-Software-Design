@@ -96,7 +96,6 @@ public class User implements Loginable {
 
 	public void addAccount(Account acc) {
 		this.accounts.add(acc);
-		this.machine.addAccount(acc);
 	}
 
 	/**

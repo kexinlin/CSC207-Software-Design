@@ -1,4 +1,4 @@
-package controller.deposit;
+package controller.transactions;
 
 import controller.ATM;
 import model.Cash;
@@ -39,7 +39,7 @@ public class FileDepositController implements DepositController {
 	}
 
 	/**
-	 * Sets the deposit file name.
+	 * Sets the transactions file name.
 	 * @param depositFileName the file name to set to.
 	 */
 	public void setDepositFileName(String depositFileName) {
@@ -47,8 +47,8 @@ public class FileDepositController implements DepositController {
 	}
 
 	/**
-	 * Gets the deposit file name.
-	 * @return the deposit file name.
+	 * Gets the transactions file name.
+	 * @return the transactions file name.
 	 */
 	public String getDepositFileName() {
 		return depositFileName;
@@ -68,17 +68,17 @@ public class FileDepositController implements DepositController {
 	 * cash,<<denomination>> <<num of bills>>,<<denomination>> <<num of bills>>
 	 * -----------------------------------------------------------------------------------------
 	 * <p>
-	 * example for cheque deposit:
+	 * example for cheque transactions:
 	 * ----------------------------------
 	 * cheque,1231.56
 	 * ----------------------------------
 	 * <p>
-	 * example for cash deposit:
+	 * example for cash transactions:
 	 * ------------------------------------------
 	 * cash,5 10,20 3,100 6
 	 * ------------------------------------------
 	 *
-	 * @param acc The account to deposit into.
+	 * @param acc The account to transactions into.
 	 * @throws InvalidOperationException when the format of data is incorrect
 	 */
 	@Override
@@ -93,7 +93,7 @@ public class FileDepositController implements DepositController {
 	}
 	/**
 	 * Gets a hash map for how many bills of each type are being deposited
-	 * @param data a String read from the deposit file.
+	 * @param data a String read from the transactions file.
 	 * @return a hash map with Key=type-of-cash and Value=number-of-that-type
 	 * @throws InvalidOperationException
 	 */
@@ -172,7 +172,7 @@ public class FileDepositController implements DepositController {
 
 			data = st.split(",", 2);
 			if (data.length < 2) {
-				throw new InvalidOperationException("Sorry, your deposit file is not in " +
+				throw new InvalidOperationException("Sorry, your transactions file is not in " +
 					"correct format.");
 			} else if (data[0].equals("cash")) {
 				return new DepositInfo(getCashMapForDeposit(data[1]));
@@ -182,15 +182,15 @@ public class FileDepositController implements DepositController {
 					amount = Double.valueOf(data[1]);
 				} catch (NumberFormatException e) {
 					throw new InvalidOperationException("Sorry, " +
-						"your deposit file is not in correct format.");
+						"your transactions file is not in correct format.");
 				}
 				return new DepositInfo(amount);
 			} else {
-				throw new InvalidOperationException("Sorry, your deposit file is not in " +
+				throw new InvalidOperationException("Sorry, your transactions file is not in " +
 					"correct format.");
 			}
 		} catch (IOException e) {
-			throw new InvalidOperationException("Cannot read deposit file.");
+			throw new InvalidOperationException("Cannot read transactions file.");
 		}
 	}
 

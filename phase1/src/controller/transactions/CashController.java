@@ -1,7 +1,6 @@
-package controller.deposit;
+package controller.transactions;
 
 import controller.ATM;
-import controller.BankSystem;
 import model.Cash;
 import model.accounts.Account;
 import model.exceptions.InsufficientCashException;
@@ -75,7 +74,7 @@ public class CashController {
 	 * Given a String array storing information of accountId and number of bills, stock
 	 * corresponding cash into BankSystem and increase balance of account
 	 *
-	 * @param acc the account to deposit into.
+	 * @param acc the account to transactions into.
 	 * @param numOfBill a HashMap storing information of accountId and number of bills
 	 */
 	public void depositCash(Account acc, HashMap<Cash, Integer> numOfBill) {

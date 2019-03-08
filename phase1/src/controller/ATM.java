@@ -1,21 +1,13 @@
 package controller;
 
-import controller.deposit.CashController;
-import controller.deposit.ChequeController;
-import controller.deposit.DepositController;
-import controller.deposit.FileDepositController;
+import controller.transactions.CashController;
+import controller.transactions.ChequeController;
+import controller.transactions.DepositController;
+import controller.transactions.FileDepositController;
 import model.Cash;
-import model.accounts.Account;
 import model.exceptions.InsufficientCashException;
-import model.exceptions.InvalidOperationException;
-import model.exceptions.NoEnoughMoneyException;
 import model.persons.Loginable;
-import model.transactions.DepositTransaction;
-import model.transactions.Transaction;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,16 +69,16 @@ public class ATM {
 	}
 
 	/**
-	 * Gets the deposit controller for this atm.
-	 * @return the deposit controller.
+	 * Gets the transactions controller for this atm.
+	 * @return the transactions controller.
 	 */
 	public DepositController getDepositController() {
 		return depositController;
 	}
 
 	/**
-	 * Sets the deposit controller for this atm.
-	 * @param depositController the deposit controller.
+	 * Sets the transactions controller for this atm.
+	 * @param depositController the transactions controller.
 	 */
 	public void setDepositController(DepositController depositController) {
 		this.depositController = depositController;

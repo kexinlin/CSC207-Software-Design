@@ -1,4 +1,4 @@
-package view;
+package view.cmdline;
 
 import controller.ATM;
 import controller.BankSystem;
@@ -9,6 +9,7 @@ import model.persons.User;
 import model.exceptions.AccountNotExistException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
+import view.UI;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -100,6 +101,10 @@ public class CommandLineUI implements UI {
 
 				case "deposit":
 					deposit(args);
+					break;
+
+				case "paybill":
+					payBill(args);
 					break;
 
 				default:
@@ -377,14 +382,13 @@ public class CommandLineUI implements UI {
 	}
 
 	/**
-	 * Deposits the cash or cheque in the deposit file into the
+	 * Deposits the cash or cheque in the transactions file into the
 	 * account specified by `query`
 	 * @param query the query string for the account
 	 */
 	private void deposit(String query) {
 		User user = checkUserLogin();
 		if (user == null) {
-			error.println("You are not logged in.");
 			return;
 		}
 		Account acc = searchAccount(query);
@@ -403,5 +407,44 @@ public class CommandLineUI implements UI {
 			return;
 		}
 		output.println("Deposit successful.");
+	}
+
+	private void payBill(String args) {
+		User user = checkUserLogin();
+		if (user == null) {
+			return;
+		}
+
+		String[] d = args.split("\\s+");
+		if (d.length != 3) {
+			error.println("Error: wrong number of arguments.");
+			return;
+		}
+
+		Account acc = searchAccount(d[0]);
+		if (acc == null) {
+			error.println("Error: Account not found.");
+			return;
+		}
+		if (! user.equals(acc.getOwner())) {
+			error.println("Error: the account is not yours.");
+			return;
+		}
+		String payeeName = d[1];
+		double amount;
+		try {
+			amount = Double.valueOf(d[2]);
+		} catch (NumberFormatException e) {
+			error.println("Error: value is not valid.");
+			return;
+		}
+		try {
+			getBankSystem().payBill(acc, payeeName, amount);
+			output.println("Payment succeeded.");
+		} catch (NoEnoughMoneyException e) {
+			error.println("Error: Your account does not have enough money.");
+		} catch (InvalidOperationException e) {
+			error.println("Error: " + e);
+		}
 	}
 }

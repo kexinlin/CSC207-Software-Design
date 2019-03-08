@@ -9,6 +9,7 @@ import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
 import org.junit.Before;
 import org.junit.Test;
+import view.cmdline.CommandLineUI;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

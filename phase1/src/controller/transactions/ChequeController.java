@@ -1,4 +1,4 @@
-package controller.deposit;
+package controller.transactions;
 
 import controller.ATM;
 import model.accounts.Account;
@@ -15,7 +15,7 @@ public class ChequeController {
 	 * Given a String array storing information of accountId and amount of cheque, increase
 	 * balance of account
 	 *
-	 * @param acc The account to deposit into.
+	 * @param acc The account to transactions into.
 	 * @param amount amount of cheque.
 	 */
 	public void depositCheque(Account acc, double amount) {
