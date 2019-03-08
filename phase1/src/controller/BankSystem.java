@@ -1,5 +1,6 @@
 package controller;
 
+import model.Request;
 import controller.transactions.BillController;
 import controller.transactions.FileBillController;
 import model.accounts.Account;
@@ -16,7 +17,6 @@ import model.persons.User;
 import model.transactions.PayBillTransaction;
 import model.transactions.Transaction;
 import model.transactions.TransferTransaction;
-import model.Request;
 
 import java.security.SecureRandom;
 import java.text.DateFormat;
@@ -31,10 +31,10 @@ public class BankSystem {
 	private Loginable loggedIn;
 	private String recordFileName;
 	private ArrayList<Request> requests;
+	private BillController billController;
 
 	private static final String NUMBERS = "0123456789";  // for randomly generating accountId;
 	private static SecureRandom rnd = new SecureRandom(); // for randomly generating accountId;
-	private BillController billController;
 
 	/**
 	 * Constructs an instance of BankSystem.
@@ -116,6 +116,7 @@ public class BankSystem {
 
 	/**
 	 * Get the user or admin with `username`
+	 *
 	 * @param username the username of wanted person
 	 * @return a `Loginable` corresponding to that person, or null if not found
 	 */
@@ -234,7 +235,7 @@ public class BankSystem {
 
 		// add transaction record to both user
 		fromAcc.getOwner().addTransaction(newTrans);
-		if (! fromAcc.getOwner().equals(toAcc.getOwner())) {
+		if (!fromAcc.getOwner().equals(toAcc.getOwner())) {
 			toAcc.getOwner().addTransaction(newTrans);
 		}
 
@@ -264,12 +265,13 @@ public class BankSystem {
 		accounts.put(acc.getAccountId(), acc);
 	}
 
-	public void addLoginable(Loginable loginable){
+	public void addLoginable(Loginable loginable) {
 		loginables.put(loginable.getUsername(), loginable);
 	}
 
 	/**
 	 * Sets the bill controller for this bank system.
+	 *
 	 * @param billController the bill controller
 	 */
 	public void setBillController(BillController billController) {
@@ -278,6 +280,7 @@ public class BankSystem {
 
 	/**
 	 * Gets the bill controller for this bank system.
+	 *
 	 * @return the bill controller
 	 */
 	public BillController getBillController() {
@@ -286,10 +289,11 @@ public class BankSystem {
 
 	/**
 	 * Records payment of `amount` from `acc` to `destinationName`
-	 * @param acc the account to take money from
+	 *
+	 * @param acc       the account to take money from
 	 * @param payeeName the name of the payee
-	 * @param amount the amount of money
-	 * @throws NoEnoughMoneyException if `acc` does not have enough money to withdraw
+	 * @param amount    the amount of money
+	 * @throws NoEnoughMoneyException    if `acc` does not have enough money to withdraw
 	 * @throws InvalidOperationException
 	 */
 	public void payBill(Account acc, String payeeName, double amount)
