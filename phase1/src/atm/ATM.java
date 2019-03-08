@@ -107,6 +107,7 @@ public class ATM {
 
 	/**
 	 * Get the user or admin with `username`
+	 *
 	 * @param username the username of wanted person
 	 * @return a `Loginable` corresponding to that person, or null if not found
 	 */
@@ -167,7 +168,8 @@ public class ATM {
 	public void depositMoney() throws IOException, InvalidOperationException,
 		AccountNotExistException {
 
-		File file = new File(DEPOSIT_FILE_NAME);
+		File file = new File("." + File.separator + "phase1" + File.separator
+			+ DEPOSIT_FILE_NAME);
 		BufferedReader br = new BufferedReader(new FileReader(file));
 
 		String st;
@@ -346,7 +348,7 @@ public class ATM {
 	 * @throws NoEnoughMoneyException    when amount withdrawn from the account exceeds what is allowed
 	 */
 	public void withdrawCash(Account acc, HashMap<Cash, Integer> amountWithdraw)
-		throws InsufficientCashException, NoEnoughMoneyException {
+		throws InsufficientCashException, NoEnoughMoneyException, InvalidOperationException {
 
 		ableToWithdraw(amountWithdraw);
 
@@ -396,8 +398,8 @@ public class ATM {
 		}
 	}
 
-	public void addCash(HashMap<Cash, Integer> amountAdd){
-	//	for(Cash cash: amountAdd.keySet())
+	public void addCash(HashMap<Cash, Integer> amountAdd) {
+		//	for(Cash cash: amountAdd.keySet())
 	}
 
 	/**
