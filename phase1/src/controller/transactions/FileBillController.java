@@ -48,7 +48,7 @@ public class FileBillController implements BillController {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
 			writer.write(account.getAccountId()
 				+ "," + account.getOwner().getUsername()
-				+ "," + payeeName + "," + amount);
+				+ "," + payeeName + "," + amount + "\n");
 			writer.close();
 		} catch (IOException e) {
 			throw new InvalidOperationException("Cannot record payment: " + e);
