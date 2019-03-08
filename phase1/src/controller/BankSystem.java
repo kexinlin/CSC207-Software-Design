@@ -1,18 +1,22 @@
 package controller;
 
-import controller.deposit.CashController;
-import model.*;
-import model.accounts.*;
+import controller.transactions.BillController;
+import controller.transactions.FileBillController;
+import model.accounts.Account;
+import model.accounts.SavingAccount;
+import model.accounts.ChequingAccount;
+import model.accounts.CreditCardAccount;
+import model.accounts.LineOfCreditAccount;
 import model.exceptions.AccountNotExistException;
-import model.exceptions.InsufficientCashException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
 import model.persons.BankManager;
 import model.persons.Loginable;
 import model.persons.User;
+import model.transactions.PayBillTransaction;
 import model.transactions.Transaction;
 import model.transactions.TransferTransaction;
-import model.transactions.WithdrawTransaction;
+import model.Request;
 
 import java.security.SecureRandom;
 import java.text.DateFormat;
@@ -30,6 +34,7 @@ public class BankSystem {
 
 	private static final String NUMBERS = "0123456789";  // for randomly generating accountId;
 	private static SecureRandom rnd = new SecureRandom(); // for randomly generating accountId;
+	private BillController billController;
 
 	/**
 	 * Constructs an instance of BankSystem.
@@ -43,6 +48,7 @@ public class BankSystem {
 		this.accounts = new HashMap<>();
 
 		this.recordFileName = recordFileName;
+		this.billController = new FileBillController(this);
 
 		readRecordsFromFile();
 	}
@@ -56,7 +62,8 @@ public class BankSystem {
 		User foobar = new User(this, "Foo Bar", "u1", "xxx");
 		Account chq = new ChequingAccount(0, new Date(), "127", foobar);
 		foobar.addAccount(chq);
-		this.loginables.put("u1", foobar);
+		this.addLoginable(foobar);
+		this.addAccount(chq);
 
 	}
 
@@ -109,7 +116,6 @@ public class BankSystem {
 
 	/**
 	 * Get the user or admin with `username`
-	 *
 	 * @param username the username of wanted person
 	 * @return a `Loginable` corresponding to that person, or null if not found
 	 */
@@ -228,7 +234,9 @@ public class BankSystem {
 
 		// add transaction record to both user
 		fromAcc.getOwner().addTransaction(newTrans);
-		toAcc.getOwner().addTransaction(newTrans);
+		if (! fromAcc.getOwner().equals(toAcc.getOwner())) {
+			toAcc.getOwner().addTransaction(newTrans);
+		}
 
 	}
 
@@ -248,11 +256,54 @@ public class BankSystem {
 	}
 
 	/**
-	 * Add the account `acc`
+	 * Add the account `acc` into `this.accounts`
 	 *
 	 * @param acc the account to add
 	 */
 	public void addAccount(Account acc) {
 		accounts.put(acc.getAccountId(), acc);
+	}
+
+	public void addLoginable(Loginable loginable){
+		loginables.put(loginable.getUsername(), loginable);
+	}
+
+	/**
+	 * Sets the bill controller for this bank system.
+	 * @param billController the bill controller
+	 */
+	public void setBillController(BillController billController) {
+		this.billController = billController;
+	}
+
+	/**
+	 * Gets the bill controller for this bank system.
+	 * @return the bill controller
+	 */
+	public BillController getBillController() {
+		return billController;
+	}
+
+	/**
+	 * Records payment of `amount` from `acc` to `destinationName`
+	 * @param acc the account to take money from
+	 * @param payeeName the name of the payee
+	 * @param amount the amount of money
+	 * @throws NoEnoughMoneyException if `acc` does not have enough money to withdraw
+	 * @throws InvalidOperationException
+	 */
+	public void payBill(Account acc, String payeeName, double amount)
+		throws NoEnoughMoneyException, InvalidOperationException {
+		acc.takeMoneyOut(amount);
+		try {
+			billController.recordPayment(acc, payeeName, amount);
+		} catch (InvalidOperationException e) { // recording failed, restore prev. state.
+			acc.putMoneyIn(amount);
+			throw e;
+		}
+		Transaction tx = new PayBillTransaction(amount, getCurrentTime(), acc, payeeName);
+
+		acc.addTrans(tx);
+		acc.getOwner().addTransaction(tx);
 	}
 }

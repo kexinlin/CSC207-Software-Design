@@ -1,6 +1,6 @@
 package controller;
 
-import view.CommandLineUI;
+import view.cmdline.CommandLineUI;
 import view.UI;
 
 /**

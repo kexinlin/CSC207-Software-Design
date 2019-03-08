@@ -1,4 +1,4 @@
-package controller.deposit;
+package controller.transactions;
 
 import controller.ATM;
 import model.accounts.Account;
@@ -6,13 +6,13 @@ import model.exceptions.InvalidOperationException;
 
 public interface DepositController {
 	/**
-	 * Sets the ATM for this deposit controller
+	 * Sets the ATM for this transactions controller
 	 * @param atm the ATM to set to.
 	 */
 	void setATM(ATM atm);
 
 	/**
-	 * Gets the ATM for this deposit controller
+	 * Gets the ATM for this transactions controller
 	 * @return the ATM.
 	 */
 	ATM getATM();

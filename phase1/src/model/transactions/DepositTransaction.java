@@ -10,9 +10,9 @@ public class DepositTransaction extends Transaction{
 	/**
 	 * Construct a new DepositTransaction.
 	 *
-	 * @param amount  the amount of deposit
+	 * @param amount  the amount of transactions
 	 * @param time the time of transaction
-	 * @param acc the source account of deposit
+	 * @param acc the source account of transactions
 	 */
 	public DepositTransaction(double amount, Date time, Account acc) {
 		super(amount, time);
@@ -20,9 +20,9 @@ public class DepositTransaction extends Transaction{
 	}
 
 	/**
-	 * Get the account that involves in this deposit.
+	 * Get the account that involves in this transactions.
 	 *
-	 * @return the account that involves in this deposit.
+	 * @return the account that involves in this transactions.
 	 */
 	public Account getAcc() {
 		return acc;
