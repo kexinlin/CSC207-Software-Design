@@ -29,6 +29,9 @@ public class BankManager implements Loginable {
 		this.setPassword(password);
 	}
 
+	public String getPassword() {
+		return password;
+	}
 
 	/**
 	 * Check if the password provided is the same as the one set for the user.

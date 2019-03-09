@@ -30,6 +30,8 @@ public class BankSystem {
 	private String recordFileName;
 	private ArrayList<Request> requests;
 	private BillController billController;
+	private RecordController recordController;
+	private ArrayList<Transaction> transactions;
 
 	private static final String NUMBERS = "0123456789";  // for randomly generating accountId;
 	private static SecureRandom rnd = new SecureRandom(); // for randomly generating accountId;
@@ -46,36 +48,20 @@ public class BankSystem {
 		this.recordFileName = recordFileName;
 		this.billController = new FileBillController(this);
 
+		this.recordController = new RecordController(this);
+
 		this.requests = new ArrayList<>();
 
-		readRecordsFromFile();
-	}
+		this.transactions = new ArrayList<>();
 
-	/**
-	 * read records from file.
-	 */
-	private void readRecordsFromFile() {
-		// FIXME replace this with actual file-reading
-		this.loginables.put("mgr1", new BankManager(this, "mgr1", "lolol"));
-		User foobar = new User(this, "Foo Bar", "u1", "xxx");
-		Account chq = new ChequingAccount(50, new Date(), "127", foobar);
-		Account cred = new CreditCardAccount(20, new Date(), "939", foobar);
-		foobar.addAccount(chq);
-		foobar.addAccount(cred);
-		this.addLoginable(foobar);
-		this.addAccount(chq);
-		this.addAccount(cred);
+		recordController.readRecords();
 	}
 
 	/**
 	 * save records to file.
 	 */
-	private void saveRecordsToFile() {
-		// TODO
-	}
-
 	public void close() {
-		saveRecordsToFile();
+		recordController.writeRecords();
 	}
 
 	/**
@@ -122,6 +108,18 @@ public class BankSystem {
 	 */
 	public Loginable getLoginable(String username) {
 		return loginables.getOrDefault(username, null);
+	}
+
+	public HashMap<String, Loginable> getLoginables() {
+		return loginables;
+	}
+
+	public HashMap<String, Account> getAccounts() {
+		return accounts;
+	}
+
+	public ArrayList<Transaction> getTransactions() {
+		return transactions;
 	}
 
 	/**
@@ -206,23 +204,21 @@ public class BankSystem {
 	/**
 	 * Undo the input account's most recent transaction, except for paying bills.
 	 *
-	 * @param account the account that for undoing transaction
-	 * @throws NoTransactionException    when there is no transaction recorded for this account
+	 * @param tx the transaction to undo
 	 * @throws InvalidOperationException when certain invalid operation is done
 	 * @throws NoEnoughMoneyException    when the account taken money out does not have enough money
 	 */
-	public void undoTransaction(Account account) throws NoTransactionException,
+	public void undoTransaction(Transaction tx) throws
 		InvalidOperationException, NoEnoughMoneyException {
-		Transaction lastTrans = account.getLastTrans();
-		if (lastTrans instanceof PayBillTransaction) {
+		if (tx instanceof PayBillTransaction) {
 			throw new InvalidOperationException("Sorry, you cannot undo a transaction " +
 				"for paying bill.");
-		} else if (lastTrans instanceof TransferTransaction) {
-			undoTransfer((TransferTransaction) lastTrans);
-		} else if (lastTrans instanceof WithdrawTransaction) {
-			undoWithdraw((WithdrawTransaction) lastTrans);
-		} else if (lastTrans instanceof DepositTransaction) {
-			undoDeposit((DepositTransaction) lastTrans);
+		} else if (tx instanceof TransferTransaction) {
+			undoTransfer((TransferTransaction) tx);
+		} else if (tx instanceof WithdrawTransaction) {
+			undoWithdraw((WithdrawTransaction) tx);
+		} else if (tx instanceof DepositTransaction) {
+			undoDeposit((DepositTransaction) tx);
 		}
 	}
 
@@ -237,14 +233,11 @@ public class BankSystem {
 		InvalidOperationException {
 		double amount = lastTrans.getAmount();
 		Account source = (lastTrans).getFromAcc();
-		Account destin = (lastTrans).getToAcc();
-		destin.takeMoneyOut(amount);
+		Account dest = (lastTrans).getToAcc();
+		dest.takeMoneyOut(amount);
 		source.putMoneyIn(amount);
-		Transaction newTrans = new TransferTransaction(amount, getCurrentTime(), destin, source);
-		destin.addTrans(newTrans);
-		destin.getOwner().addTransaction(newTrans);
-		source.addTrans(newTrans);
-		source.getOwner().addTransaction(newTrans);
+		Transaction newTrans = new TransferTransaction(amount, getCurrentTime(), dest, source);
+		addTransaction(newTrans);
 	}
 
 	/**
@@ -257,8 +250,7 @@ public class BankSystem {
 		Account acc = (lastTrans).getAcc();
 		acc.putMoneyIn(amount);
 		Transaction newTrans = new DepositTransaction(amount, getCurrentTime(), acc);
-		acc.addTrans(newTrans);
-		acc.getOwner().addTransaction(newTrans);
+		addTransaction(newTrans);
 	}
 
 	/**
@@ -274,8 +266,7 @@ public class BankSystem {
 		Account acc = (lastTrans).getAcc();
 		acc.takeMoneyOut(amount);
 		Transaction newTrans = new WithdrawTransaction(amount, getCurrentTime(), acc);
-		acc.addTrans(newTrans);
-		acc.getOwner().addTransaction(newTrans);
+		addTransaction(newTrans);
 	}
 
 
@@ -300,17 +291,7 @@ public class BankSystem {
 		fromAcc.takeMoneyOut(amount);
 		toAcc.putMoneyIn(amount);
 		Transaction newTrans = new TransferTransaction(amount, getCurrentTime(), fromAcc, toAcc);
-
-		// add transaction record to both accounts
-		fromAcc.addTrans(newTrans);
-		toAcc.addTrans(newTrans);
-
-		// add transaction record to both user
-		fromAcc.getOwner().addTransaction(newTrans);
-		if (!fromAcc.getOwner().equals(toAcc.getOwner())) {
-			toAcc.getOwner().addTransaction(newTrans);
-		}
-
+		addTransaction(newTrans);
 	}
 
 	/**
@@ -329,12 +310,55 @@ public class BankSystem {
 	}
 
 	/**
-	 * Add the account `acc` into `this.accounts`
+	 * Add the account `acc` into `this.accounts` as well as the owner of the account.
 	 *
 	 * @param acc the account to add
 	 */
 	public void addAccount(Account acc) {
 		accounts.put(acc.getAccountId(), acc);
+		acc.getOwner().addAccount(acc);
+	}
+
+	/**
+	 * Add the transaction tx to transaction history of the bank system, accounts, and user(s)
+	 * @param tx the transaction to add.
+	 */
+	public void addTransaction(Transaction tx) {
+		this.transactions.add(tx);
+
+		if (tx instanceof TransferTransaction) {
+			TransferTransaction transferTx = (TransferTransaction) tx;
+			Account fromAcc = transferTx.getFromAcc();
+			Account toAcc = transferTx.getToAcc();
+
+			// add transaction record to both accounts
+			fromAcc.addTrans(transferTx);
+			toAcc.addTrans(transferTx);
+
+			// add transaction record to both user
+			fromAcc.getOwner().addTransaction(transferTx);
+			if (!fromAcc.getOwner().equals(toAcc.getOwner())) {
+				toAcc.getOwner().addTransaction(transferTx);
+			}
+		} else if (tx instanceof DepositTransaction) {
+			DepositTransaction depositTx = (DepositTransaction) tx;
+			Account acc = depositTx.getAcc();
+
+			acc.addTrans(depositTx);
+			acc.getOwner().addTransaction(depositTx);
+		} else if (tx instanceof WithdrawTransaction) {
+			WithdrawTransaction withdrawTx = (WithdrawTransaction) tx;
+			Account acc = withdrawTx.getAcc();
+
+			acc.addTrans(withdrawTx);
+			acc.getOwner().addTransaction(withdrawTx);
+		} else if (tx instanceof PayBillTransaction) {
+			PayBillTransaction payBillTx = (PayBillTransaction) tx;
+			Account acc = payBillTx.getSource();
+
+			acc.addTrans(payBillTx);
+			acc.getOwner().addTransaction(payBillTx);
+		}
 	}
 
 	public void addLoginable(Loginable loginable) {
@@ -379,7 +403,16 @@ public class BankSystem {
 		}
 		Transaction tx = new PayBillTransaction(amount, getCurrentTime(), acc, payeeName);
 
-		acc.addTrans(tx);
-		acc.getOwner().addTransaction(tx);
+		addTransaction(tx);
 	}
+
+
+	public String getRecordFileName() {
+		return recordFileName;
+	}
+
+	public void setRecordFileName(String recordFileName) {
+		this.recordFileName = recordFileName;
+	}
+
 }

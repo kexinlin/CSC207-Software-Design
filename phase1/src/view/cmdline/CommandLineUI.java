@@ -1,6 +1,7 @@
 package view.cmdline;
 
 import controller.ATM;
+import controller.AccountFactory;
 import controller.BankSystem;
 import model.accounts.*;
 import model.persons.BankManager;
@@ -210,12 +211,13 @@ public class CommandLineUI implements UI {
 	 * @return the account matches `query`.
 	 */
 	Account searchAccount(String query) {
+		AccountFactory accountFactory = new AccountFactory();
 		Pattern regex = Pattern.compile("^([a-z]{3})(\\d+)$");
 		Matcher matcher = regex.matcher(query);
 		if (matcher.matches()) { // looks like a `type-order`
 			try {
 				Account acc = curAccounts.get(Integer.valueOf(matcher.group(2)));
-				if (accountsCmd.getAccountType(acc).equals(matcher.group(1))) {
+				if (accountFactory.getAccountType(acc).equals(matcher.group(1))) {
 					// we found it
 					return acc;
 				}

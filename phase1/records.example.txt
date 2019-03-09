@@ -1,0 +1,5 @@
+manager,mgr1,lolol
+user,Foo Bar,u1,xxx
+account,chq,50.0,1552098056134,127,u1
+account,cre,0.0,1552098056134,939,u1
+transaction,transfer,127,939,1552098366959,20.0

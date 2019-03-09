@@ -1,5 +1,6 @@
 package view.cmdline;
 
+import controller.AccountFactory;
 import model.accounts.*;
 import model.persons.User;
 
@@ -8,6 +9,7 @@ import java.util.HashMap;
 
 public class AccountsCmd {
 	private CommandLineUI ui;
+	private AccountFactory accountFactory;
 
 	/**
 	 * Constructs the accounts command
@@ -15,6 +17,7 @@ public class AccountsCmd {
 	 */
 	AccountsCmd(CommandLineUI ui) {
 		this.ui = ui;
+		this.accountFactory = new AccountFactory();
 	}
 
 	/**
@@ -34,7 +37,7 @@ public class AccountsCmd {
 		int i = 0;
 		ui.getOutput().println("Type & Order\tID\tBalance");
 		for (Account acc : accounts) {
-			String typeStr = getAccountType(acc);
+			String typeStr = accountFactory.getAccountType(acc);
 			// TODO cache the codes
 			ui.getOutput().println(typeStr + i + "\t\t"
 				+ acc.getAccountId() + "\t" + acc.getBalance());
@@ -42,20 +45,6 @@ public class AccountsCmd {
 		}
 		ui.getOutput().println("\n" +
 			"Summary -- Net Total: " + user.getNetTotal());
-	}
-
-	/**
-	 * Gets the account type for `acc`
-	 * @param acc the account
-	 * @return the type of `acc`
-	 */
-	String getAccountType(Account acc) {
-		HashMap<Class, String> nameMap = new HashMap<>();
-		nameMap.put(ChequingAccount.class, "chq");
-		nameMap.put(SavingAccount.class, "sav");
-		nameMap.put(CreditCardAccount.class, "cre");
-		nameMap.put(LineOfCreditAccount.class, "loc");
-		return nameMap.get(acc.getClass());
 	}
 
 	/**
@@ -75,7 +64,7 @@ public class AccountsCmd {
 		}
 
 		ui.getOutput().println("Acc Id\tType\tBalance");
-		ui.getOutput().println(acc.getAccountId() + ": " + getAccountType(acc)
+		ui.getOutput().println(acc.getAccountId() + ": " + accountFactory.getAccountType(acc)
 			+ ": " + acc.getBalance());
 	}
 }

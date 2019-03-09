@@ -8,7 +8,7 @@ import view.UI;
  */
 public class Main {
 	public static void main(String[] args) {
-		String recordFileName = "data/records";
+		String recordFileName = "records.txt";
 		BankSystem sys = new BankSystem(recordFileName);
 		ATM atm = new ATM(sys);
 		UI ui = new CommandLineUI(atm,

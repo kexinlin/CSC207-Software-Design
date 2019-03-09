@@ -24,4 +24,8 @@ public class PayBillTransaction extends Transaction {
 	public Account getSource() {
 		return source;
 	}
+
+	public String getPayeeName() {
+		return payeeName;
+	}
 }

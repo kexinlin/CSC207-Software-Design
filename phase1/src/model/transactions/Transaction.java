@@ -21,4 +21,7 @@ public abstract class Transaction {
 		return amount;
 	}
 
+	public Date getDate() {
+		return transTime;
+	}
 }

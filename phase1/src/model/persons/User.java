@@ -27,8 +27,16 @@ public class User implements Loginable {
 		this.password = password;
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	public String getUsername() {
 		return this.username;
+	}
+
+	public String getPassword() {
+		return password;
 	}
 
 	/**
