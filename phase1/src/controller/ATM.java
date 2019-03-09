@@ -1,9 +1,6 @@
 package controller;
 
-import controller.transactions.CashController;
-import controller.transactions.ChequeController;
-import controller.transactions.DepositController;
-import controller.transactions.FileDepositController;
+import controller.transactions.*;
 import model.Cash;
 import model.exceptions.InsufficientCashException;
 import model.persons.Loginable;
@@ -18,6 +15,7 @@ public class ATM {
 	private CashController cashController;
 	private ChequeController chequeController;
 	private DepositController depositController;
+	private WithdrawController withdrawController;
 
 	/**
 	 * Constructs an ATM.
@@ -34,6 +32,7 @@ public class ATM {
 		this.cashController = new CashController(this);
 		this.chequeController = new ChequeController(this);
 		this.depositController = new FileDepositController(this);
+		this.withdrawController = new FileWithdrawController(this);
 	}
 
 	/**
@@ -82,6 +81,14 @@ public class ATM {
 	 */
 	public void setDepositController(DepositController depositController) {
 		this.depositController = depositController;
+	}
+
+	public WithdrawController getWithdrawController() {
+		return withdrawController;
+	}
+
+	public void setWithdrawController(WithdrawController withdrawController) {
+		this.withdrawController = withdrawController;
 	}
 
 	/**

@@ -62,9 +62,7 @@ public class CashController {
 
 		Transaction newTrans = new WithdrawTransaction(
 			totalAmount, machine.getBankSystem().getCurrentTime(), acc);
-		acc.addTrans(newTrans);
-		acc.getOwner().addTransaction(newTrans);
-
+		machine.getBankSystem().addTransaction(newTrans);
 	}
 
 	/**
@@ -99,8 +97,6 @@ public class CashController {
 
 		Transaction newTrans = new DepositTransaction(amount,
 			machine.getBankSystem().getCurrentTime(), acc);
-		acc.addTrans(newTrans);
-		acc.getOwner().addTransaction(newTrans);
-
+		machine.getBankSystem().addTransaction(newTrans);
 	}
 }

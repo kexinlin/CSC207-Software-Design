@@ -23,7 +23,6 @@ public class ChequeController {
 
 		Transaction newTrans = new DepositTransaction(amount,
 			machine.getBankSystem().getCurrentTime(), acc);
-		acc.addTrans(newTrans);
-		acc.getOwner().addTransaction(newTrans);
+		machine.getBankSystem().addTransaction(newTrans);
 	}
 }
