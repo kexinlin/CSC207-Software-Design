@@ -1,5 +1,6 @@
 package view.cmdline;
 
+import model.Message;
 import model.persons.Loginable;
 import model.persons.User;
 
@@ -86,5 +87,55 @@ class PersonsCmd {
 
 		personToChangePassword.setPassword(password);
 		ui.getOutput().println("Password changed successfully.");
+	}
+
+	private void showMessage(Message Message) {
+		if (Message == null) {
+			return;
+		}
+		ui.getOutput().println(Message.getText());
+	}
+
+	private void showMessages(User user) {
+		int i = 0;
+		for (Message msg : user.getMessages()) {
+			ui.getOutput().print("Msg #" + i + ": ");
+			showMessage(msg);
+			++i;
+		}
+	}
+
+	private Message getMessage(User user, String s) {
+		int order;
+		try {
+			order = Integer.valueOf(s);
+			return user.getMessages().get(order);
+		} catch (NumberFormatException e) {
+			ui.getError().println(s + " is not in correct format.");
+			return null;
+		} catch (IndexOutOfBoundsException e) {
+			ui.getError().println("Message #" + s + " not found.");
+			return null;
+		}
+	}
+
+	private void deleteMessage(User user, String query) {
+		Message msg = getMessage(user, query);
+		if (msg == null) {
+			return;
+		}
+		ui.getBankSystem().removeMessage(msg);
+	}
+
+	void processMessages(String data) {
+		User user = ui.checkUserLogin();
+		if (user == null) {
+			return;
+		}
+		if (data.length() == 0) {
+			showMessages(user);
+		} else {
+			deleteMessage(user, data);
+		}
 	}
 }

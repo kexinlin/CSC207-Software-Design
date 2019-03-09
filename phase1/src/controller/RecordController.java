@@ -1,5 +1,7 @@
 package controller;
 
+import model.Message;
+import model.Request;
 import model.accounts.*;
 import model.exceptions.AccountNotExistException;
 import model.persons.BankManager;
@@ -8,6 +10,7 @@ import model.persons.User;
 import model.transactions.*;
 
 import java.io.*;
+import java.nio.Buffer;
 import java.util.Date;
 
 public class RecordController {
@@ -34,6 +37,8 @@ public class RecordController {
 	 * tx,transfer,FROM-ACC-ID,TO-ACC-ID,DATE,AMOUNT
 	 * tx,deposit/withdraw,ACC-ID,DATE,AMOUNT
 	 * tx,paybill,ACC-ID,PAYEE,DATE,AMOUNT
+	 * req,USERNAME,ACC-TYPE,MSG
+	 * msg,USERNAME,MESSAGE-TEXT
 	 */
 	public void readRecords() {
 		File file = getRecordFile();
@@ -64,6 +69,12 @@ public class RecordController {
 						processTx(entries[1]);
 						break;
 
+					case "req":
+						processRequest(entries[1]);
+
+					case "msg":
+						processMessage(entries[1]);
+
 					default:
 						break;
 				}
@@ -72,6 +83,40 @@ public class RecordController {
 
 		}
 
+	}
+
+	private void processMessage(String data) {
+		String[] entries = data.split(",", 2);
+		if (entries.length < 2) {
+			return;
+		}
+
+		String username = entries[0];
+		User user = (User) bankSystem.getLoginable(username);
+		if (user == null) {
+			return;
+		}
+		String text = entries[1];
+
+		Message msg = new Message(user, text);
+		bankSystem.addMessage(msg);
+	}
+
+	private void processRequest(String data) {
+		String[] entries = data.split(",", 3);
+		if (entries.length < 3) {
+			return;
+		}
+
+		String username = entries[0];
+		User user = (User) bankSystem.getLoginable(username);
+		if (user == null) {
+			return;
+		}
+		String type = entries[1];
+		String msg = entries[2];
+		Request req = new Request(user, type, msg);
+		bankSystem.addRequest(req);
 	}
 
 	private void processTx(String data) {
@@ -254,11 +299,32 @@ public class RecordController {
 			for (Transaction tx : bankSystem.getTransactions()) {
 				recordTransaction(writer, tx);
 			}
+			// then, requests
+			for (Request req : bankSystem.getRequests()) {
+				recordRequest(writer, req);
+			}
+			// then, messages
+			for (Message msg : bankSystem.getMessages()) {
+				recordMessage(writer, msg);
+			}
 			writer.close();
 		} catch (IOException e) {
 			System.out.println("Cannot save records");
 			//
 		}
+	}
+
+	private void recordMessage(BufferedWriter writer, Message msg) throws IOException {
+		writer.write("msg,"
+			+ msg.getUser().getUsername() + ","
+			+ msg.getText() + "\n");
+	}
+
+	private void recordRequest(BufferedWriter writer, Request req) throws IOException {
+		writer.write("req,"
+			+ req.getUser().getUsername() + ","
+			+ req.getAccountType() + ","
+			+ req.getMsg() + "\n");
 	}
 
 	private void recordAccount(BufferedWriter writer, Account account) throws IOException {

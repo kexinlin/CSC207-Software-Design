@@ -22,6 +22,9 @@ class HelpCmd {
 			+ "exit\t-\tQuit the program\n"
 			+ "deposit\t-\tDeposit cash or cheque\n"
 			+ "paybill\t-\tPay a bill to a payee outside the bank\n"
+			+ "request\t-\tShow or process requests to create account\n"
+			+ "mkaccount\t-\tRequest the bank manager to create an account\n"
+			+ "msg\t-\tRead and delete messages\n"
 			+ "Enter `help COMMAND` for a detailed description for that command.\n");
 
 		commandHelp.put("login", "login -- log into the system\n" +
@@ -101,6 +104,50 @@ class HelpCmd {
 			"\n" +
 			"For more information on QUERY strings, type `help ls`.\n");
 
+		commandHelp.put("request", "request -- show or process requests\n" +
+			"Usage: request [INDEX [y/n]]\n" +
+			"\n" +
+			"When used on its own, show all requests.\n" +
+			"When used with INDEX, show the request at INDEX.\n" +
+			"When used with INDEX and y, accept the user's request, and an account " +
+			"will be created for the user.\n" +
+			"When used with INDEX and n, decline the user's request, and a message " +
+			"will be sent to the user.\n" +
+			"\n" +
+			"You must log in as a bank manager to use this command.\n" +
+			"\n" +
+			"Examples:\n" +
+			"request\n" +
+			"request 0\n" +
+			"request 2 n\n");
+
+		commandHelp.put("mkaccount", "mkaccount -- request to create an account\n" +
+			"Usage: mkaccount TYPE\n" +
+			"\n" +
+			"Request the bank manager to create a account of TYPE.\n" +
+			"The available TYPE strings are:\n" +
+			"chq -- chequing accounts\n" +
+			"sav -- saving accounts\n" +
+			"cre -- credit card accounts\n" +
+			"loc -- line of credit accounts\n" +
+			"\n" +
+			"You must log in as a user to use this command.\n" +
+			"\n" +
+			"Examples:\n" +
+			"mkaccount chq\n" +
+			"mkaccount sav\n");
+
+		commandHelp.put("msg", "msg -- read and delete messages\n" +
+			"Usage: msg [INDEX]\n" +
+			"\n" +
+			"When INDEX is not specified, read all messages.\n" +
+			"WHEN INDEX is specified, delete the message at INDEX.\n" +
+			"\n" +
+			"You must log in as a user to use this command.\n" +
+			"\n" +
+			"Examples:\n" +
+			"msg\n" +
+			"msg 0\n");
 	}
 
 	/**

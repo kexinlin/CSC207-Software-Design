@@ -1,18 +1,14 @@
 package controller;
 
+import model.Message;
 import model.Request;
 import controller.transactions.BillController;
 import controller.transactions.FileBillController;
 import model.accounts.Account;
-import model.accounts.SavingAccount;
-import model.accounts.ChequingAccount;
 import model.accounts.CreditCardAccount;
-import model.accounts.LineOfCreditAccount;
 import model.exceptions.AccountNotExistException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
-import model.exceptions.NoTransactionException;
-import model.persons.BankManager;
 import model.persons.Loginable;
 import model.persons.User;
 import model.transactions.*;
@@ -32,6 +28,8 @@ public class BankSystem {
 	private BillController billController;
 	private RecordController recordController;
 	private ArrayList<Transaction> transactions;
+	private AccountFactory accountFactory;
+	private ArrayList<Message> messages;
 
 	private static final String NUMBERS = "0123456789";  // for randomly generating accountId;
 	private static SecureRandom rnd = new SecureRandom(); // for randomly generating accountId;
@@ -53,7 +51,8 @@ public class BankSystem {
 		this.requests = new ArrayList<>();
 
 		this.transactions = new ArrayList<>();
-
+		this.accountFactory = new AccountFactory();
+		this.messages = new ArrayList<>();
 		recordController.readRecords();
 	}
 
@@ -79,14 +78,8 @@ public class BankSystem {
 	 *
 	 * @param newTime The new time set for this BankSystem.
 	 */
-	public void setCurrentTime(String newTime) {
-		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date date = sdf.parse(newTime);
-			long timeInMillis = date.getTime();
-			this.currentTime = new Date(timeInMillis);
-		} catch (ParseException e) {
-		}
+	public void setCurrentTime(Date newTime) {
+		this.currentTime = newTime;
 	}
 
 	/**
@@ -167,6 +160,17 @@ public class BankSystem {
 		return requests;
 	}
 
+	public void processRequest(Request request, boolean accepted) {
+		if (accepted) {
+			createAccount(request);
+		} else {
+			Message msg = new Message(request.getUser(),
+				"Your request to create a account of type " + request.getAccountType()
+					+ " was declined.");
+			addMessage(msg);
+		}
+		requests.remove(request);
+	}
 
 	/**
 	 * Create an account based on the input Request.
@@ -176,29 +180,11 @@ public class BankSystem {
 	 */
 	public void createAccount(Request request) {
 		User owner = request.getUser();
-		String accountType = request.getAccountType();
-		Account newAccount;
+		String accountId = randomString(6);
+		Account newAccount = accountFactory.getAccount(request.getAccountType()
+			,0, getCurrentTime(), accountId, owner);
 
-		String accountId = randomString(6);   //generated randomly
-		switch (accountType) {
-			case "chq":
-				newAccount = new CreditCardAccount(0, getCurrentTime(), accountId, owner);
-				break;
-			case "sav":
-				newAccount = new SavingAccount(0, getCurrentTime(), accountId, owner);
-				break;
-			case "cre":
-				newAccount = new CreditCardAccount(0, getCurrentTime(), accountId, owner);
-				break;
-			case "loc":
-				newAccount = new LineOfCreditAccount(0, getCurrentTime(), accountId, owner);
-				break;
-			default:
-				newAccount = null;
-				break;
-		}
-		owner.addAccount(newAccount);
-		accounts.put(accountId, newAccount);
+		addAccount(newAccount);
 	}
 
 	/**
@@ -415,4 +401,37 @@ public class BankSystem {
 		this.recordFileName = recordFileName;
 	}
 
+	/**
+	 * Add req to the request list.
+	 * @param req the request to add.
+	 */
+	public void addRequest(Request req) {
+		this.requests.add(req);
+	}
+
+	/**
+	 * Gets all messages in the system
+	 * @return an array list of messages
+	 */
+	public ArrayList<Message> getMessages() {
+		return messages;
+	}
+
+	/**
+	 * Add msg to the message for the user.
+	 * @param msg the message to add.
+	 */
+	public void addMessage(Message msg) {
+		this.messages.add(msg);
+		msg.getUser().addMessage(msg);
+	}
+
+	/**
+	 * Remove msg from the user.
+	 * @param msg the message to remove.
+	 */
+	public void removeMessage(Message msg) {
+		this.messages.remove(msg);
+		msg.getUser().removeMessage(msg);
+	}
 }

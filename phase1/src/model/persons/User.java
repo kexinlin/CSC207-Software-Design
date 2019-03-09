@@ -1,6 +1,7 @@
 package model.persons;
 
 import controller.BankSystem;
+import model.Message;
 import model.Request;
 import model.accounts.*;
 import model.exceptions.NoTransactionException;
@@ -18,7 +19,7 @@ public class User implements Loginable {
 	private ChequingAccount primaryAccount;
 	private Date date;
 	private ArrayList<Transaction> transactions = new ArrayList<>();
-
+	private ArrayList<Message> messages = new ArrayList<>();
 
 	public User(BankSystem bankSystem, String name, String username, String password) {
 		this.machine = bankSystem;
@@ -120,5 +121,17 @@ public class User implements Loginable {
 	public void sendNewAccountRequest(String accountType) {
 		Request r = new Request(this, accountType, "want to create account");	// ERROR!!
 		BankManager.addRequest(r);
+	}
+
+	public ArrayList<Message> getMessages() {
+		return messages;
+	}
+
+	public void addMessage(Message msg) {
+		this.messages.add(msg);
+	}
+
+	public void removeMessage(Message msg) {
+		this.messages.remove(msg);
 	}
 }

@@ -154,7 +154,7 @@ public class ATM {
 	 *                                   is less than the amount that the user wants
 	 *                                   to withdraw
 	 */
-	private void checkIfAbleToWithdraw(HashMap<Cash, Integer> amountWithdraw)
+	public void checkIfAbleToWithdraw(HashMap<Cash, Integer> amountWithdraw)
 		throws InsufficientCashException {
 		for (Cash cash : amountWithdraw.keySet()) {
 			if (this.billAmount.get(cash) < amountWithdraw.get(cash)) {

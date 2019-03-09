@@ -64,9 +64,9 @@ public class TxCmd {
 	 * Deposits the cash or cheque in the transactions file into the
 	 * account specified by `query`
 	 * @param query the query string for the account
-	 * @param ui
+	 *
 	 */
-	void deposit(String query, CommandLineUI ui) {
+	void deposit(String query) {
 		User user = ui.checkUserLogin();
 		if (user == null) {
 			return;
@@ -89,7 +89,7 @@ public class TxCmd {
 		ui.getOutput().println("Deposit successful.");
 	}
 
-	void payBill(String args, CommandLineUI ui) {
+	void payBill(String args) {
 		User user = ui.checkUserLogin();
 		if (user == null) {
 			return;

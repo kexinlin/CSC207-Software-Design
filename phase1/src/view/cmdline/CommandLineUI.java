@@ -27,6 +27,7 @@ public class CommandLineUI implements UI {
 	private PersonsCmd personsCmd;
 	private AccountsCmd accountsCmd;
 	private TxCmd txCmd;
+	private ManagerCmd managerCmd;
 
 	/**
 	 * Constructs a new Command Line UI.
@@ -50,6 +51,7 @@ public class CommandLineUI implements UI {
 		this.personsCmd = new PersonsCmd(this);
 		this.accountsCmd = new AccountsCmd(this);
 		this.txCmd = new TxCmd(this);
+		this.managerCmd = new ManagerCmd(this);
 	}
 
 	public InputStream getInput() {
@@ -134,11 +136,23 @@ public class CommandLineUI implements UI {
 					break;
 
 				case "deposit":
-					txCmd.deposit(args, this);
+					txCmd.deposit(args);
 					break;
 
 				case "paybill":
-					txCmd.payBill(args, this);
+					txCmd.payBill(args);
+					break;
+
+				case "request":
+					managerCmd.processRequests(args);
+					break;
+
+				case "mkaccount":
+					accountsCmd.requestToCreate(args);
+					break;
+
+				case "msg":
+					personsCmd.processMessages(args);
 					break;
 
 				default:

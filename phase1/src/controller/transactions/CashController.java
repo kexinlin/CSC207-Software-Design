@@ -52,13 +52,14 @@ public class CashController {
 	public void withdrawCash(Account acc, HashMap<Cash, Integer> amountWithdraw)
 		throws InsufficientCashException, NoEnoughMoneyException, InvalidOperationException {
 
-		machine.deductCash(amountWithdraw);
+		machine.checkIfAbleToWithdraw(amountWithdraw);
 		// if it fails, the process ends with throwing an exception. Nothing done.
 
 		// calculate the total amount withdrawn
 		int totalAmount = calculateTotalBillAmount(amountWithdraw);
 
 		acc.takeMoneyOut(totalAmount); // money in account may not be enough
+		machine.deductCash(amountWithdraw);
 
 		Transaction newTrans = new WithdrawTransaction(
 			totalAmount, machine.getBankSystem().getCurrentTime(), acc);

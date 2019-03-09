@@ -1,10 +1,12 @@
 package view.cmdline;
 
 import controller.AccountFactory;
+import model.Request;
 import model.accounts.*;
 import model.persons.User;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class AccountsCmd {
@@ -30,7 +32,9 @@ public class AccountsCmd {
 			return;
 		}
 
-		ArrayList<Account> accounts = user.getAccounts();
+		// we clone the array list since we do not want to surprise users
+		// when another account is added between lines.
+		ArrayList<Account> accounts = (ArrayList<Account>) (user.getAccounts().clone());
 		// to be thread-safe
 		ui.setCurAccounts(accounts);
 
@@ -66,5 +70,29 @@ public class AccountsCmd {
 		ui.getOutput().println("Acc Id\tType\tBalance");
 		ui.getOutput().println(acc.getAccountId() + ": " + accountFactory.getAccountType(acc)
 			+ ": " + acc.getBalance());
+	}
+
+	/**
+	 * Request the creation of the account type specified by `query`
+	 * @param query the type of the account
+	 */
+	void requestToCreate(String query) {
+		User user = ui.checkUserLogin();
+		if (user == null) {
+			return;
+		}
+
+		// get a fake account, just to make sure this type exists.
+		Account fakeAcc = accountFactory.getAccount(query, 0
+			, ui.getBankSystem().getCurrentTime(), "", null);
+		if (fakeAcc == null) {
+			ui.getError().println(query + " is not a valid type of account.");
+			return;
+		}
+		Request request = new Request(user, query, "Requested"
+			+ ui.getBankSystem().getCurrentTime().toString());
+		ui.getBankSystem().getRequests().add(request);
+		ui.getOutput().println("The creation of accounts has been sent. " +
+			"Please wait for bank managers to process it.");
 	}
 }

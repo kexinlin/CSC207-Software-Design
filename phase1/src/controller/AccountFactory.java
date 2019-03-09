@@ -18,7 +18,7 @@ public class AccountFactory {
 	 */
 	public Account getAccount(String type, double balance,
 							  Date time, String accountId, User owner) {
-		switch (type){
+		switch (type) {
 			case "chq":
 				return new ChequingAccount(balance, time, accountId, owner);
 				
