@@ -5,6 +5,7 @@ import model.Request;
 import controller.transactions.BillController;
 import controller.transactions.FileBillController;
 import model.accounts.Account;
+import model.accounts.ChequingAccount;
 import model.accounts.CreditCardAccount;
 import model.exceptions.AccountNotExistException;
 import model.exceptions.InvalidOperationException;
@@ -184,7 +185,15 @@ public class BankSystem {
 		Account newAccount = accountFactory.getAccount(request.getAccountType()
 			,0, getCurrentTime(), accountId, owner);
 
+		// if there were no primary chequing accounts
+		// make this the default one.
+		if (newAccount instanceof ChequingAccount &&
+			owner.getAccounts().stream()
+				.noneMatch(a -> a instanceof ChequingAccount)) {
+			owner.setPrimaryCheuqingAccount((ChequingAccount) newAccount);
+		}
 		addAccount(newAccount);
+
 	}
 
 	/**

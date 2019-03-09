@@ -221,8 +221,9 @@ public class CommandLineUI implements UI {
 
 	/**
 	 * Search for `query` in all accounts.
-	 * @param query Account ID. TODO add account code for searching
+	 * @param query Account ID, `type-order`, or username
 	 * @return the account matches `query`.
+	 * if query is a username, return that user's primary chequing account.
 	 */
 	Account searchAccount(String query) {
 		AccountFactory accountFactory = new AccountFactory();
@@ -239,6 +240,18 @@ public class CommandLineUI implements UI {
 				return null;
 			}
 		}
+
+		// not pure number, probably a username
+		if (! query.matches("^\\d+$")) {
+			Loginable l = getBankSystem().getLoginable(query);
+			if (l instanceof User) {
+				ChequingAccount acc = ((User) l).getPrimaryChequingAccount();
+				if (acc != null) {
+					return acc;
+				}
+			}
+		}
+
 		try {
 			return getBankSystem().getAccountById(query);
 		} catch (AccountNotExistException e) {

@@ -1,5 +1,6 @@
 package controller;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import model.Message;
 import model.Request;
 import model.accounts.*;
@@ -9,6 +10,7 @@ import model.persons.Loginable;
 import model.persons.User;
 import model.transactions.*;
 
+import javax.jws.soap.SOAPBinding;
 import java.io.*;
 import java.nio.Buffer;
 import java.util.Date;
@@ -39,6 +41,7 @@ public class RecordController {
 	 * tx,paybill,ACC-ID,PAYEE,DATE,AMOUNT
 	 * req,USERNAME,ACC-TYPE,MSG
 	 * msg,USERNAME,MESSAGE-TEXT
+	 * set,primary-acc,USERNAME,ACC-ID
 	 */
 	public void readRecords() {
 		File file = getRecordFile();
@@ -71,9 +74,15 @@ public class RecordController {
 
 					case "req":
 						processRequest(entries[1]);
+						break;
 
 					case "msg":
 						processMessage(entries[1]);
+						break;
+
+					case "set":
+						processSetting(entries[1]);
+						break;
 
 					default:
 						break;
@@ -83,6 +92,36 @@ public class RecordController {
 
 		}
 
+	}
+
+	private void processSetting(String data) {
+		String[] entries = data.split(",", 2);
+		if (entries.length < 2) {
+			return;
+		}
+		if (entries[0].equals("primary-acc")) {
+			String[] e = entries[1].split(",", 2);
+			if (e.length < 2) {
+				return;
+			}
+			String username = e[0];
+			Loginable l = bankSystem.getLoginable(username);
+			if (!(l instanceof User)) {
+				return;
+			}
+			User user = (User) l;
+			String accId = e[1];
+			Account acc;
+			try {
+				acc = bankSystem.getAccountById(accId);
+			} catch (AccountNotExistException ex) {
+				return;
+			}
+			if (! (acc instanceof ChequingAccount)) {
+				return;
+			}
+			user.setPrimaryCheuqingAccount((ChequingAccount) acc);
+		}
 	}
 
 	private void processMessage(String data) {
@@ -307,11 +346,27 @@ public class RecordController {
 			for (Message msg : bankSystem.getMessages()) {
 				recordMessage(writer, msg);
 			}
+			// then, settings
+			for (Loginable l : bankSystem.getLoginables().values()) {
+				if (l instanceof User) {
+					Account acc = ((User) l).getPrimaryChequingAccount();
+					recordPrimaryAcc(writer, acc);
+				}
+			}
 			writer.close();
 		} catch (IOException e) {
 			System.out.println("Cannot save records");
 			//
 		}
+	}
+
+	private void recordPrimaryAcc(BufferedWriter writer, Account acc) throws IOException {
+		if (acc == null) {
+			return;
+		}
+		writer.write("set,primary-acc,"
+			+ acc.getOwner().getUsername() + ","
+			+ acc.getAccountId() + "\n");
 	}
 
 	private void recordMessage(BufferedWriter writer, Message msg) throws IOException {
@@ -367,7 +422,8 @@ public class RecordController {
 				.append(((TransferTransaction) tx).getToAcc().getAccountId()).append(",");
 		}
 		builder.append(tx.getDate().getTime()).append(",")
-			.append(tx.getAmount());
+			.append(tx.getAmount())
+			.append("\n");
 
 		writer.write(builder.toString());
 	}

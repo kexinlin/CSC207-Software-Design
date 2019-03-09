@@ -104,6 +104,10 @@ public class User implements Loginable {
 		this.primaryAccount = acc;
 	}
 
+	public ChequingAccount getPrimaryChequingAccount() {
+		return this.primaryAccount;
+	}
+
 	public void addAccount(Account acc) {
 		this.accounts.add(acc);
 	}
@@ -115,12 +119,6 @@ public class User implements Loginable {
 	 */
 	public void addTransaction(Transaction t) {
 		this.transactions.add(t);
-	}
-
-
-	public void sendNewAccountRequest(String accountType) {
-		Request r = new Request(this, accountType, "want to create account");	// ERROR!!
-		BankManager.addRequest(r);
 	}
 
 	public ArrayList<Message> getMessages() {
