@@ -71,15 +71,16 @@ public class TxCmd {
 		if (user == null) {
 			return;
 		}
-		Account acc = ui.searchAccount(query);
-		if (acc == null) {
-			ui.getError().println("No such account.");
+
+		Account acc = query.length() > 0
+			? ui.searchAccount(query)
+			: user.getPrimaryChequingAccount();
+
+		if (acc == null || ! user.equals(acc.getOwner())) {
+			ui.getError().println("The account is not found, or does not belong to you.");
 			return;
 		}
-		if (! user.equals(acc.getOwner())) {
-			ui.getError().println("You can only deposit into your own account.");
-			return;
-		}
+
 		try {
 			ui.getATM().getDepositController().depositMoney(acc);
 		} catch (InvalidOperationException e) {

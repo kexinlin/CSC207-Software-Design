@@ -30,6 +30,7 @@ class HelpCmd {
 				+ "msg\t-\tRead and delete messages\n"
 				+ "adduser\t-\tAdd a user\n"
 				+ "undo\t-\tUndo transaction\n"
+				+ "primary\t-\tView or set primary chequing account\n"
 				+ "Enter `help COMMAND` for a detailed description for that command.\n");
 
 		commandHelp.put("login", "login -- log into the system\n" +
@@ -98,10 +99,11 @@ class HelpCmd {
 			"Exit the program. Save all changes.\n");
 
 		commandHelp.put("deposit", "deposit -- deposit cash or cheque\n" +
-			"Usage: deposit QUERY\n" +
+			"Usage: deposit [QUERY]\n" +
 			"\n" +
 			"Deposit the cash or cheque you put into the machine.\n" +
 			"The money will go to the account which matches QUERY.\n" +
+			"If QUERY is not specified, use your primary chequing account.\n" +
 			"You must log in as a user to use this command.\n" +
 			"The account which matches QUERY must be yours.\n" +
 			"\n" +
@@ -180,6 +182,17 @@ class HelpCmd {
 			"Undo the last transaction on account with ACC-ID.\n" +
 			"\n" +
 			"You must log in as a bank manager to use this command.\n");
+
+		commandHelp.put("primary", "primary -- set your primary chequing account\n" +
+			"Usage: primary [QUERY]\n" +
+			"\n" +
+			"If QUERY presents, " +
+			"Set the primary chequing account to account matching QUERY\n" +
+			"Otherwise, print your primary account.\n" +
+			"\n" +
+			"You must log in to use this command.\n" +
+			"\n" +
+			"For more on QUERY strings, see `help ls`.\n");
 	}
 
 	/**

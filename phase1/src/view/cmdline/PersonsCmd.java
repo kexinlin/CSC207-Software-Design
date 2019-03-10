@@ -1,6 +1,8 @@
 package view.cmdline;
 
 import model.Message;
+import model.accounts.Account;
+import model.accounts.ChequingAccount;
 import model.persons.Loginable;
 import model.persons.User;
 
@@ -143,5 +145,35 @@ class PersonsCmd {
 	void logout() {
 		ui.getATM().logout();
 		ui.getOutput().println("Logged out successfully.");
+	}
+
+	void setPrimary(String data) {
+		User user = ui.checkUserLogin();
+		if (user == null) {
+			return;
+		}
+		if (data.length() == 0) {
+			Account acc = user.getPrimaryChequingAccount();
+			if (acc == null) {
+				ui.getOutput().println("You do not have a primary chequing account.");
+				return;
+			}
+			ui.getOutput().println("Your primary account is: " + acc.getAccountId());
+			return;
+		}
+		Account acc = ui.searchAccount(data);
+
+		if (acc == null || ! acc.getOwner().equals(user)) {
+			ui.getError().println("Account is not found, or does not belong to you.");
+			return;
+		}
+
+		if (! (acc instanceof ChequingAccount)) {
+			ui.getError().println("This is not a chequing account.");
+			return;
+		}
+
+		user.setPrimaryCheuqingAccount((ChequingAccount) acc);
+		ui.getOutput().println("Primary account successfully set.");
 	}
 }
