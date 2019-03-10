@@ -16,11 +16,19 @@ class RecordController {
 	private BankSystem bankSystem;
 	private AccountFactory accountFactory;
 
+	/**
+	 * Constructs a record controller
+	 * @param bankSystem the bank system to use
+	 */
 	public RecordController(BankSystem bankSystem) {
 		this.bankSystem = bankSystem;
 		this.accountFactory = new AccountFactory();
 	}
 
+	/**
+	 * Gets the File for recording
+	 * @return a File object
+	 */
 	private File getRecordFile() {
 		return new File(bankSystem.getRecordFileName());
 	}
@@ -91,6 +99,11 @@ class RecordController {
 
 	}
 
+	/**
+	 * Reads setting of users
+	 * @param data a line containing the setting,
+	 *             excluding the "setting," prefix (first column)
+	 */
 	private void processSetting(String data) {
 		String[] entries = data.split(",", 2);
 		if (entries.length < 2) {
@@ -121,6 +134,10 @@ class RecordController {
 		}
 	}
 
+	/**
+	 * Reads a message from the record, and add it to the message list
+	 * @param data the line of message, excluding the first column
+	 */
 	private void processMessage(String data) {
 		String[] entries = data.split(",", 2);
 		if (entries.length < 2) {
@@ -138,6 +155,10 @@ class RecordController {
 		bankSystem.addMessage(msg);
 	}
 
+	/**
+	 * Reads a request from the file, and add it to request list.
+	 * @param data the line of request, excluding the first column
+	 */
 	private void processRequest(String data) {
 		String[] entries = data.split(",", 3);
 		if (entries.length < 3) {
@@ -155,6 +176,10 @@ class RecordController {
 		bankSystem.addRequest(req);
 	}
 
+	/**
+	 * Reads a transaction from the file and add it to transaction list
+	 * @param data the line containing the transaction, excluding the first column.
+	 */
 	private void processTx(String data) {
 		String[] entries = data.split(",", 2);
 		if (entries.length != 2) {
@@ -184,6 +209,13 @@ class RecordController {
 		}
 	}
 
+	/**
+	 * Reads a deposit or withdraw transaction from the file and add it to the
+	 * transaction list
+	 * @param type the type of transaction. either "deposit" or "withdraw"
+	 * @param data the line containing the transaction, excluding the first two columns
+	 * @return whether it succeeds or not
+	 */
 	private boolean processDepositWithdraw(String type, String data) {
 		String[] entries = data.split(",", 3);
 		if (entries.length != 3) {
@@ -212,6 +244,11 @@ class RecordController {
 		return true;
 	}
 
+	/**
+	 * Reads a pay-bill transaction and add it to the transaction list
+	 * @param data the line containing the transaction, excluding the first two columns
+	 * @return whether it succeeds or not
+	 */
 	private boolean processPayBill(String data) {
 		String[] entries = data.split(",", 4);
 		if (entries.length != 4) {
@@ -241,6 +278,11 @@ class RecordController {
 		return true;
 	}
 
+	/**
+	 * Reads a transfer transaction and add it to the transaction list
+	 * @param data the line containing the transaction, excluding the first two columns
+	 * @return whether it succeeds or not
+	 */
 	private boolean processTransfer(String data) {
 		String[] entries = data.split(",", 4);
 		if (entries.length != 4) {
@@ -271,6 +313,10 @@ class RecordController {
 		return true;
 	}
 
+	/**
+	 * Reads an account and add it to the account list
+	 * @param data the line containing the account, excluding the first column
+	 */
 	private void processAccount(String data) {
 		String[] entries = data.split(",", 5);
 		if (entries.length != 5) {
@@ -296,6 +342,10 @@ class RecordController {
 		bankSystem.addAccount(account);
 	}
 
+	/**
+	 * Reads a bank manager and add it to loginable list
+	 * @param data the line containing the bank manager, excluding the first column
+	 */
 	private void processManager(String data) {
 		String[] entries = data.split(",", 2);
 		if (entries.length != 2) {
@@ -309,6 +359,10 @@ class RecordController {
 		bankSystem.addLoginable(bankManager);
 	}
 
+	/**
+	 * Reads a user and add it to the loginable list
+	 * @param data the line containing the user, excluding the first column
+	 */
 	private void processUser(String data) {
 		String[] entries = data.split(",", 3);
 		if (entries.length != 3) {
@@ -324,6 +378,9 @@ class RecordController {
 		bankSystem.addLoginable(user);
 	}
 
+	/**
+	 * Write all records to the record file.
+	 */
 	public void writeRecords() {
 		File file = getRecordFile();
 		try {
@@ -366,6 +423,12 @@ class RecordController {
 		}
 	}
 
+	/**
+	 * Records the primary account for the user
+	 * @param writer the BufferedWriter to use
+	 * @param acc the primary account
+	 * @throws IOException when the writer fails
+	 */
 	private void recordPrimaryAcc(BufferedWriter writer, Account acc) throws IOException {
 		if (acc == null) {
 			return;
@@ -375,12 +438,24 @@ class RecordController {
 			+ acc.getAccountId() + "\n");
 	}
 
+	/**
+	 * Records a message
+	 * @param writer the BufferedWriter to use
+	 * @param msg the Message
+	 * @throws IOException when the writer fails
+	 */
 	private void recordMessage(BufferedWriter writer, Message msg) throws IOException {
 		writer.write("msg,"
 			+ msg.getUser().getUsername() + ","
 			+ msg.getText() + "\n");
 	}
 
+	/**
+	 * Records a Request
+	 * @param writer the BufferedWriter to use
+	 * @param req the request to record
+	 * @throws IOException when writer fails
+	 */
 	private void recordRequest(BufferedWriter writer, Request req) throws IOException {
 		writer.write("req,"
 			+ req.getUser().getUsername() + ","
@@ -388,6 +463,12 @@ class RecordController {
 			+ req.getMsg() + "\n");
 	}
 
+	/**
+	 * Records an account
+	 * @param writer the BufferedWriter to use
+	 * @param account the account to record
+	 * @throws IOException when writer fails
+	 */
 	private void recordAccount(BufferedWriter writer, Account account) throws IOException {
 		writer.write("account,"
 			+ accountFactory.getAccountType(account) + ","
@@ -397,6 +478,12 @@ class RecordController {
 			+ account.getOwner().getUsername() + "\n");
 	}
 
+	/**
+	 * Records a user
+	 * @param writer the BufferedWriter to use
+	 * @param user the user to record
+	 * @throws IOException
+	 */
 	private void recordUser(BufferedWriter writer, User user) throws IOException {
 		writer.write("user,"
 			+ user.getName() + ","
@@ -404,12 +491,24 @@ class RecordController {
 			+ user.getPassword() + "\n");
 	}
 
+	/**
+	 * Records a bank manager
+	 * @param writer the writer to use
+	 * @param manager the bank manager to record
+	 * @throws IOException when writer fails
+	 */
 	private void recordManager(BufferedWriter writer, BankManager manager) throws IOException {
 		writer.write("manager,"
 			+ manager.getUsername() + ","
 			+ manager.getPassword() + "\n");
 	}
 
+	/**
+	 * Records a transaction
+	 * @param writer the writer to use
+	 * @param tx the transaction to record
+	 * @throws IOException when writer fails
+	 */
 	private void recordTransaction(BufferedWriter writer, Transaction tx) throws IOException {
 		StringBuilder builder = new StringBuilder("tx,");
 		if (tx instanceof DepositTransaction) {
