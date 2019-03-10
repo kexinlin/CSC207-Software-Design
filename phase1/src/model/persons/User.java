@@ -13,7 +13,6 @@ public class User implements Loginable {
 	private String password;
 	private ArrayList<Account> accounts = new ArrayList<>();
 	private ChequingAccount primaryAccount;
-	private Date date;
 	private ArrayList<Transaction> transactions = new ArrayList<>();
 	private ArrayList<Message> messages = new ArrayList<>();
 
@@ -23,14 +22,30 @@ public class User implements Loginable {
 		this.password = password;
 	}
 
+	/**
+	 * Get the name of this User.
+	 *
+	 * @return name of this User
+	 */
 	public String getName() {
 		return name;
 	}
+
+	/**
+	 * Get the username of this User.
+	 *
+	 * @return user name of this User
+	 */
 
 	public String getUsername() {
 		return this.username;
 	}
 
+	/**
+	 * Get the current password of this User.
+	 *
+	 * @return the password of this User
+	 */
 	public String getPassword() {
 		return password;
 	}
@@ -69,11 +84,6 @@ public class User implements Loginable {
 	}
 
 
-	public Date getDateOfCreation() {
-		return date;
-	}
-
-
 	/**
 	 * return all available accounts
 	 *
@@ -82,6 +92,7 @@ public class User implements Loginable {
 	public ArrayList<Account> getAccounts() {
 		return accounts;
 	}
+
 
 	public void setPrimaryCheuqingAccount(ChequingAccount acc) {
 		this.primaryAccount = acc;
