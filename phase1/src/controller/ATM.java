@@ -16,13 +16,17 @@ public class ATM {
 	private ChequeController chequeController;
 	private DepositController depositController;
 	private WithdrawController withdrawController;
+	private String atmRecordFileName;
+	private ATMRecordController atmRecordController;
 
 	/**
 	 * Constructs an ATM.
 	 * @param bankSystem the bank system underneath.
 	 */
-	public ATM(BankSystem bankSystem) {
+	public ATM(BankSystem bankSystem, String recordFileName) {
 		this.bankSystem = bankSystem;
+		this.atmRecordFileName = recordFileName;
+		this.atmRecordController = new ATMRecordController(this);
 
 		this.billAmount = new HashMap<>();
 		// init the num of each kind of cash to zero
@@ -33,6 +37,17 @@ public class ATM {
 		this.chequeController = new ChequeController(this);
 		this.depositController = new FileDepositController(this);
 		this.withdrawController = new FileWithdrawController(this);
+
+		atmRecordController.readRecords();
+	}
+
+
+	/**
+	 * Get the file name of record for this atm.
+	 * @return record file name
+	 */
+	public String getAtmRecordFileName() {
+		return atmRecordFileName;
 	}
 
 	/**
@@ -49,6 +64,14 @@ public class ATM {
 	 */
 	public void setBankSystem(BankSystem bankSystem) {
 		this.bankSystem = bankSystem;
+	}
+
+	/**
+	 * Sets the ATM record name for this atm.
+	 * @param atmRecordFileName the name of the record file
+	 */
+	public void setAtmRecordFileName(String atmRecordFileName) {
+		this.atmRecordFileName = atmRecordFileName;
 	}
 
 	/**
@@ -187,5 +210,13 @@ public class ATM {
 	 */
 	public ChequeController getChequeController() {
 		return this.chequeController;
+	}
+
+
+	/**
+	 * save records to file.
+	 */
+	public void close(){
+		atmRecordController.writeRecords();
 	}
 }

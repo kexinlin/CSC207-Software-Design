@@ -28,18 +28,20 @@ public class CashController {
 		this.machine = atm;
 	}
 
-	private HashMap<Cash, Integer> getCashToWithdraw(double amount) {
-		HashMap<Cash, Integer> cashToWithdraw = new HashMap<>();
-		HashMap<Cash, Integer> cashPool = machine.getBillAmount();
 
-		Cash workingCashType = Cash.HUNDRED;
+//	private HashMap<Cash, Integer> getCashToWithdraw(double amount) {
+//		HashMap<Cash, Integer> cashToWithdraw = new HashMap<>();
+//		HashMap<Cash, Integer> cashPool = machine.getBillAmount();
+//
+//		Cash workingCashType = Cash.HUNDRED;
+//
+//		boolean running = true;
+//		/*while (running) {
+//			if (workingCashType.getNumVal() <= )
+//		}*/
+//		return cashToWithdraw;
+//	}
 
-		boolean running = true;
-		/*while (running) {
-			if (workingCashType.getNumVal() <= )
-		}*/
-		return cashToWithdraw;
-	}
 
 	/**
 	 * @param acc            account of the user for withdrawal

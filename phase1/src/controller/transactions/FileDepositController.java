@@ -1,6 +1,7 @@
 package controller.transactions;
 
 import controller.ATM;
+import controller.CashFactory;
 import model.Cash;
 import model.accounts.Account;
 import model.exceptions.InvalidOperationException;
@@ -14,9 +15,11 @@ import java.util.HashMap;
 public class FileDepositController implements DepositController {
 	private ATM machine;
 	private String depositFileName;
+	private CashFactory cashFactory;
 
 	public FileDepositController(ATM atm) {
 		this.machine = atm;
+		this.cashFactory = new CashFactory();
 		depositFileName = "deposits.txt";
 	}
 
@@ -106,7 +109,7 @@ public class FileDepositController implements DepositController {
 		for (String s : vals)  {
 			String kv[] = s.split("\\s+");
 			try {
-				bills.put(getCash(kv[0]), Integer.valueOf(kv[1]));
+				bills.put(cashFactory.getCash(kv[0]), Integer.valueOf(kv[1]));
 			} catch (ArrayIndexOutOfBoundsException e) {
 				throw new InvalidOperationException(
 					"Every `Cash Amount` field should have only two sub-fields.");
@@ -117,43 +120,6 @@ public class FileDepositController implements DepositController {
 		}
 
 		return bills;
-	}
-
-	/**
-	 * Gets the cash for `amount`
-	 * @param amount the value of the cash, in String.
-	 * @return the cash for `amount`
-	 * @throws InvalidOperationException
-	 */
-	private Cash getCash(String amount) throws InvalidOperationException {
-		Cash bill;
-		switch (amount) {
-			case "5":
-				bill = Cash.FIVE;
-				break;
-
-			case "10":
-				bill = Cash.TEN;
-				break;
-
-			case "20":
-				bill = Cash.TWENTY;
-				break;
-
-			case "50":
-				bill = Cash.FIFTY;
-				break;
-
-			case "100":
-				bill = Cash.HUNDRED;
-				break;
-
-			default:
-				throw new InvalidOperationException(
-					"Sorry, the bill denomination"
-						+ " in your input file does not exist.");
-		}
-		return bill;
 	}
 
 	/**
