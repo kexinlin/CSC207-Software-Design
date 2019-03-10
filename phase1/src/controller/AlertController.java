@@ -47,8 +47,8 @@ public class AlertController {
 		File file = getRecordFile();
 		StringBuilder cashSummary = new StringBuilder();
 		for (Cash cash : Cash.values()) {
-			cashSummary.append(("Current number of " + cash.getNumVal() + " dollar bills: "
-				+ atm.getBillAmount().get(cash)) + ". ");
+			cashSummary.append("Current number of ").append(cash.getNumVal()).append(" dollar bills: ")
+				.append(atm.getBillAmount().get(cash)).append(". ");
 		}
 
 		try {

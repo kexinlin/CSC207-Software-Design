@@ -17,7 +17,6 @@ public class User implements Loginable {
 	private String password;
 	private ArrayList<Account> accounts = new ArrayList<>();
 	private ChequingAccount primaryAccount;
-	private Date date;
 	private ArrayList<Transaction> transactions = new ArrayList<>();
 	private ArrayList<Message> messages = new ArrayList<>();
 
@@ -28,14 +27,30 @@ public class User implements Loginable {
 		this.password = password;
 	}
 
+	/**
+	 * Get the name of this User.
+	 *
+	 * @return name of this User
+	 */
 	public String getName() {
 		return name;
 	}
+
+	/**
+	 * Get the username of this User.
+	 *
+	 * @return user name of this User
+	 */
 
 	public String getUsername() {
 		return this.username;
 	}
 
+	/**
+	 * Get the current password of this User.
+	 *
+	 * @return the password of this User
+	 */
 	public String getPassword() {
 		return password;
 	}
@@ -54,6 +69,7 @@ public class User implements Loginable {
 
 	/**
 	 * Change the password of this user to `password`.
+	 *
 	 * @param password the password to change to.
 	 * @return true if succeeds, false otherwise.
 	 */
@@ -65,17 +81,13 @@ public class User implements Loginable {
 
 	/**
 	 * Gets the net balance of this user
+	 *
 	 * @return net balance
 	 */
 	public double getNetTotal() {
 		return accounts.stream()
 			.mapToDouble(acc -> acc.getBalance() * acc.balanceFactor())
 			.sum();
-	}
-
-
-	public Date getDateOfCreation() {
-		return date;
 	}
 
 
@@ -88,17 +100,6 @@ public class User implements Loginable {
 		return accounts;
 	}
 
-	public boolean logEmpty() {
-		return this.transactions.isEmpty();
-	}
-
-	public Transaction getMostRecentTransaction() throws NoTransactionException {
-		if (!logEmpty()) {
-			return this.transactions.get(transactions.size() - 1);
-		} else {
-			throw new NoTransactionException("This account does not have transaction record.");
-		}
-	}
 
 	public void setPrimaryCheuqingAccount(ChequingAccount acc) {
 		this.primaryAccount = acc;
