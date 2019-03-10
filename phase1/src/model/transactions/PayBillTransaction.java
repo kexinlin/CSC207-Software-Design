@@ -21,14 +21,28 @@ public class PayBillTransaction extends Transaction {
 		this.payeeName = payeeName;
 	}
 
+	/**
+	 * Gets the source account of this transaction.
+	 * @return the account from which the money is taken
+	 */
 	public Account getSource() {
 		return source;
 	}
 
+	/**
+	 * Gets the payee's name
+	 * @return payee's name
+	 */
 	public String getPayeeName() {
 		return payeeName;
 	}
 
+	/**
+	 * Gets a string representing this transaction, including the amount
+	 * involved, source account,
+	 * the payee's name, and the date of transaction.
+	 * @return a string representing this transaction
+	 */
 	@Override
 	public String toString() {
 		return "Paid " + getAmount() + " from "

@@ -5,7 +5,6 @@ import model.accounts.*;
 import model.transactions.Transaction;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class User implements Loginable {
 	private String name;
@@ -16,6 +15,12 @@ public class User implements Loginable {
 	private ArrayList<Transaction> transactions = new ArrayList<>();
 	private ArrayList<Message> messages = new ArrayList<>();
 
+	/**
+	 * Constructs a user object.
+	 * @param name the full name of this user
+	 * @param username the username of this user
+	 * @param password the password of this user
+	 */
 	public User(String name, String username, String password) {
 		this.name = name;
 		this.username = username;
@@ -94,14 +99,26 @@ public class User implements Loginable {
 	}
 
 
+	/**
+	 * Sets the primary chequing account for this user
+	 * @param acc the chequing account to set as primary
+	 */
 	public void setPrimaryCheuqingAccount(ChequingAccount acc) {
 		this.primaryAccount = acc;
 	}
 
+	/**
+	 * Gets the primary chequing account for this user
+	 * @return the primary chequing account, or null if the user does not have one
+	 */
 	public ChequingAccount getPrimaryChequingAccount() {
 		return this.primaryAccount;
 	}
 
+	/**
+	 * add account `acc` to this user
+	 * @param acc the account to add
+	 */
 	public void addAccount(Account acc) {
 		this.accounts.add(acc);
 	}
@@ -115,14 +132,26 @@ public class User implements Loginable {
 		this.transactions.add(t);
 	}
 
+	/**
+	 * get a list of all messages
+	 * @return an ArrayList of all messages
+	 */
 	public ArrayList<Message> getMessages() {
 		return messages;
 	}
 
+	/**
+	 * Add a message to the message list
+	 * @param msg the message to add
+	 */
 	public void addMessage(Message msg) {
 		this.messages.add(msg);
 	}
 
+	/**
+	 * Remove a message from the message list
+	 * @param msg the message to remove
+	 */
 	public void removeMessage(Message msg) {
 		this.messages.remove(msg);
 	}

@@ -41,6 +41,11 @@ public class TransferTransaction extends Transaction {
 		return toAcc;
 	}
 
+	/**
+	 * Gets a human-readable representation of this transaction, including
+	 * the amount, the source and destination account and transaction date
+	 * @return a string representing the transaction
+	 */
 	@Override
 	public String toString() {
 		return "Transferred " + getAmount() + " from " + fromAcc.getAccountId()

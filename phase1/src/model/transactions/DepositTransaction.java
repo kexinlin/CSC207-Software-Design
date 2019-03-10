@@ -28,6 +28,11 @@ public class DepositTransaction extends Transaction{
 		return acc;
 	}
 
+	/**
+	 * Gets the string representation of this transaction, including
+	 * the amount deposited and the destination account.
+	 * @return the string representation of this transaction
+	 */
 	@Override
 	public String toString() {
 		return "Deposited " + getAmount() + " into "

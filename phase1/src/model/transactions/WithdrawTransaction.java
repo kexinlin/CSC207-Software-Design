@@ -28,6 +28,11 @@ public class WithdrawTransaction extends Transaction{
 		return acc;
 	}
 
+	/**
+	 * Gets a human-readable representation of this transaction, including
+	 * the account the money is taken from and the date of transaction.
+	 * @return a string representation of this transaction.
+	 */
 	@Override
 	public String toString() {
 		return "Withdrew " + getAmount() + " from " + getAcc().getAccountId()
