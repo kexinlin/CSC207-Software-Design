@@ -24,7 +24,9 @@ public interface WithdrawController {
 
 	/**
 	 * Take money out of the account and the machine.
+	 * @param acc the account to take from
+	 * @param amount the amount of money to take
 	 */
-	void withdrawMoney(Account acc, HashMap<Cash,Integer> cashMap)
+	void withdrawMoney(Account acc, double amount)
 		throws InvalidOperationException, InsufficientCashException, NoEnoughMoneyException;
 }

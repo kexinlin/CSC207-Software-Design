@@ -58,14 +58,13 @@ public class FileWithdrawController implements WithdrawController {
 	/**
 	 * Take out money from the machine.
 	 * @param acc the account to take money from
-	 * @param cashMap the amount of each kind of cash
+	 * @param amount the amount of money
 	 * @throws InvalidOperationException
 	 */
 	@Override
-	public void withdrawMoney(Account acc, HashMap<Cash, Integer> cashMap)
+	public void withdrawMoney(Account acc, double amount)
 		throws InvalidOperationException, InsufficientCashException, NoEnoughMoneyException {
-
-		atm.getCashController().withdrawCash(acc, cashMap);
+		HashMap<Cash, Integer> cashMap = atm.getCashController().withdrawCash(acc, amount);
 		writeWithdrawFile(cashMap);
 	}
 
@@ -74,11 +73,10 @@ public class FileWithdrawController implements WithdrawController {
 		File file = new File(withdrawFileName);
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-			StringBuilder sb = new StringBuilder("cash,");
-			sb.append(
+			String string = "cash," +
 				String.join(",", cashMap.entrySet().stream().map(kv ->
-				kv.getKey().getNumVal() + " " + kv.getValue()).toArray(String[]::new)));
-			writer.write(sb.toString());
+					kv.getKey().getNumVal() + " " + kv.getValue()).toArray(String[]::new));
+			writer.write(string);
 		} catch (IOException e) {
 			throw new InvalidOperationException("Error writing file: " + e);
 		}

@@ -1,6 +1,8 @@
 package view.cmdline;
 
 import model.accounts.Account;
+import model.exceptions.AccountNotExistException;
+import model.exceptions.InsufficientCashException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
 import model.persons.User;
@@ -127,5 +129,45 @@ public class TxCmd {
 		} catch (InvalidOperationException e) {
 			ui.getError().println("Error: " + e);
 		}
+	}
+
+	void withdraw(String data) {
+		User user = ui.checkUserLogin();
+		if (user == null) {
+			return;
+		}
+		String[] entries = data.split("\\s+", 2);
+		if (entries.length != 2) {
+			ui.getError().println("Wrong number of arguments.");
+			return;
+		}
+		String query = entries[0];
+		Account acc = ui.searchAccount(query);
+		if (acc == null || !acc.getOwner().equals(user)) {
+			ui.getError().println("The account does not exist or is not owned by you.");
+			return;
+		}
+
+		double amount;
+		try {
+			amount = Double.valueOf(entries[1]);
+		} catch (NumberFormatException e) {
+			ui.getError().println("Amount is not in a correct format.");
+			return;
+		}
+		try {
+			ui.getATM().getWithdrawController().withdrawMoney(acc, amount);
+		} catch (InvalidOperationException e) {
+			ui.getError().println("Error when giving you money.");
+			return;
+		} catch (NoEnoughMoneyException e) {
+			ui.getError().println("Your account does not have enough money.");
+			return;
+		} catch (InsufficientCashException e) {
+			ui.getError().println("The machine does not have enough cash.");
+			return;
+		}
+		ui.getOutput().println("Withdraw done. Please take your money.");
+
 	}
 }

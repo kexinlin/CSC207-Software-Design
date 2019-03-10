@@ -24,6 +24,7 @@ class HelpCmd {
 				+ "mv  \t-\tTransfer between your accounts\n"
 				+ "passwd\t-\tChange password\n"
 				+ "deposit\t-\tDeposit cash or cheque\n"
+				+ "withdraw\t-\tWithdraw cash\n"
 				+ "paybill\t-\tPay a bill to a payee outside the bank\n"
 				+ "request\t-\tShow or process requests to create account\n"
 				+ "mkaccount\t-\tRequest the bank manager to create an account\n"
@@ -104,6 +105,17 @@ class HelpCmd {
 			"Deposit the cash or cheque you put into the machine.\n" +
 			"The money will go to the account which matches QUERY.\n" +
 			"If QUERY is not specified, use your primary chequing account.\n" +
+			"You must log in as a user to use this command.\n" +
+			"The account which matches QUERY must be yours.\n" +
+			"\n" +
+			"For more information on QUERY strings, type `help ls`.\n");
+
+		commandHelp.put("withdraw", "withdraw -- withdraw cash\n" +
+			"Usage: withdraw QUERY AMOUNT\n" +
+			"\n" +
+			"Withdraw AMOUNT of CASH from " +
+			"the account which matches QUERY.\n" +
+			"\n" +
 			"You must log in as a user to use this command.\n" +
 			"The account which matches QUERY must be yours.\n" +
 			"\n" +

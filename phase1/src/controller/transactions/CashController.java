@@ -9,10 +9,9 @@ import model.exceptions.NoEnoughMoneyException;
 import model.transactions.DepositTransaction;
 import model.transactions.Transaction;
 import model.transactions.WithdrawTransaction;
+import org.omg.CORBA.INTERNAL;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Controls operations related to cash.
@@ -28,30 +27,70 @@ public class CashController {
 		this.machine = atm;
 	}
 
-	private HashMap<Cash, Integer> getCashToWithdraw(double amount) {
+	private HashMap<Cash, Integer> getCashToWithdraw(double amount)
+		throws InsufficientCashException {
+		// better to work with ints
+		int amt = (int) amount;
+		if (amt != amount) { // cannot withdraw < $1
+			return null;
+		}
 		HashMap<Cash, Integer> cashToWithdraw = new HashMap<>();
 		HashMap<Cash, Integer> cashPool = machine.getBillAmount();
 
-		Cash workingCashType = Cash.HUNDRED;
+		ArrayList<Cash> cashTypes = new ArrayList<>(Arrays.asList(
+			Cash.HUNDRED,
+			Cash.FIFTY,
+			Cash.TWENTY,
+			Cash.TEN,
+			Cash.FIVE
+		));
 
-		boolean running = true;
-		/*while (running) {
-			if (workingCashType.getNumVal() <= )
+		// greedy method
+
+		int sum = 0;
+
+		for (Cash c : cashTypes) {
+			int val = c.getNumVal();
+			int num = (amt - sum)/val;
+			int maximumAvailable = cashPool.get(c);
+			if (num > maximumAvailable) {
+				num = maximumAvailable;
+			}
+			sum += num * val;
+			cashToWithdraw.put(c, num);
+		}
+
+		// if greedy succeeds
+		if (sum == amt) {
+			return cashToWithdraw;
+		}
+		// greedy fails
+
+		throw new InsufficientCashException(
+			"Cannot work out a method to withdraw the amount.");
+/*		HashMap<Cash, Integer> maxAvailCash = new HashMap<>();
+
+		// calculate at most how many we need & can use for each type
+		for (Cash c : cashTypes) {
+			maxAvailCash.put(c,
+				Math.min(amt/c.getNumVal(), cashPool.get(c)));
 		}*/
-		return cashToWithdraw;
+
+
 	}
 
 	/**
+	 * Take `amount` of money out of `acc` and put it into user's hand
 	 * @param acc            account of the user for withdrawal
-	 * @param amountWithdraw a HashMap that record the number of bills for each denomination that
-	 *                       the user wants to withdraw
+	 * @param amount the amount of money
 	 * @throws InsufficientCashException when the number of bills of certain denomination is less
 	 *                                   than the amount that the user wants to withdraw
 	 * @throws NoEnoughMoneyException    when amount withdrawn from the account exceeds what is allowed
 	 */
-	public void withdrawCash(Account acc, HashMap<Cash, Integer> amountWithdraw)
+	public HashMap<Cash, Integer> withdrawCash(Account acc, double amount)
 		throws InsufficientCashException, NoEnoughMoneyException, InvalidOperationException {
 
+		HashMap<Cash, Integer> amountWithdraw = getCashToWithdraw(amount);
 		machine.checkIfAbleToWithdraw(amountWithdraw);
 		// if it fails, the process ends with throwing an exception. Nothing done.
 
@@ -64,6 +103,7 @@ public class CashController {
 		Transaction newTrans = new WithdrawTransaction(
 			totalAmount, machine.getBankSystem().getCurrentTime(), acc);
 		machine.getBankSystem().addTransaction(newTrans);
+		return amountWithdraw;
 	}
 
 	/**

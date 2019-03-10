@@ -171,6 +171,10 @@ public class CommandLineUI implements UI {
 					personsCmd.setPrimary(args);
 					break;
 
+				case "withdraw":
+					txCmd.withdraw(args);
+					break;
+
 				default:
 					error.println("Unknown command: " + command);
 					break;
