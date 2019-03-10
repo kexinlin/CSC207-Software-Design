@@ -7,7 +7,7 @@ public enum Cash {
 
 	private int numVal;
 
-	private Cash(int num) {
+	Cash(int num) {
 		this.numVal = num;
 	}
 

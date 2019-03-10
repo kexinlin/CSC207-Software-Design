@@ -4,6 +4,7 @@ import controller.AccountFactory;
 import model.Request;
 import model.accounts.*;
 import model.exceptions.NoTransactionException;
+import model.persons.Loginable;
 import model.persons.User;
 import model.transactions.Transaction;
 
@@ -30,28 +31,43 @@ public class AccountsCmd {
 	 * Must log in as a user to use.
 	 */
 	void listAccounts() {
-		User user = ui.checkUserLogin();
-		if (user == null) {
+		Loginable l = ui.getATM().currentLoggedIn();
+		if (l == null) {
+			ui.getError().println("You must log in to use this command.");
 			return;
 		}
 
-		// we clone the array list since we do not want to surprise users
-		// when another account is added between lines.
-		ArrayList<Account> accounts = (ArrayList<Account>) (user.getAccounts().clone());
+		ArrayList<Account> accounts;
+		// the user can only view their own accounts,
+		// the bank manager can view all people's accounts.
+		if (l instanceof User) {
+			// we clone the array list since we do not want to surprise users
+			// when another account is added between lines.
+			accounts = (ArrayList<Account>) ((User) l).getAccounts().clone();
+		} else {
+			accounts = new ArrayList<>(ui.getBankSystem().getAccounts().values());
+		}
 		// to be thread-safe
 		ui.setCurAccounts(accounts);
 
 		int i = 0;
-		ui.getOutput().println("Type & Order\tID\tBalance");
+		if (!(l instanceof User)) {
+			ui.getOutput().print("Owner\t");
+		}
+		ui.getOutput().println("Type-Order\tID\tBalance");
 		for (Account acc : accounts) {
 			String typeStr = accountFactory.getAccountType(acc);
-			// TODO cache the codes
+			if (! (l instanceof User)) {
+				ui.getOutput().print(acc.getOwner().getUsername() + "\t");
+			}
 			ui.getOutput().println(typeStr + i + "\t\t"
 				+ acc.getAccountId() + "\t" + acc.getBalance());
 			++i;
 		}
-		ui.getOutput().println("\n" +
-			"Summary -- Net Total: " + user.getNetTotal());
+		if (l instanceof User) {
+			ui.getOutput().println("\n" +
+				"Summary -- Net Total: " + ((User) l).getNetTotal());
+		}
 	}
 
 	/**
@@ -59,14 +75,23 @@ public class AccountsCmd {
 	 * @param query the id or order of account
 	 */
 	void showAccount(String query) {
-		User u = ui.checkUserLogin();
-		if (u == null) {
+		Loginable l = ui.getATM().currentLoggedIn();
+		if (l == null) {
+			ui.getError().println("You must log in to use this command.");
 			return;
 		}
-		// TODO: should do acc id-order check
+
 		Account acc = ui.searchAccount(query);
 		if (acc == null) {
-			ui.getError().println("No such account found.");
+			ui.getError().println("No such account found in your control.");
+			return;
+		}
+
+		// the account does not belong to the user
+		// use the same error message to ensure the user
+		// does not intentionally guess other people's account id
+		if (l instanceof User && ! (acc.getOwner().equals(l))) {
+			ui.getError().println("No such account found in your control.");
 			return;
 		}
 

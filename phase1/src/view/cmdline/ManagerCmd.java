@@ -1,6 +1,11 @@
 package view.cmdline;
 
 import model.Request;
+import model.accounts.Account;
+import model.exceptions.AccountNotExistException;
+import model.exceptions.InvalidOperationException;
+import model.exceptions.NoEnoughMoneyException;
+import model.exceptions.NoTransactionException;
 import model.persons.BankManager;
 import model.persons.User;
 
@@ -134,5 +139,31 @@ public class ManagerCmd {
 		User user = new User(ui.getBankSystem(), name, username, password);
 		ui.getBankSystem().addLoginable(user);
 		ui.getOutput().println("Successfully added user.");
+	}
+
+	/**
+	 * Undo the last transaction on account accId.
+	 * @param accId the id of the account.
+	 */
+	void undoTx(String accId) {
+		BankManager manager = ui.checkBankManagerLogin();
+		if (manager == null) {
+			return;
+		}
+		try {
+			Account acc = ui.getBankSystem().getAccountById(accId);
+
+			ui.getBankSystem().undoTransaction(acc.getLastTrans());
+		} catch (AccountNotExistException e) {
+			ui.getError().println("No such account.");
+		} catch (NoTransactionException e) {
+			ui.getError().println("No transaction on that account.");
+		} catch (InvalidOperationException e) {
+			ui.getError().println("Error: " + e);
+		} catch (NoEnoughMoneyException e) {
+			ui.getError().println("Cannot undo the transaction because the " +
+				"account that received the money does not have enough money.");
+		}
+		ui.getOutput().println("Transaction undone.");
 	}
 }

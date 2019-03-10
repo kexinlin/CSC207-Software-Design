@@ -29,6 +29,8 @@ class HelpCmd {
 				+ "mkaccount\t-\tRequest the bank manager to create an account\n"
 				+ "msg\t-\tRead and delete messages\n"
 				+ "adduser\t-\tAdd a user\n"
+				+ "undo\t-\tUndo transaction\n"
+				+ "primary\t-\tView or set primary chequing account\n"
 				+ "Enter `help COMMAND` for a detailed description for that command.\n");
 
 		commandHelp.put("login", "login -- log into the system\n" +
@@ -53,11 +55,15 @@ class HelpCmd {
 			"\n" +
 			"If QUERY presents, display the information about the account which " +
 			"matches QUERY.\n" +
-			"Otherwise, show a list of your accounts.\n" +
-			"Must be logged in as a user to use this command.\n" +
+			"Otherwise, if you log in as a user, show a list of your accounts.\n" +
+			"If you log in as a bank manager, show a list of all accounts.\n" +
 			"\n" +
-			"QUERY string can be the account ID of your account, or a `type order` " +
-			"format, i.e. the first" +
+			"Must be logged in to use this command.\n" +
+			"A user can only view their own accounts.\n" +
+			"\n" +
+			"QUERY string can be the account ID of your account, or a " +
+			"username, or a `type order` " +
+			"format, i.e. the `Type-Order` " +
 			"column of what `ls` displays. It consists of two parts, the " +
 			"short name of account type, and the order in the list. For example, " +
 			"`chq0` is a `type order` string. A `type order` string is only effective " +
@@ -93,10 +99,11 @@ class HelpCmd {
 			"Exit the program. Save all changes.\n");
 
 		commandHelp.put("deposit", "deposit -- deposit cash or cheque\n" +
-			"Usage: deposit QUERY\n" +
+			"Usage: deposit [QUERY]\n" +
 			"\n" +
 			"Deposit the cash or cheque you put into the machine.\n" +
 			"The money will go to the account which matches QUERY.\n" +
+			"If QUERY is not specified, use your primary chequing account.\n" +
 			"You must log in as a user to use this command.\n" +
 			"The account which matches QUERY must be yours.\n" +
 			"\n" +
@@ -168,6 +175,24 @@ class HelpCmd {
 			"(see `help ls`).\n" +
 			"\n" +
 			"You must log in as a bank manager to use this command.\n");
+
+		commandHelp.put("undo", "undo -- undo transactions\n" +
+			"Usage: undo ACC-ID\n" +
+			"\n" +
+			"Undo the last transaction on account with ACC-ID.\n" +
+			"\n" +
+			"You must log in as a bank manager to use this command.\n");
+
+		commandHelp.put("primary", "primary -- set your primary chequing account\n" +
+			"Usage: primary [QUERY]\n" +
+			"\n" +
+			"If QUERY presents, " +
+			"Set the primary chequing account to account matching QUERY\n" +
+			"Otherwise, print your primary account.\n" +
+			"\n" +
+			"You must log in to use this command.\n" +
+			"\n" +
+			"For more on QUERY strings, see `help ls`.\n");
 	}
 
 	/**

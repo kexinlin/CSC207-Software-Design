@@ -163,6 +163,14 @@ public class CommandLineUI implements UI {
 					personsCmd.logout();
 					break;
 
+				case "undo":
+					managerCmd.undoTx(args);
+					break;
+
+				case "primary":
+					personsCmd.setPrimary(args);
+					break;
+
 				default:
 					error.println("Unknown command: " + command);
 					break;
