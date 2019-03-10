@@ -18,6 +18,10 @@ public class BankManager implements Loginable {
 		this.setPassword(password);
 	}
 
+	/**
+	 * Get the password of the bank manager.
+	 * @return the password of the bank manager
+	 */
 	public String getPassword() {
 		return password;
 	}
@@ -43,6 +47,11 @@ public class BankManager implements Loginable {
 		return this.managerName;
 	}
 
+	/**
+	 * Set the password of the bank manager
+	 * @param password the password to change to.
+	 * @return true when the operation succeed, false otherwise.
+	 */
 	@Override
 	public boolean setPassword(String password) {
 		this.password = password;

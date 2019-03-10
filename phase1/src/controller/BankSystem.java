@@ -107,7 +107,7 @@ public class BankSystem {
 	}
 
 	/**
-	 * Get the user or admin with `username`
+	 * Get the user or admin with `username`.
 	 *
 	 * @param username the username of wanted person
 	 * @return a `Loginable` corresponding to that person, or null if not found
@@ -116,14 +116,27 @@ public class BankSystem {
 		return loginables.getOrDefault(username, null);
 	}
 
+	/**
+	 * Get a HashMap of unique id and Loginable object for all loginables in this bank system.
+	 *
+	 * @return a map of unique id and Loginable object
+	 */
 	public HashMap<String, Loginable> getLoginables() {
 		return loginables;
 	}
 
+	/**
+	 * Get a HashMap of account id and account object for all accounts in this bank system.
+	 * @return
+	 */
 	public HashMap<String, Account> getAccounts() {
 		return accounts;
 	}
 
+	/**
+	 * Get a ArrayList for all transactions in this bank system.
+	 * @return
+	 */
 	public ArrayList<Transaction> getTransactions() {
 		return transactions;
 	}
@@ -412,11 +425,18 @@ public class BankSystem {
 		addTransaction(tx);
 	}
 
-
+	/**
+	 * Get the name of the file that stores record of this BankSystem.
+	 * @return the name of the file that stores record of this BankSystem
+	 */
 	public String getRecordFileName() {
 		return recordFileName;
 	}
 
+	/**
+	 * Set the name of the file that stores record of this BankSystem
+	 * @param recordFileName new name for the file that stores record of this BankSystem
+	 */
 	public void setRecordFileName(String recordFileName) {
 		this.recordFileName = recordFileName;
 	}

@@ -65,6 +65,11 @@ public class FileWithdrawController implements WithdrawController {
 		writeWithdrawFile(cashMap);
 	}
 
+	/**
+	 * Write a file to record withdrawal information.
+	 * @param cashMap a HashMap that maps the number of bills withdrawn
+	 * @throws InvalidOperationException when error occurs while writing file
+	 */
 	private void writeWithdrawFile(HashMap<Cash, Integer> cashMap)
 		throws InvalidOperationException {
 		File file = new File(withdrawFileName);

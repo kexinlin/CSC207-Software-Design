@@ -95,6 +95,10 @@ public class FileDepositController implements DepositController {
 		}
 	}
 
+	/**
+	 * Stock Cash based on getDepositInfo.
+	 * @throws InvalidOperationException when non-cash is stocked
+	 */
 	@Override
 	public void stockCash() throws InvalidOperationException {
 		DepositInfo depositInfo = getDepositInfo();
@@ -110,7 +114,7 @@ public class FileDepositController implements DepositController {
 	 * Gets a hash map for how many bills of each type are being deposited
 	 * @param data a String read from the transactions file.
 	 * @return a hash map with Key=type-of-cash and Value=number-of-that-type
-	 * @throws InvalidOperationException
+	 * @throws InvalidOperationException when the format of input file is incorrect
 	 */
 	private HashMap<Cash, Integer> getCashMapForDeposit(String data)
 		throws InvalidOperationException {
@@ -135,9 +139,9 @@ public class FileDepositController implements DepositController {
 	}
 
 	/**
-	 * Gets a DepositInfo from the file
-	 * @return Deposit info.
-	 * @throws InvalidOperationException
+	 * Gets a DepositInfo from the file.
+	 * @return Deposit info
+	 * @throws InvalidOperationException when transaction file is not in correct format
 	 */
 	private DepositInfo getDepositInfo() throws InvalidOperationException {
 		try {
@@ -172,7 +176,14 @@ public class FileDepositController implements DepositController {
 		}
 	}
 
+	/**
+	 * Enum that stores the types of possible depisit.
+	 */
 	private enum DepositType { CASH, CHEQUE }
+
+	/**
+	 * A private class that stores the information of deposit.
+	 */
 	private class DepositInfo {
 		DepositType type;
 		HashMap<Cash, Integer> cashMap;

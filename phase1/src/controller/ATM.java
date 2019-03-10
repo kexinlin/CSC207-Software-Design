@@ -71,7 +71,7 @@ public class ATM {
 	}
 
 	/**
-	 * Gets the bank system for this atm.
+	 * Get the bank system for this atm.
 	 *
 	 * @return the bank system.
 	 */
@@ -80,7 +80,7 @@ public class ATM {
 	}
 
 	/**
-	 * Sets the bank system for this atm.
+	 * Set the bank system for this atm.
 	 *
 	 * @param bankSystem the bank system to set to.
 	 */
@@ -89,7 +89,7 @@ public class ATM {
 	}
 
 	/**
-	 * Sets the ATM record name for this atm.
+	 * Set the ATM record name for this atm.
 	 *
 	 * @param atmRecordFileName the name of the record file
 	 */
@@ -98,7 +98,7 @@ public class ATM {
 	}
 
 	/**
-	 * Sets the cash controller for this atm.
+	 * Set the cash controller for this atm.
 	 *
 	 * @param cashController the cash controller to set.
 	 */
@@ -107,7 +107,7 @@ public class ATM {
 	}
 
 	/**
-	 * Gets the cash controller for this atm.
+	 * Get the cash controller for this atm.
 	 *
 	 * @return the cash controller.
 	 */
@@ -116,7 +116,7 @@ public class ATM {
 	}
 
 	/**
-	 * Gets the transactions controller for this atm.
+	 * Get the transactions controller for this atm.
 	 *
 	 * @return the transactions controller.
 	 */
@@ -125,7 +125,7 @@ public class ATM {
 	}
 
 	/**
-	 * Sets the transactions controller for this atm.
+	 * Set the transactions controller for this atm.
 	 *
 	 * @param depositController the transactions controller.
 	 */
@@ -133,16 +133,24 @@ public class ATM {
 		this.depositController = depositController;
 	}
 
+	/**
+	 * Get the withdraw controller for this atm.
+	 * @return the withdraw controller
+	 */
 	public WithdrawController getWithdrawController() {
 		return withdrawController;
 	}
 
+	/**
+	 * Set the withdraw controller for this atm.
+	 * @param withdrawController the withdraw controller
+	 */
 	public void setWithdrawController(WithdrawController withdrawController) {
 		this.withdrawController = withdrawController;
 	}
 
 	/**
-	 * Gets the bill amount in this ATM.
+	 * Get the bill amount in this ATM.
 	 *
 	 * @return the bill amount.
 	 */

@@ -12,13 +12,17 @@ class AlertController {
 	/**
 	 * Instantiate an alert controller.
 	 *
-	 * @param atm the atm that this alert controll
+	 * @param atm the atm that this alert controller controls
 	 */
 	AlertController(ATM atm, BankSystem bankSystem) {
 		this.bankSystem = bankSystem;
 		this.atm = atm;
 	}
 
+	/**
+	 * Get the file for recording alert information
+	 * @return
+	 */
 	private File getRecordFile() {
 		return new File(atm.getAlertFileName());
 	}

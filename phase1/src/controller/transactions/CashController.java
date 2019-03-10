@@ -26,6 +26,12 @@ public class CashController {
 		this.machine = atm;
 	}
 
+	/**
+	 * Get the amount of bills gives the User who withdraw money
+	 * @param amount the amount of money that User wants to withdraw
+	 * @return a HashMap that maps the Cash and the number of bills
+	 * @throws InsufficientCashException when the cash stored in ATM cannot add up to the amount
+	 */
 	private HashMap<Cash, Integer> getCashToWithdraw(double amount)
 		throws InsufficientCashException {
 		// better to work with ints

@@ -19,6 +19,10 @@ class ATMRecordController {
 		this.cashFactory = new CashFactory();
 	}
 
+	/**
+	 * Get the file that stores record for ATM.
+	 * @return a file that stores record for ATM
+	 */
 	private File getRecordFile() {
 		return new File(atm.getAtmRecordFileName());
 	}
