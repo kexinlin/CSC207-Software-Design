@@ -115,6 +115,13 @@ public class ATM {
 		return false;
 	}
 
+	/**
+	 * Log out the current individual.
+	 */
+	public void logout() {
+		loggedIn = null;
+	}
+
 
 	/**
 	 * Deduct the amount of cash that the user wants to withdraw from the BankSystem.

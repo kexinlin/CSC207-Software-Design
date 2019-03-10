@@ -155,6 +155,14 @@ public class CommandLineUI implements UI {
 					personsCmd.processMessages(args);
 					break;
 
+				case "adduser":
+					managerCmd.addUser(args);
+					break;
+
+				case "logout":
+					personsCmd.logout();
+					break;
+
 				default:
 					error.println("Unknown command: " + command);
 					break;

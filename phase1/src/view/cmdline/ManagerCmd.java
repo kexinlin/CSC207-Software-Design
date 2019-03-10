@@ -2,6 +2,9 @@ package view.cmdline;
 
 import model.Request;
 import model.persons.BankManager;
+import model.persons.User;
+
+import java.io.IOException;
 
 public class ManagerCmd {
 	private CommandLineUI ui;
@@ -66,6 +69,10 @@ public class ManagerCmd {
 		ui.getBankSystem().processRequest(req, accepted);
 	}
 
+	/**
+	 * View and accept/deny the requests
+	 * @param data optionally, # of request and whether the bank manager accepts it.
+	 */
 	void processRequests(String data) {
 		BankManager manager = ui.checkBankManagerLogin();
 		if (manager == null) {
@@ -81,5 +88,51 @@ public class ManagerCmd {
 				processRequest(entries[0], entries[1]);
 			}
 		}
+	}
+
+	/**
+	 * Adds the user into the bank system.
+	 * @param username the username to create.
+	 */
+	void addUser(String username) {
+		BankManager manager = ui.checkBankManagerLogin();
+		if (manager == null) {
+			return;
+		}
+
+		if (username.length() == 0) {
+			ui.getError().println("No username specified.");
+			return;
+		}
+		// reserved names for account `type-order` strings. not allowed.
+		if (username.matches("^(loc|chq|sav|cre)\\d+$")) {
+			ui.getError().println("The username is reserved and cannot be registered.");
+			return;
+		}
+
+		if (ui.getBankSystem().getLoginable(username) != null) {
+			ui.getError().println("The username is occupied by another individual.");
+			return;
+		}
+
+		String name;
+		try {
+			ui.getOutput().print("Enter the name for the user: ");
+			name = ui.getReader().readLine();
+		} catch (IOException e) {
+			ui.getError().println("Error reading the name");
+			return;
+		}
+
+		String password = ui.readPassword("Enter password for the user: ");
+		String repeatPwd = ui.readPassword("Repeat the password: ");
+		if (!password.equals(repeatPwd)) {
+			ui.getError().println("Passwords do not match.");
+			return;
+		}
+
+		User user = new User(ui.getBankSystem(), name, username, password);
+		ui.getBankSystem().addLoginable(user);
+		ui.getOutput().println("Successfully added user.");
 	}
 }

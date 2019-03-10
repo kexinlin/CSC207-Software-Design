@@ -5,6 +5,7 @@ import model.persons.Loginable;
 import model.persons.User;
 
 import java.io.IOException;
+import java.util.Optional;
 
 class PersonsCmd {
 	private CommandLineUI ui;
@@ -137,5 +138,10 @@ class PersonsCmd {
 		} else {
 			deleteMessage(user, data);
 		}
+	}
+
+	void logout() {
+		ui.getATM().logout();
+		ui.getOutput().println("Logged out successfully.");
 	}
 }

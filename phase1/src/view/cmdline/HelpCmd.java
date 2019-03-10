@@ -14,18 +14,22 @@ class HelpCmd {
 		this.ui = ui;
 		commandHelp = new HashMap<>();
 
-		commandHelp.put("", "login\t-\tLog in as a user or admin\n"
-			+ "help\t-\tDisplay this help information\n"
-			+ "ls  \t-\tList accounts\n"
-			+ "mv  \t-\tTransfer between your accounts\n"
-			+ "passwd\t-\tChange password\n"
-			+ "exit\t-\tQuit the program\n"
-			+ "deposit\t-\tDeposit cash or cheque\n"
-			+ "paybill\t-\tPay a bill to a payee outside the bank\n"
-			+ "request\t-\tShow or process requests to create account\n"
-			+ "mkaccount\t-\tRequest the bank manager to create an account\n"
-			+ "msg\t-\tRead and delete messages\n"
-			+ "Enter `help COMMAND` for a detailed description for that command.\n");
+		commandHelp.put("",
+			"Command list:\n"
+				+ "login\t-\tLog in as a user or admin\n"
+				+ "help\t-\tDisplay this help information\n"
+				+ "logout\t-\tLog out\n"
+				+ "exit\t-\tQuit the program\n"
+				+ "ls  \t-\tList accounts\n"
+				+ "mv  \t-\tTransfer between your accounts\n"
+				+ "passwd\t-\tChange password\n"
+				+ "deposit\t-\tDeposit cash or cheque\n"
+				+ "paybill\t-\tPay a bill to a payee outside the bank\n"
+				+ "request\t-\tShow or process requests to create account\n"
+				+ "mkaccount\t-\tRequest the bank manager to create an account\n"
+				+ "msg\t-\tRead and delete messages\n"
+				+ "adduser\t-\tAdd a user\n"
+				+ "Enter `help COMMAND` for a detailed description for that command.\n");
 
 		commandHelp.put("login", "login -- log into the system\n" +
 			"Usage: login\n" +
@@ -33,6 +37,11 @@ class HelpCmd {
 			"You will be prompted to enter your username and password. " +
 			"If your login information is correct, you will be logged in " +
 			"to the machine.\n");
+
+		commandHelp.put("logout", "logout -- log out\n" +
+			"Usage: logout\n" +
+			"\n" +
+			"You will be logged out the system, and other people may log in.\n");
 		commandHelp.put("help", "help -- display help\n" +
 			"Usage: help [COMMAND]\n" +
 			"\n" +
@@ -148,6 +157,17 @@ class HelpCmd {
 			"Examples:\n" +
 			"msg\n" +
 			"msg 0\n");
+
+		commandHelp.put("adduser", "adduser -- add a user\n" +
+			"Usage: adduser USERNAME\n" +
+			"\n" +
+			"Add the user with USERNAME to the bank system.\n" +
+			"You will be prompted to enter the name for the user, " +
+			"and the password.\n" +
+			"The username cannot be in the form of a `type-order` string " +
+			"(see `help ls`).\n" +
+			"\n" +
+			"You must log in as a bank manager to use this command.\n");
 	}
 
 	/**
