@@ -16,8 +16,10 @@ public class ATM {
 	private ChequeController chequeController;
 	private DepositController depositController;
 	private WithdrawController withdrawController;
-	private String atmRecordFileName;
 	private ATMRecordController atmRecordController;
+	private AlertController alertController;
+	private String atmRecordFileName;
+	private String alertFileName;
 
 	/**
 	 * Constructs an ATM.
@@ -26,6 +28,7 @@ public class ATM {
 	 */
 	public ATM(BankSystem bankSystem, String recordFileName) {
 		this.bankSystem = bankSystem;
+
 		this.atmRecordFileName = recordFileName;
 		this.atmRecordController = new ATMRecordController(this);
 
@@ -39,9 +42,21 @@ public class ATM {
 		this.depositController = new FileDepositController(this);
 		this.withdrawController = new FileWithdrawController(this);
 
+		this.alertFileName = "alerts.txt";
+		this.alertController = new AlertController(this, bankSystem);
+
 		atmRecordController.readRecords();
 	}
 
+	/**
+	 * Get the name of the file that sends alert when the amount of any denomination
+	 * goes below 20.
+	 *
+	 * @return
+	 */
+	public String getAlertFileName() {
+		return alertFileName;
+	}
 
 	/**
 	 * Get the file name of record for this atm.
@@ -170,7 +185,12 @@ public class ATM {
 			int newNum = oldNum - amountWithdraw.get(cash);
 			this.billAmount.put(cash, newNum);
 		}
+
+		if (alertController.atmNeedReplenishment()) {
+			alertController.sendAlert();
+		}
 	}
+
 
 	/**
 	 * Put `Cash` into this BankSystem machine.
