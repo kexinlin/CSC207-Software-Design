@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import model.Cash;
 
-public class ATMRecordController {
+class ATMRecordController {
 	private ATM atm;
 	private CashFactory cashFactory;
 
@@ -19,7 +19,7 @@ public class ATMRecordController {
 		this.cashFactory = new CashFactory();
 	}
 
-	public File getRecordFile() {
+	private File getRecordFile() {
 		return new File(atm.getAtmRecordFileName());
 	}
 

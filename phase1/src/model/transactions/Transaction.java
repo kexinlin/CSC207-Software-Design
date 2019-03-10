@@ -13,7 +13,7 @@ public abstract class Transaction {
 	 * @param amount the amount of transaction
 	 * @param time the time of transaction
 	 */
-	public Transaction(double amount, Date time) {
+	Transaction(double amount, Date time) {
 		this.amount = amount;
 		this.transTime = time;
 	}
@@ -26,7 +26,7 @@ public abstract class Transaction {
 		return transTime;
 	}
 
-	public String getDateStr() {
+	String getDateStr() {
 		SimpleDateFormat format = new SimpleDateFormat("MMM d, yyyy");
 		return format.format(getDate());
 	}

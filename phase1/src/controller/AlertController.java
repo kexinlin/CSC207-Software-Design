@@ -5,7 +5,7 @@ import model.Cash;
 import java.io.*;
 import java.util.HashMap;
 
-public class AlertController {
+class AlertController {
 	private BankSystem bankSystem;
 	private ATM atm;
 
@@ -19,7 +19,7 @@ public class AlertController {
 		this.atm = atm;
 	}
 
-	public File getRecordFile() {
+	private File getRecordFile() {
 		return new File(atm.getAlertFileName());
 	}
 

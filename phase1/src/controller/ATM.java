@@ -6,7 +6,6 @@ import model.exceptions.InsufficientCashException;
 import model.persons.Loginable;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class ATM {
 	private BankSystem bankSystem;

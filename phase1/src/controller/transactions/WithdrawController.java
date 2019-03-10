@@ -1,13 +1,10 @@
 package controller.transactions;
 
 import controller.ATM;
-import model.Cash;
 import model.accounts.Account;
 import model.exceptions.InsufficientCashException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
-
-import java.util.HashMap;
 
 public interface WithdrawController {
 	/**

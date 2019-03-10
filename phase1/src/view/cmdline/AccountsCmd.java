@@ -10,10 +10,8 @@ import model.transactions.Transaction;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 
-public class AccountsCmd {
+class AccountsCmd {
 	private CommandLineUI ui;
 	private AccountFactory accountFactory;
 

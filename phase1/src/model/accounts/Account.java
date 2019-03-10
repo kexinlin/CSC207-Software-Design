@@ -1,20 +1,11 @@
 package model.accounts;
 
-import controller.BankSystem;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
 import model.exceptions.NoTransactionException;
 import model.transactions.Transaction;
 import model.persons.User;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -33,7 +24,7 @@ public abstract class Account {
 	 * @param accountId      account id
 	 * @param owner          owner of the account
 	 */
-	public Account(double balance, Date dateOfCreation, String accountId, User owner) {
+	Account(double balance, Date dateOfCreation, String accountId, User owner) {
 		this.balance = balance;
 		this.dateOfCreation = dateOfCreation;
 		this.accountId = accountId;
@@ -105,7 +96,7 @@ public abstract class Account {
 	 *
 	 * @return return true when `this.log` contains no transaction
 	 */
-	public boolean logEmpty() {
+	private boolean logEmpty() {
 		return this.logs.isEmpty();
 	}
 

@@ -1,10 +1,7 @@
 package model.persons;
 
-import controller.BankSystem;
 import model.Message;
-import model.Request;
 import model.accounts.*;
-import model.exceptions.NoTransactionException;
 import model.transactions.Transaction;
 
 import java.util.ArrayList;
@@ -13,15 +10,13 @@ import java.util.Date;
 public class User implements Loginable {
 	private String name;
 	private String username;
-	private BankSystem machine;
 	private String password;
 	private ArrayList<Account> accounts = new ArrayList<>();
 	private ChequingAccount primaryAccount;
 	private ArrayList<Transaction> transactions = new ArrayList<>();
 	private ArrayList<Message> messages = new ArrayList<>();
 
-	public User(BankSystem bankSystem, String name, String username, String password) {
-		this.machine = bankSystem;
+	public User(String name, String username, String password) {
 		this.name = name;
 		this.username = username;
 		this.password = password;
@@ -69,7 +64,6 @@ public class User implements Loginable {
 
 	/**
 	 * Change the password of this user to `password`.
-	 *
 	 * @param password the password to change to.
 	 * @return true if succeeds, false otherwise.
 	 */
@@ -81,7 +75,6 @@ public class User implements Loginable {
 
 	/**
 	 * Gets the net balance of this user
-	 *
 	 * @return net balance
 	 */
 	public double getNetTotal() {

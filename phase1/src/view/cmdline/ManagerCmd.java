@@ -13,7 +13,7 @@ import model.persons.User;
 import java.io.IOException;
 import java.util.Map;
 
-public class ManagerCmd {
+class ManagerCmd {
 	private CommandLineUI ui;
 
 	ManagerCmd(CommandLineUI ui) {
@@ -138,7 +138,7 @@ public class ManagerCmd {
 			return;
 		}
 
-		User user = new User(ui.getBankSystem(), name, username, password);
+		User user = new User(name, username, password);
 		ui.getBankSystem().addLoginable(user);
 		ui.getOutput().println("Successfully added user.");
 	}

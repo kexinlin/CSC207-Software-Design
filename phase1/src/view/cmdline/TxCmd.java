@@ -1,13 +1,12 @@
 package view.cmdline;
 
 import model.accounts.Account;
-import model.exceptions.AccountNotExistException;
 import model.exceptions.InsufficientCashException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
 import model.persons.User;
 
-public class TxCmd {
+class TxCmd {
 	private CommandLineUI ui;
 
 	/**

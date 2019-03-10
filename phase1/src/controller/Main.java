@@ -6,7 +6,7 @@ import view.UI;
 /**
  * The entrance to the whole program.
  */
-public class Main {
+class Main {
 	public static void main(String[] args) {
 		String recordFileName = "records.txt";
 		String atmRecordFileName = "atm-records.txt";

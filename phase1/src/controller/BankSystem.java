@@ -17,7 +17,6 @@ import model.transactions.*;
 
 import java.security.SecureRandom;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -142,7 +141,7 @@ public class BankSystem {
 			throw new InvalidOperationException("Sorry, " +
 				"your username is already taken. Please try another one.");
 		}
-		User u = new User(this, name, username, password);
+		User u = new User(name, username, password);
 
 		this.loginables.put(username, u);
 	}
@@ -150,13 +149,12 @@ public class BankSystem {
 	/**
 	 * Randomly generate an `accountId`.
 	 *
-	 * @param length the length of the String generated
 	 * @return the generated String
 	 */
-	private String randomString(int length) {
-		StringBuilder stringbuilder = new StringBuilder(length);
+	private String randomString() {
+		StringBuilder stringbuilder = new StringBuilder(6);
 		do {
-			for (int i = 0; i < length; i++)
+			for (int i = 0; i < 6; i++)
 				stringbuilder.append(NUMBERS.charAt(rnd.nextInt(NUMBERS.length())));
 			String temp = stringbuilder.toString();
 			boolean flag = !accounts.containsKey(temp);
@@ -192,9 +190,9 @@ public class BankSystem {
 	 * @param request a request from a User containing the information for creating an account,
 	 *                which has been verified by a BankManager.
 	 */
-	public void createAccount(Request request) {
+	private void createAccount(Request request) {
 		User owner = request.getUser();
-		String accountId = randomString(6);
+		String accountId = randomString();
 		Account newAccount = accountFactory.getAccount(request.getAccountType()
 			,0, getCurrentTime(), accountId, owner);
 
