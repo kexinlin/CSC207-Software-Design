@@ -16,13 +16,18 @@ public class ATM {
 	private ChequeController chequeController;
 	private DepositController depositController;
 	private WithdrawController withdrawController;
+	private String atmRecordFileName;
+	private ATMRecordController atmRecordController;
 
 	/**
 	 * Constructs an ATM.
+	 *
 	 * @param bankSystem the bank system underneath.
 	 */
-	public ATM(BankSystem bankSystem) {
+	public ATM(BankSystem bankSystem, String recordFileName) {
 		this.bankSystem = bankSystem;
+		this.atmRecordFileName = recordFileName;
+		this.atmRecordController = new ATMRecordController(this);
 
 		this.billAmount = new HashMap<>();
 		// init the num of each kind of cash to zero
@@ -33,10 +38,23 @@ public class ATM {
 		this.chequeController = new ChequeController(this);
 		this.depositController = new FileDepositController(this);
 		this.withdrawController = new FileWithdrawController(this);
+
+		atmRecordController.readRecords();
+	}
+
+
+	/**
+	 * Get the file name of record for this atm.
+	 *
+	 * @return record file name
+	 */
+	public String getAtmRecordFileName() {
+		return atmRecordFileName;
 	}
 
 	/**
 	 * Gets the bank system for this atm.
+	 *
 	 * @return the bank system.
 	 */
 	public BankSystem getBankSystem() {
@@ -45,6 +63,7 @@ public class ATM {
 
 	/**
 	 * Sets the bank system for this atm.
+	 *
 	 * @param bankSystem the bank system to set to.
 	 */
 	public void setBankSystem(BankSystem bankSystem) {
@@ -52,7 +71,17 @@ public class ATM {
 	}
 
 	/**
+	 * Sets the ATM record name for this atm.
+	 *
+	 * @param atmRecordFileName the name of the record file
+	 */
+	public void setAtmRecordFileName(String atmRecordFileName) {
+		this.atmRecordFileName = atmRecordFileName;
+	}
+
+	/**
 	 * Sets the cash controller for this atm.
+	 *
 	 * @param cashController the cash controller to set.
 	 */
 	public void setCashController(CashController cashController) {
@@ -61,6 +90,7 @@ public class ATM {
 
 	/**
 	 * Gets the cash controller for this atm.
+	 *
 	 * @return the cash controller.
 	 */
 	public CashController getCashController() {
@@ -69,6 +99,7 @@ public class ATM {
 
 	/**
 	 * Gets the transactions controller for this atm.
+	 *
 	 * @return the transactions controller.
 	 */
 	public DepositController getDepositController() {
@@ -77,6 +108,7 @@ public class ATM {
 
 	/**
 	 * Sets the transactions controller for this atm.
+	 *
 	 * @param depositController the transactions controller.
 	 */
 	public void setDepositController(DepositController depositController) {
@@ -93,6 +125,7 @@ public class ATM {
 
 	/**
 	 * Gets the bill amount in this ATM.
+	 *
 	 * @return the bill amount.
 	 */
 	public HashMap<Cash, Integer> getBillAmount() {
@@ -145,8 +178,8 @@ public class ATM {
 	 * @param inputCash a HashMap that map the denomination to its number of bills
 	 */
 	public void stockCash(HashMap<Cash, Integer> inputCash) {
-		for (Map.Entry<Cash, Integer> pair : inputCash.entrySet()) {
-			this.billAmount.put(pair.getKey(), pair.getValue());
+		for (Cash cash : inputCash.keySet()) {
+			this.billAmount.put(cash, this.billAmount.get(cash) + inputCash.get(cash));
 		}
 	}
 
@@ -167,7 +200,7 @@ public class ATM {
 			if (this.billAmount.get(cash) < amountWithdraw.get(cash)) {
 				throw new InsufficientCashException(
 					"Sorry, this BankSystem does not have enough " +
-					cash.getNumVal() + " dollar bills at this moment.");
+						cash.getNumVal() + " dollar bills at this moment.");
 			}
 		}
 	}
@@ -183,9 +216,18 @@ public class ATM {
 
 	/**
 	 * Gets the cheque controller.
+	 *
 	 * @return cheque controller.
 	 */
 	public ChequeController getChequeController() {
 		return this.chequeController;
+	}
+
+
+	/**
+	 * save records to file.
+	 */
+	public void close() {
+		atmRecordController.writeRecords();
 	}
 }

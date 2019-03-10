@@ -9,7 +9,6 @@ import model.exceptions.NoEnoughMoneyException;
 import model.transactions.DepositTransaction;
 import model.transactions.Transaction;
 import model.transactions.WithdrawTransaction;
-import org.omg.CORBA.INTERNAL;
 
 import java.util.*;
 
@@ -38,7 +37,6 @@ public class CashController {
 		HashMap<Cash, Integer> cashPool = machine.getBillAmount();
 
 		ArrayList<Cash> cashTypes = new ArrayList<>(Arrays.asList(
-			Cash.HUNDRED,
 			Cash.FIFTY,
 			Cash.TWENTY,
 			Cash.TEN,
