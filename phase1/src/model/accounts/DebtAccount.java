@@ -1,7 +1,6 @@
 package model.accounts;
 
 import model.accounts.Account;
-import model.exceptions.NoEnoughMoneyException;
 import model.persons.User;
 
 import java.util.Date;
@@ -14,7 +13,7 @@ public abstract class DebtAccount extends Account {
 	 * @param accountId account id
 	 * @param owner owner of the account
 	 */
-	public DebtAccount(double balance, Date dateOfCreation, String accountId, User owner) {
+	DebtAccount(double balance, Date dateOfCreation, String accountId, User owner) {
 		super(balance, dateOfCreation, accountId, owner);
 	}
 

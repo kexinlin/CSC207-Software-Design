@@ -7,7 +7,6 @@ import model.persons.Loginable;
 import model.persons.User;
 
 import java.io.IOException;
-import java.util.Optional;
 
 class PersonsCmd {
 	private CommandLineUI ui;

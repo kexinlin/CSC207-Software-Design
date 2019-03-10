@@ -2,8 +2,6 @@ package controller;
 
 import model.accounts.Account;
 import model.exceptions.AccountNotExistException;
-import model.persons.Loginable;
-import model.persons.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,27 +31,6 @@ public class BankSystemTest {
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-
-	@After
-	public void cleanUp() {
-	}
-
-	@Test
-	public void createUser() {
-
-	}
-
-	@Test
-	public void testTransferMoney() {
-	}
-
-	@Test
-	public void addAccount() {
-	}
-
-	@Test
-	public void testPayBill() {
 	}
 
 	@Test

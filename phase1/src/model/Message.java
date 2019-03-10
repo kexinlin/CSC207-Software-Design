@@ -3,8 +3,8 @@ package model;
 import model.persons.User;
 
 public class Message {
-	User user;
-	String text;
+	private User user;
+	private String text;
 	/**
 	 * Constructs a message.
 	 * @param user the user for whom the message is for.

@@ -112,14 +112,14 @@ public class FileDepositController implements DepositController {
 	 * @return a hash map with Key=type-of-cash and Value=number-of-that-type
 	 * @throws InvalidOperationException
 	 */
-	public HashMap<Cash, Integer> getCashMapForDeposit(String data)
+	private HashMap<Cash, Integer> getCashMapForDeposit(String data)
 		throws InvalidOperationException {
 		HashMap<Cash, Integer> bills = new HashMap<>();
 
-		String vals[] = data.split(",");
+		String[] vals = data.split(",");
 
 		for (String s : vals)  {
-			String kv[] = s.split("\\s+");
+			String[] kv = s.split("\\s+");
 			try {
 				bills.put(cashFactory.getCash(kv[0]), Integer.valueOf(kv[1]));
 			} catch (ArrayIndexOutOfBoundsException e) {

@@ -6,15 +6,12 @@ import model.accounts.Account;
 import model.exceptions.InsufficientCashException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
-import org.omg.PortableInterceptor.INACTIVE;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.Buffer;
 import java.util.HashMap;
-import java.util.Map;
 
 public class FileWithdrawController implements WithdrawController {
 	private ATM atm;

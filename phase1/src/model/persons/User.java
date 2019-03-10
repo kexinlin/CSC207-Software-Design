@@ -1,10 +1,7 @@
 package model.persons;
 
-import controller.BankSystem;
 import model.Message;
-import model.Request;
 import model.accounts.*;
-import model.exceptions.NoTransactionException;
 import model.transactions.Transaction;
 
 import java.util.ArrayList;
@@ -13,7 +10,6 @@ import java.util.Date;
 public class User implements Loginable {
 	private String name;
 	private String username;
-	private BankSystem machine;
 	private String password;
 	private ArrayList<Account> accounts = new ArrayList<>();
 	private ChequingAccount primaryAccount;
@@ -21,8 +17,7 @@ public class User implements Loginable {
 	private ArrayList<Transaction> transactions = new ArrayList<>();
 	private ArrayList<Message> messages = new ArrayList<>();
 
-	public User(BankSystem bankSystem, String name, String username, String password) {
-		this.machine = bankSystem;
+	public User(String name, String username, String password) {
 		this.name = name;
 		this.username = username;
 		this.password = password;
@@ -86,18 +81,6 @@ public class User implements Loginable {
 	 */
 	public ArrayList<Account> getAccounts() {
 		return accounts;
-	}
-
-	public boolean logEmpty() {
-		return this.transactions.isEmpty();
-	}
-
-	public Transaction getMostRecentTransaction() throws NoTransactionException {
-		if (!logEmpty()) {
-			return this.transactions.get(transactions.size() - 1);
-		} else {
-			throw new NoTransactionException("This account does not have transaction record.");
-		}
 	}
 
 	public void setPrimaryCheuqingAccount(ChequingAccount acc) {

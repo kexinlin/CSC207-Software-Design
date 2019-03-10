@@ -12,7 +12,7 @@ import model.transactions.*;
 import java.io.*;
 import java.util.Date;
 
-public class RecordController {
+class RecordController {
 	private BankSystem bankSystem;
 	private AccountFactory accountFactory;
 
@@ -155,10 +155,10 @@ public class RecordController {
 		bankSystem.addRequest(req);
 	}
 
-	private boolean processTx(String data) {
+	private void processTx(String data) {
 		String[] entries = data.split(",", 2);
 		if (entries.length != 2) {
-			return false;
+			return;
 		}
 		boolean ret;
 		switch (entries[0]) {
@@ -182,7 +182,6 @@ public class RecordController {
 		if (!ret) {
 			System.err.println("Error processing transaction.");
 		}
-		return ret;
 	}
 
 	private boolean processDepositWithdraw(String type, String data) {
@@ -306,7 +305,7 @@ public class RecordController {
 		String username = entries[0];
 		String password = entries[1];
 
-		BankManager bankManager = new BankManager(bankSystem, username, password);
+		BankManager bankManager = new BankManager(username, password);
 		bankSystem.addLoginable(bankManager);
 	}
 
@@ -321,7 +320,7 @@ public class RecordController {
 		String username = entries[1];
 		String password = entries[2];
 
-		User user = new User(bankSystem, name, username, password);
+		User user = new User(name, username, password);
 		bankSystem.addLoginable(user);
 	}
 
