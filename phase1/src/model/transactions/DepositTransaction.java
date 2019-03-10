@@ -27,4 +27,10 @@ public class DepositTransaction extends Transaction{
 	public Account getAcc() {
 		return acc;
 	}
+
+	@Override
+	public String toString() {
+		return "Deposited " + getAmount() + " into "
+			+ acc.getAccountId() + " on " + getDateStr();
+	}
 }

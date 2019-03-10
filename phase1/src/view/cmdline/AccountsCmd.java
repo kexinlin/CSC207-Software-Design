@@ -3,8 +3,11 @@ package view.cmdline;
 import controller.AccountFactory;
 import model.Request;
 import model.accounts.*;
+import model.exceptions.NoTransactionException;
 import model.persons.User;
+import model.transactions.Transaction;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -67,9 +70,18 @@ public class AccountsCmd {
 			return;
 		}
 
-		ui.getOutput().println("Acc Id\tType\tBalance");
-		ui.getOutput().println(acc.getAccountId() + ": " + accountFactory.getAccountType(acc)
-			+ ": " + acc.getBalance());
+		SimpleDateFormat format = new SimpleDateFormat("MMM d, YYYY");
+
+		ui.getOutput().println("Acc Id\tType\tBalance\tDate of Creation");
+		ui.getOutput().println(acc.getAccountId() + "\t" + accountFactory.getAccountType(acc)
+			+ "\t" + acc.getBalance() + "\t" + format.format(acc.getDateOfCreation()));
+		Transaction tx;
+		try {
+			tx = acc.getLastTrans();
+		} catch (NoTransactionException e) {
+			return;
+		}
+		ui.getOutput().println("Last Transaction: " + tx);
 	}
 
 	/**

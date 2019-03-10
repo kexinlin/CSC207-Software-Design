@@ -1,6 +1,5 @@
 package controller;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import model.Message;
 import model.Request;
 import model.accounts.*;
@@ -10,9 +9,7 @@ import model.persons.Loginable;
 import model.persons.User;
 import model.transactions.*;
 
-import javax.jws.soap.SOAPBinding;
 import java.io.*;
-import java.nio.Buffer;
 import java.util.Date;
 
 public class RecordController {
@@ -158,40 +155,47 @@ public class RecordController {
 		bankSystem.addRequest(req);
 	}
 
-	private void processTx(String data) {
+	private boolean processTx(String data) {
 		String[] entries = data.split(",", 2);
 		if (entries.length != 2) {
-			return;
+			return false;
 		}
+		boolean ret;
 		switch (entries[0]) {
 			case "transfer":
-				processTransfer(entries[1]);
+				ret = processTransfer(entries[1]);
 				break;
 
 			case "deposit":
 			case "withdraw":
-				processDepositWithdraw(entries[0], entries[1]);
+				ret = processDepositWithdraw(entries[0], entries[1]);
 				break;
 
 			case "paybill":
-				processPayBill(entries[1]);
+				ret = processPayBill(entries[1]);
+				break;
 
 			default:
+				ret = false;
 				break;
 		}
+		if (!ret) {
+			System.err.println("Error processing transaction.");
+		}
+		return ret;
 	}
 
-	private void processDepositWithdraw(String type, String data) {
+	private boolean processDepositWithdraw(String type, String data) {
 		String[] entries = data.split(",", 3);
 		if (entries.length != 3) {
-			return;
+			return false;
 		}
 		String accId = entries[0];
 		Account acc;
 		try {
 			acc = bankSystem.getAccountById(accId);
 		} catch (AccountNotExistException e) {
-			return;
+			return false;
 		}
 		Date date;
 		double amount;
@@ -199,19 +203,20 @@ public class RecordController {
 			date = new Date(Long.valueOf(entries[2]));
 			amount = Double.valueOf(entries[3]);
 		} catch (NumberFormatException e) {
-			return;
+			return false;
 		}
 
 		Transaction tx = type.equals("deposit")
 			? new DepositTransaction(amount, date, acc)
 			: new WithdrawTransaction(amount, date, acc);
 		bankSystem.addTransaction(tx);
+		return true;
 	}
 
-	private void processPayBill(String data) {
+	private boolean processPayBill(String data) {
 		String[] entries = data.split(",", 4);
 		if (entries.length != 4) {
-			return;
+			return false;
 		}
 
 		String fromAccId = entries[0];
@@ -220,7 +225,7 @@ public class RecordController {
 		try {
 			fromAcc = bankSystem.getAccountById(fromAccId);
 		} catch (AccountNotExistException e) {
-			return;
+			return false;
 		}
 
 		Date date;
@@ -229,17 +234,18 @@ public class RecordController {
 			date = new Date(Long.valueOf(entries[2]));
 			amount = Double.valueOf(entries[3]);
 		} catch (NumberFormatException e) {
-			return;
+			return false;
 		}
 
 		Transaction tx = new PayBillTransaction(amount, date, fromAcc, payee);
 		bankSystem.addTransaction(tx);
+		return true;
 	}
 
-	private void processTransfer(String data) {
+	private boolean processTransfer(String data) {
 		String[] entries = data.split(",", 4);
 		if (entries.length != 4) {
-			return;
+			return false;
 		}
 
 		String fromAccId = entries[0];
@@ -249,7 +255,7 @@ public class RecordController {
 			fromAcc = bankSystem.getAccountById(fromAccId);
 			toAcc = bankSystem.getAccountById(toAccId);
 		} catch (AccountNotExistException e) {
-			return;
+			return false;
 		}
 
 		Date date;
@@ -258,11 +264,12 @@ public class RecordController {
 			date = new Date(Long.valueOf(entries[2]));
 			amount = Double.valueOf(entries[3]);
 		} catch (NumberFormatException e) {
-			return;
+			return false;
 		}
 
 		Transaction tx = new TransferTransaction(amount, date, fromAcc, toAcc);
 		bankSystem.addTransaction(tx);
+		return true;
 	}
 
 	private void processAccount(String data) {
@@ -405,7 +412,7 @@ public class RecordController {
 	}
 
 	private void recordTransaction(BufferedWriter writer, Transaction tx) throws IOException {
-		StringBuilder builder = new StringBuilder("transaction,");
+		StringBuilder builder = new StringBuilder("tx,");
 		if (tx instanceof DepositTransaction) {
 			builder.append("deposit,")
 				.append(((DepositTransaction) tx).getAcc().getAccountId()).append(",");

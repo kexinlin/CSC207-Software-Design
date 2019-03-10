@@ -24,8 +24,6 @@ public abstract class Account {
 	private String accountId;
 	private User owner;
 	private ArrayList<Transaction> logs;
-	private BankSystem bankSystem;
-	private static final String PAY_BILL_FILE_NAME = "outgoing.txt";
 
 	/**
 	 * Create an instance of account
@@ -65,9 +63,9 @@ public abstract class Account {
 
 
 	/**
-	 * Gets the currentTime of account creation.
+	 * Gets the date of account creation.
 	 *
-	 * @return currentTime of creation
+	 * @return date of creation
 	 */
 	public Date getDateOfCreation() {
 		return this.dateOfCreation;
@@ -101,34 +99,6 @@ public abstract class Account {
 	 * @param amount the amount of money to put in
 	 */
 	public abstract void putMoneyIn(double amount);
-
-
-	/**
-	 * Pay `amount` of money to a non-user account.
-	 * Note that transferring money out is not allowed for certain type of class,
-	 * and in this case, exception should be raised.
-	 * Exception will also be raised when the amount exceeds what is allowed.
-	 * If succeeds, result will be recorded in outgoing.txt.
-	 *
-	 * @param nonUserAccount a non-user account represented by a String
-	 * @param amount         the amount of bill
-	 */
-	public void payBill(String nonUserAccount, double amount) throws NoEnoughMoneyException {
-		Writer writer;
-
-		try {
-			writer = new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream("." + File.separator + "phase1" + File.separator
-					+ PAY_BILL_FILE_NAME), StandardCharsets.UTF_8));
-			String timeStr = bankSystem.getCurrentTimeStr();
-			writer.write(String.join(",", this.accountId, this.owner.getUsername(),
-				nonUserAccount, String.valueOf(amount), timeStr));
-			writer.close();
-		} catch (IOException ex) {
-			/*ignore*/
-		}
-	}
-
 
 	/**
 	 * Return whether `this.log` contains no transaction.

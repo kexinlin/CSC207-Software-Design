@@ -40,19 +40,4 @@ public class ChequingAccount extends AssetAccount {
 		}
 		this.balance -= amount;
 	}
-
-
-	/**
-	 * Pay `amount` of money to a non-user account.
-	 * Exception will be raised when the amount exceeds what is allowed.
-	 * If succeeds, result will be recorded in outgoing.txt.
-	 *
-	 * @param nonUserAccount a non-user account represented by a String
-	 * @param amount         the amount of bill
-	 */
-	@Override
-	public void payBill(String nonUserAccount, double amount) throws NoEnoughMoneyException {
-		takeMoneyOut(amount);
-		super.payBill(nonUserAccount, amount);
-	}
 }

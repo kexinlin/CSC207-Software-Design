@@ -6,7 +6,7 @@ import model.persons.User;
 import java.util.Date;
 
 public class SavingAccount extends AssetAccount {
-	private static final double INTEREST = 0.1;
+	private double interestRate;
 
 	/**
 	 * Create an instance of SavingAccount
@@ -18,6 +18,7 @@ public class SavingAccount extends AssetAccount {
 	 */
 	public SavingAccount(double balance, Date dateOfCreation, String accountId, User owner) {
 		super(balance, dateOfCreation, accountId, owner);
+		this.interestRate = 0.1/100;
 	}
 
 	/**
@@ -35,26 +36,10 @@ public class SavingAccount extends AssetAccount {
 		this.balance -= amount;
 	}
 
-
-	/**
-	 * Pay `amount` of money to a non-user account.
-	 * Exception will be raised when the amount exceeds what is allowed.
-	 * If succeeds, result will be recorded in outgoing.txt.
-	 *
-	 * @param nonUserAccount a non-user account represented by a String
-	 * @param amount         the amount of bill
-	 */
-	@Override
-	public void payBill(String nonUserAccount, double amount) throws NoEnoughMoneyException {
-		takeMoneyOut(amount);
-		super.payBill(nonUserAccount, amount);
-	}
-
-
 	/**
 	 * Increase the saving account balance bt a factor of 0.1%.
 	 */
-	public void increasInterest() {
-		this.balance *= (1 + INTEREST / 100);
+	public void increaseInterest() {
+		this.balance *= (1 + interestRate);
 	}
 }

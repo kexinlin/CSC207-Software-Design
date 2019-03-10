@@ -27,4 +27,10 @@ public class WithdrawTransaction extends Transaction{
 	public Account getAcc() {
 		return acc;
 	}
+
+	@Override
+	public String toString() {
+		return "Withdrew " + getAmount() + " from " + getAcc().getAccountId()
+			+ " on " + getDateStr();
+	}
 }

@@ -7,6 +7,7 @@ import controller.transactions.FileBillController;
 import model.accounts.Account;
 import model.accounts.ChequingAccount;
 import model.accounts.CreditCardAccount;
+import model.accounts.SavingAccount;
 import model.exceptions.AccountNotExistException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
@@ -61,6 +62,18 @@ public class BankSystem {
 	 * save records to file.
 	 */
 	public void close() {
+		Calendar cal = new Calendar.Builder().build();
+		cal.setTime(getCurrentTime());
+		// proceed to the next day, since the system shuts down at midnight
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		// on the first day of each month, gain interest.
+		if (cal.get(Calendar.DAY_OF_MONTH) == 1) {
+			accounts.values().forEach(a -> {
+				if (a instanceof SavingAccount) {
+					((SavingAccount) a).increaseInterest();
+				}
+			});
+		}
 		recordController.writeRecords();
 	}
 

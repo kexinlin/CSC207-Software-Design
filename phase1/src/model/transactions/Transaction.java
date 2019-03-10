@@ -1,5 +1,6 @@
 package model.transactions;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public abstract class Transaction {
@@ -23,5 +24,10 @@ public abstract class Transaction {
 
 	public Date getDate() {
 		return transTime;
+	}
+
+	public String getDateStr() {
+		SimpleDateFormat format = new SimpleDateFormat("MMM d, yyyy");
+		return format.format(getDate());
 	}
 }

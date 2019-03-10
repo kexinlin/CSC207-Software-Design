@@ -28,4 +28,11 @@ public class PayBillTransaction extends Transaction {
 	public String getPayeeName() {
 		return payeeName;
 	}
+
+	@Override
+	public String toString() {
+		return "Paid " + getAmount() + " from "
+			+ getSource().getAccountId() + " to " + getPayeeName()
+			+ " on " + getDateStr();
+	}
 }

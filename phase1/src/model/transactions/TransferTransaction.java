@@ -40,4 +40,10 @@ public class TransferTransaction extends Transaction {
 	public Account getToAcc() {
 		return toAcc;
 	}
+
+	@Override
+	public String toString() {
+		return "Transferred " + getAmount() + " from " + fromAcc.getAccountId()
+			+ " to " + toAcc.getAccountId() + " on " + getDateStr();
+	}
 }

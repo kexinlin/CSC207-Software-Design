@@ -19,21 +19,6 @@ public abstract class DebtAccount extends Account {
 	}
 
 	/**
-	 * Pay `amount` of money to a non-user account.
-	 * Note that transferring money out is not allowed for certain type of class,
-	 * and in this case, exception should be raised.
-	 * Exception will also be raised when the amount exceeds what is allowed.
-	 *
-	 * @param nonUserAccount a non-user account represented by a String
-	 * @param amount         the amount of bill
-	 */
-	public void payBill(String nonUserAccount, double amount) throws NoEnoughMoneyException {
-		this.balance += amount;
-		super.payBill(nonUserAccount, amount);
-	}
-
-
-	/**
 	 * Take money out of the credit card account.
 	 *
 	 * @param amount the amount of money to take out.
