@@ -141,11 +141,18 @@ class PersonsCmd {
 		}
 	}
 
+	/**
+	 * Log out the current user.
+	 */
 	void logout() {
 		ui.getATM().logout();
 		ui.getOutput().println("Logged out successfully.");
 	}
 
+	/**
+	 * set/view the account to the primary chequing account.
+	 * @param data the query string of the account.
+	 */
 	void setPrimary(String data) {
 		User user = ui.checkUserLogin();
 		if (user == null) {

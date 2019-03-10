@@ -2,7 +2,9 @@ package model;
 
 import model.persons.User;
 
-
+/**
+ * A request sent by the user to bank managers to create an account.
+ */
 public class Request {
 	private User user;
 	private String accountType;
@@ -23,14 +25,26 @@ public class Request {
 		this.msg = msg;
 	}
 
+	/**
+	 * Gets the user who sent this request.
+	 * @return the user
+	 */
 	public User getUser() {
 		return user;
 	}
 
+	/**
+	 * Gets the account type the user requested to create
+	 * @return the type of account, in a 3-char string.
+	 */
 	public String getAccountType() {
 		return accountType;
 	}
 
+	/**
+	 * Gets the message sent to the bank manager.
+	 * @return the message.
+	 */
 	public String getMsg() {
 		return msg;
 	}

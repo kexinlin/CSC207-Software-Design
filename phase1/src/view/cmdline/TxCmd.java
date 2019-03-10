@@ -130,6 +130,10 @@ class TxCmd {
 		}
 	}
 
+	/**
+	 * Withdraw from the account.
+	 * @param data the query string of the account.
+	 */
 	void withdraw(String data) {
 		User user = ui.checkUserLogin();
 		if (user == null) {

@@ -41,7 +41,7 @@ class AccountsCmd {
 		if (l instanceof User) {
 			// we clone the array list since we do not want to surprise users
 			// when another account is added between lines.
-			accounts = (ArrayList<Account>) ((User) l).getAccounts().clone();
+			accounts = new ArrayList<>(((User) l).getAccounts());
 		} else {
 			accounts = new ArrayList<>(ui.getBankSystem().getAccounts().values());
 		}

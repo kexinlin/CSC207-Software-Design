@@ -2,6 +2,10 @@ package model;
 
 import model.persons.User;
 
+/**
+ * A message that bank managers can send to users to inform them about something,
+ * such as denial of account creation.
+ */
 public class Message {
 	private User user;
 	private String text;

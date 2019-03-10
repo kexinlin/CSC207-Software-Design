@@ -54,30 +54,58 @@ public class CommandLineUI implements UI {
 		this.managerCmd = new ManagerCmd(this);
 	}
 
+	/**
+	 * Gets the input stream for this ui.
+	 * @return the input stream.
+	 */
 	public InputStream getInput() {
 		return input;
 	}
 
+	/**
+	 * Gets the output stream for this ui.
+	 * @return the output stream.
+	 */
 	public PrintStream getOutput() {
 		return output;
 	}
 
+	/**
+	 * Gets the error stream for this ui.
+	 * @return the error stream.
+	 */
 	public PrintStream getError() {
 		return error;
 	}
 
+	/**
+	 * Gets the reader for this ui.
+	 * @return the reader.
+	 */
 	public BufferedReader getReader() {
 		return reader;
 	}
 
+	/**
+	 * Gets the ATM for this UI.
+	 * @return the ATM.
+	 */
 	public ATM getATM() {
 		return machine;
 	}
 
+	/**
+	 * Gets current account list for this ui.
+	 * @return an ArrayList containing current accounts
+	 */
 	public ArrayList<Account> getCurAccounts() {
 		return curAccounts;
 	}
 
+	/**
+	 * Sets the current account list.
+	 * @param curAccounts the ArrayList to set to.
+	 */
 	public void setCurAccounts(ArrayList<Account> curAccounts) {
 		this.curAccounts = curAccounts;
 	}
@@ -196,7 +224,6 @@ public class CommandLineUI implements UI {
 	 * @param prompt The string to prompt the individual to input a password
 	 * @return the password we have read
 	 */
-
 	String readPassword(String prompt) {
 		String password;
 		Console console = System.console();
