@@ -78,7 +78,7 @@ public class FileDepositController implements DepositController {
 	 * <p>
 	 * example for cash transactions:
 	 * ------------------------------------------
-	 * cash,5 10,20 3,100 6
+	 * cash,5 10,20 3,50 6
 	 * ------------------------------------------
 	 *
 	 * @param acc The account to transactions into.
