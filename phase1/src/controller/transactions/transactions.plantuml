@@ -70,7 +70,7 @@ title __TRANSACTIONS's Class Diagram__\n
           + getDepositFileName()
           + depositMoney()
           + stockCash()
-          + getCashMapForDeposit()
+          - getCashMapForDeposit()
           - getDepositInfo()
       }
     }

@@ -15,11 +15,6 @@ title __CONTROLLER's Class Diagram__\n
     class BankSystemTest {
         - recordFileName : String
         + setUp()
-        + cleanUp()
-        + createUser()
-        + testTransferMoney()
-        + addAccount()
-        + testPayBill()
         + testGainInterest()
     }
   }

@@ -376,7 +376,6 @@ title __PHASE1's Class Diagram__\n
   AlertController o-- ATM : atm
   AssetAccount -up-|> Account
   BankManager -up-|> Loginable
-  BankManager o-- BankSystem : bankSystem
   BankSystem o-- BillController : billController
   BankSystem o-- RecordController : recordController
   BankSystem o-- AccountFactory : accountFactory
@@ -417,7 +416,6 @@ title __PHASE1's Class Diagram__\n
   TransferTransaction o-- Account : toAcc
   TxCmd o-- CommandLineUI : ui
   User -up-|> Loginable
-  User o-- BankSystem : machine
   User o-- ChequingAccount : primaryAccount
   WithdrawTransaction -up-|> Transaction
   WithdrawTransaction o-- Account : acc

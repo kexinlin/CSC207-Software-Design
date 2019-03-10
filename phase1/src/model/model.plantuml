@@ -15,7 +15,7 @@ title __MODEL's Class Diagram__\n
 
   package model {
     class Message {
-        ~ text : String
+        - text : String
         + Message()
         + getUser()
         + getText()

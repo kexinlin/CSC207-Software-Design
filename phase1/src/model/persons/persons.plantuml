@@ -35,7 +35,6 @@ title __PERSONS's Class Diagram__\n
           - username : String
           - password : String
           - accounts : ArrayList<Account>
-          - date : Date
           - transactions : ArrayList<Transaction>
           - messages : ArrayList<Message>
           + User()
@@ -45,10 +44,7 @@ title __PERSONS's Class Diagram__\n
           + verifyPassword()
           + setPassword()
           + getNetTotal()
-          + getDateOfCreation()
           + getAccounts()
-          + logEmpty()
-          + getMostRecentTransaction()
           + setPrimaryCheuqingAccount()
           + getPrimaryChequingAccount()
           + addAccount()
@@ -62,9 +58,7 @@ title __PERSONS's Class Diagram__\n
   
 
   BankManager -up-|> Loginable
-  BankManager o-- BankSystem : bankSystem
   User -up-|> Loginable
-  User o-- BankSystem : machine
   User o-- ChequingAccount : primaryAccount
 
 

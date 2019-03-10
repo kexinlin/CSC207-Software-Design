@@ -31,10 +31,10 @@ title __TRANSACTIONS's Class Diagram__\n
       abstract class Transaction {
           - amount : double
           - transTime : Date
-          + Transaction()
+          ~ Transaction()
           + getAmount()
           + getDate()
-          + getDateStr()
+          ~ getDateStr()
       }
     }
   }

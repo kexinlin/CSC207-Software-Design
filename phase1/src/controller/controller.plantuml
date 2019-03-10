@@ -36,7 +36,7 @@ title __CONTROLLER's Class Diagram__\n
   package controller {
     class ATMRecordController {
         ~ ATMRecordController()
-        + getRecordFile()
+        - getRecordFile()
         + readRecords()
         + writeRecords()
     }
@@ -54,7 +54,7 @@ title __CONTROLLER's Class Diagram__\n
   package controller {
     class AlertController {
         ~ AlertController()
-        + getRecordFile()
+        - getRecordFile()
         + atmNeedReplenishment()
         + sendAlert()
     }
@@ -85,7 +85,7 @@ title __CONTROLLER's Class Diagram__\n
         - randomString()
         + getRequests()
         + processRequest()
-        + createAccount()
+        - createAccount()
         + undoTransaction()
         - undoTransfer()
         - undoWithdraw()

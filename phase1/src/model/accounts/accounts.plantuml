@@ -9,14 +9,14 @@ title __ACCOUNTS's Class Diagram__\n
           - dateOfCreation : Date
           - accountId : String
           - logs : ArrayList<Transaction>
-          + Account()
+          ~ Account()
           + getBalance()
           + getAccountId()
           + getDateOfCreation()
           + getOwner()
           {abstract} + takeMoneyOut()
           {abstract} + putMoneyIn()
-          + logEmpty()
+          - logEmpty()
           + getLastTrans()
           + addTrans()
           {abstract} + balanceFactor()
@@ -28,7 +28,7 @@ title __ACCOUNTS's Class Diagram__\n
   package model {
     package model.accounts {
       abstract class AssetAccount {
-          + AssetAccount()
+          ~ AssetAccount()
           + balanceFactor()
           + putMoneyIn()
       }
@@ -60,7 +60,7 @@ title __ACCOUNTS's Class Diagram__\n
   package model {
     package model.accounts {
       abstract class DebtAccount {
-          + DebtAccount()
+          ~ DebtAccount()
           + takeMoneyOut()
           + putMoneyIn()
           + balanceFactor()
