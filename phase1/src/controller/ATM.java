@@ -58,6 +58,10 @@ public class ATM {
 		return alertFileName;
 	}
 
+	public void setAlertFileName(String alertFileName) {
+		this.alertFileName = alertFileName;
+	}
+
 	/**
 	 * Get the file name of record for this atm.
 	 *

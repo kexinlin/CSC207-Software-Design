@@ -45,16 +45,16 @@ public class AlertController {
 	 */
 	public void sendAlert() {
 		File file = getRecordFile();
-		String cashSummary = "";
+		StringBuilder cashSummary = new StringBuilder();
 		for (Cash cash : Cash.values()) {
-			cashSummary += ("Current number of " + cash.getNumVal() + "dollar bills: "
-				+ atm.getBillAmount().get(cash)) + ". ";
+			cashSummary.append(("Current number of " + cash.getNumVal() + "dollar bills: "
+				+ atm.getBillAmount().get(cash)) + ". ");
 		}
 
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
 			writer.write(bankSystem.getCurrentTimeStr() + ": ATM replenishment needed. " +
-				cashSummary);
+				cashSummary.toString());
 			writer.close();
 		} catch (IOException e) {
 			System.err.println("Cannot write alert." + e);
