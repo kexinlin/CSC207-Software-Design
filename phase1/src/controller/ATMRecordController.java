@@ -50,7 +50,7 @@ public class ATMRecordController {
 				try {
 					cash = cashFactory.getCash(entries[0]);
 					amount = Integer.valueOf(entries[1]);
-					inputCash.put(cash, inputCash.get(cash) + amount);
+					inputCash.put(cash, amount);
 				} catch (NumberFormatException e) {
 				}
 			}

@@ -1,5 +1,6 @@
 package view.cmdline;
 
+import model.Cash;
 import model.Request;
 import model.accounts.Account;
 import model.exceptions.AccountNotExistException;
@@ -10,6 +11,7 @@ import model.persons.BankManager;
 import model.persons.User;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class ManagerCmd {
 	private CommandLineUI ui;
@@ -154,6 +156,7 @@ public class ManagerCmd {
 			Account acc = ui.getBankSystem().getAccountById(accId);
 
 			ui.getBankSystem().undoTransaction(acc.getLastTrans());
+			ui.getOutput().println("Transaction undone.");
 		} catch (AccountNotExistException e) {
 			ui.getError().println("No such account.");
 		} catch (NoTransactionException e) {
@@ -164,6 +167,36 @@ public class ManagerCmd {
 			ui.getError().println("Cannot undo the transaction because the " +
 				"account that received the money does not have enough money.");
 		}
-		ui.getOutput().println("Transaction undone.");
+	}
+
+	/**
+	 * put cash into the machine.
+	 */
+	void stockCash() {
+		BankManager manager = ui.checkBankManagerLogin();
+		if (manager == null) {
+			return;
+		}
+		try {
+			ui.getATM().getDepositController().stockCash();
+		} catch (InvalidOperationException e) {
+			ui.getError().println("The thing you put in the machine is not cash.");
+			return;
+		}
+		ui.getOutput().println("Done.");
+	}
+
+	/**
+	 * display the amount of different kinds of cash
+	 */
+	void showCash() {
+		BankManager manager = ui.checkBankManagerLogin();
+		if (manager == null) {
+			return;
+		}
+		ui.getOutput().println("Value\tAmount");
+		for (Map.Entry<Cash, Integer> kv : ui.getATM().getBillAmount().entrySet()) {
+			ui.getOutput().println(kv.getKey().getNumVal() + "\t" + kv.getValue());
+		}
 	}
 }

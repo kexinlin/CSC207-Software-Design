@@ -175,6 +175,14 @@ public class CommandLineUI implements UI {
 					txCmd.withdraw(args);
 					break;
 
+				case "addcash":
+					managerCmd.stockCash();
+					break;
+
+				case "lscash":
+					managerCmd.showCash();
+					break;
+
 				default:
 					error.println("Unknown command: " + command);
 					break;

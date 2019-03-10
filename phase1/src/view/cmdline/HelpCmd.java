@@ -32,6 +32,8 @@ class HelpCmd {
 				+ "adduser\t-\tAdd a user\n"
 				+ "undo\t-\tUndo transaction\n"
 				+ "primary\t-\tView or set primary chequing account\n"
+				+ "lscash\t-\tShow the amount of different kinds of cash\n"
+				+ "addcash\t-\tAdd cash into the machine\n"
 				+ "Enter `help COMMAND` for a detailed description for that command.\n");
 
 		commandHelp.put("login", "login -- log into the system\n" +
@@ -202,9 +204,23 @@ class HelpCmd {
 			"Set the primary chequing account to account matching QUERY\n" +
 			"Otherwise, print your primary account.\n" +
 			"\n" +
-			"You must log in to use this command.\n" +
+			"You must log in as a user to use this command.\n" +
 			"\n" +
 			"For more on QUERY strings, see `help ls`.\n");
+
+		commandHelp.put("lscash", "lscash -- display amount of cash\n" +
+			"Usage: lscash\n" +
+			"\n" +
+			"Show how many cash of each kind are in this machine.\n" +
+			"\n" +
+			"You must log in as a bank manager to use this command.\n");
+
+		commandHelp.put("addcash", "addcash -- add cash to the machine\n" +
+			"Usage: addcash\n" +
+			"\n" +
+			"Add the cash you put into the machine.\n" +
+			"\n" +
+			"You must log in as a bank manager to use this command.\n");
 	}
 
 	/**

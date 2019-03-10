@@ -77,6 +77,7 @@ public class FileWithdrawController implements WithdrawController {
 				String.join(",", cashMap.entrySet().stream().map(kv ->
 					kv.getKey().getNumVal() + " " + kv.getValue()).toArray(String[]::new));
 			writer.write(string);
+			writer.close();
 		} catch (IOException e) {
 			throw new InvalidOperationException("Error writing file: " + e);
 		}

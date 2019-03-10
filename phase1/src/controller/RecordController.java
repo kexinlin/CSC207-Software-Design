@@ -200,8 +200,8 @@ public class RecordController {
 		Date date;
 		double amount;
 		try {
-			date = new Date(Long.valueOf(entries[2]));
-			amount = Double.valueOf(entries[3]);
+			date = new Date(Long.valueOf(entries[1]));
+			amount = Double.valueOf(entries[2]);
 		} catch (NumberFormatException e) {
 			return false;
 		}

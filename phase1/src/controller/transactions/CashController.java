@@ -31,7 +31,8 @@ public class CashController {
 		// better to work with ints
 		int amt = (int) amount;
 		if (amt != amount) { // cannot withdraw < $1
-			return null;
+			throw new InsufficientCashException("We do not have cash whose value is" +
+				"below 1.");
 		}
 		HashMap<Cash, Integer> cashToWithdraw = new HashMap<>();
 		HashMap<Cash, Integer> cashPool = machine.getBillAmount();

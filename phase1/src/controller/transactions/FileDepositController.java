@@ -94,6 +94,18 @@ public class FileDepositController implements DepositController {
 			machine.getCashController().depositCash(acc, depositInfo.cashMap);
 		}
 	}
+
+	@Override
+	public void stockCash() throws InvalidOperationException {
+		DepositInfo depositInfo = getDepositInfo();
+		if (depositInfo.type == DepositType.CASH) {
+			machine.stockCash(depositInfo.cashMap);
+		} else {
+			throw new InvalidOperationException("Cannot take non-cash fund into " +
+				"the machine.");
+		}
+	}
+
 	/**
 	 * Gets a hash map for how many bills of each type are being deposited
 	 * @param data a String read from the transactions file.
