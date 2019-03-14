@@ -7,3 +7,8 @@ deposits.txt
 outgoing.txt
 doc
 records.txt
+*.png
+*.docx
+*.test.txt
+atm-records.txt
+withdraw.txt

@@ -1,0 +1,6 @@
+manager,mgr1,lolol
+user,Foo Bar,u1,xxx
+account,chq,50.0,1552098056134,127000,u1
+account,cre,0.0,1552098056134,939000,u1
+tx,transfer,127000,939000,1552098366959,20.0
+set,primary,u1,127000

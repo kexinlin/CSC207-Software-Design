@@ -1,0 +1,431 @@
+@startuml
+
+title __PHASE1's Class Diagram__\n
+
+  package controller {
+    class ATM {
+    }
+  }
+  
+
+  package controller {
+    class ATMRecordController {
+    }
+  }
+  
+
+  package controller {
+    class ATMTest {
+    }
+  }
+  
+
+  package model {
+    package model.accounts {
+      abstract class Account {
+      }
+    }
+  }
+  
+
+  package controller {
+    class AccountFactory {
+    }
+  }
+  
+
+  package model {
+    package model.exceptions {
+      class AccountNotExistException {
+      }
+    }
+  }
+  
+
+  package view {
+    package view.cmdline {
+      class AccountsCmd {
+      }
+    }
+  }
+  
+
+  package controller {
+    class AlertController {
+    }
+  }
+  
+
+  package model {
+    package model.accounts {
+      abstract class AssetAccount {
+      }
+    }
+  }
+  
+
+  package model {
+    package model.persons {
+      class BankManager {
+      }
+    }
+  }
+  
+
+  package controller {
+    class BankSystem {
+    }
+  }
+  
+
+  package controller {
+    class BankSystemTest {
+    }
+  }
+  
+
+  package controller {
+    package controller.transactions {
+      interface BillController {
+      }
+    }
+  }
+  
+
+  package model {
+    enum Cash {
+    }
+  }
+  
+
+  package controller {
+    package controller.transactions {
+      class CashController {
+      }
+    }
+  }
+  
+
+  package controller {
+    class CashFactory {
+    }
+  }
+  
+
+  package controller {
+    package controller.transactions {
+      class ChequeController {
+      }
+    }
+  }
+  
+
+  package model {
+    package model.accounts {
+      class ChequingAccount {
+      }
+    }
+  }
+  
+
+  package view {
+    package view.cmdline {
+      class CommandLineUI {
+      }
+    }
+  }
+  
+
+  package model {
+    package model.accounts {
+      class CreditCardAccount {
+      }
+    }
+  }
+  
+
+  package model {
+    package model.accounts {
+      abstract class DebtAccount {
+      }
+    }
+  }
+  
+
+  package controller {
+    package controller.transactions {
+      interface DepositController {
+      }
+    }
+  }
+  
+
+  package model {
+    package model.transactions {
+      class DepositTransaction {
+      }
+    }
+  }
+  
+
+  package controller {
+    package controller.transactions {
+      class FileBillController {
+      }
+    }
+  }
+  
+
+  package controller {
+    package controller.transactions {
+      class FileDepositController {
+      }
+    }
+  }
+  
+
+  package controller {
+    package controller.transactions {
+      class FileWithdrawController {
+      }
+    }
+  }
+  
+
+  package view {
+    package view.cmdline {
+      class HelpCmd {
+      }
+    }
+  }
+  
+
+  package model {
+    package model.exceptions {
+      class InsufficientCashException {
+      }
+    }
+  }
+  
+
+  package model {
+    package model.exceptions {
+      class InvalidOperationException {
+      }
+    }
+  }
+  
+
+  package model {
+    package model.accounts {
+      class LineOfCreditAccount {
+      }
+    }
+  }
+  
+
+  package model {
+    package model.persons {
+      interface Loginable {
+      }
+    }
+  }
+  
+
+  package controller {
+    class Main {
+    }
+  }
+  
+
+  package view {
+    package view.cmdline {
+      class ManagerCmd {
+      }
+    }
+  }
+  
+
+  package model {
+    class Message {
+    }
+  }
+  
+
+  package model {
+    package model.exceptions {
+      class NoEnoughMoneyException {
+      }
+    }
+  }
+  
+
+  package model {
+    package model.exceptions {
+      class NoTransactionException {
+      }
+    }
+  }
+  
+
+  package model {
+    package model.transactions {
+      class PayBillTransaction {
+      }
+    }
+  }
+  
+
+  package view {
+    package view.cmdline {
+      class PersonsCmd {
+      }
+    }
+  }
+  
+
+  package controller {
+    class RecordController {
+    }
+  }
+  
+
+  package model {
+    class Request {
+    }
+  }
+  
+
+  package model {
+    package model.accounts {
+      class SavingAccount {
+      }
+    }
+  }
+  
+
+  package model {
+    package model.transactions {
+      abstract class Transaction {
+      }
+    }
+  }
+  
+
+  package model {
+    package model.transactions {
+      class TransferTransaction {
+      }
+    }
+  }
+  
+
+  package view {
+    package view.cmdline {
+      class TxCmd {
+      }
+    }
+  }
+  
+
+  package view {
+    interface UI {
+    }
+  }
+  
+
+  package model {
+    package model.persons {
+      class User {
+      }
+    }
+  }
+  
+
+  package controller {
+    package controller.transactions {
+      interface WithdrawController {
+      }
+    }
+  }
+  
+
+  package model {
+    package model.transactions {
+      class WithdrawTransaction {
+      }
+    }
+  }
+  
+
+  ATM o-- BankSystem : bankSystem
+  ATM o-- Loginable : loggedIn
+  ATM o-- CashController : cashController
+  ATM o-- ChequeController : chequeController
+  ATM o-- DepositController : depositController
+  ATM o-- WithdrawController : withdrawController
+  ATM o-- ATMRecordController : atmRecordController
+  ATM o-- AlertController : alertController
+  ATMRecordController o-- ATM : atm
+  ATMRecordController o-- CashFactory : cashFactory
+  ATMTest o-- ATM : atm
+  Account o-- User : owner
+  AccountsCmd o-- CommandLineUI : ui
+  AccountsCmd o-- AccountFactory : accountFactory
+  AlertController o-- BankSystem : bankSystem
+  AlertController o-- ATM : atm
+  AssetAccount -up-|> Account
+  BankManager -up-|> Loginable
+  BankSystem o-- BillController : billController
+  BankSystem o-- RecordController : recordController
+  BankSystem o-- AccountFactory : accountFactory
+  BankSystemTest o-- BankSystem : bankSystem
+  CashController o-- ATM : machine
+  ChequeController o-- ATM : machine
+  ChequingAccount -up-|> AssetAccount
+  CommandLineUI -up-|> UI
+  CommandLineUI o-- ATM : machine
+  CommandLineUI o-- HelpCmd : helpCmd
+  CommandLineUI o-- PersonsCmd : personsCmd
+  CommandLineUI o-- AccountsCmd : accountsCmd
+  CommandLineUI o-- TxCmd : txCmd
+  CommandLineUI o-- ManagerCmd : managerCmd
+  CreditCardAccount -up-|> DebtAccount
+  DebtAccount -up-|> Account
+  DepositTransaction -up-|> Transaction
+  DepositTransaction o-- Account : acc
+  FileBillController -up-|> BillController
+  FileDepositController -up-|> DepositController
+  FileDepositController o-- ATM : machine
+  FileDepositController o-- CashFactory : cashFactory
+  FileWithdrawController -up-|> WithdrawController
+  FileWithdrawController o-- ATM : atm
+  HelpCmd o-- CommandLineUI : ui
+  LineOfCreditAccount -up-|> DebtAccount
+  ManagerCmd o-- CommandLineUI : ui
+  Message o-- User : user
+  PayBillTransaction -up-|> Transaction
+  PayBillTransaction o-- Account : source
+  PersonsCmd o-- CommandLineUI : ui
+  RecordController o-- BankSystem : bankSystem
+  RecordController o-- AccountFactory : accountFactory
+  Request o-- User : user
+  SavingAccount -up-|> AssetAccount
+  TransferTransaction -up-|> Transaction
+  TransferTransaction o-- Account : fromAcc
+  TransferTransaction o-- Account : toAcc
+  TxCmd o-- CommandLineUI : ui
+  User -up-|> Loginable
+  User o-- ChequingAccount : primaryAccount
+  WithdrawTransaction -up-|> Transaction
+  WithdrawTransaction o-- Account : acc
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml
