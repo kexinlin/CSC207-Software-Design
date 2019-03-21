@@ -14,7 +14,7 @@ public class HighInterestAccount extends Account{
 	private double interestRate;
 
 	/**
-	 * Create an instance of ChequingAccount
+	 * Create an instance of HighInterestAccount
 	 *
 	 * @param balance        the balance of the account
 	 * @param dateOfCreation the currentTime of creation
