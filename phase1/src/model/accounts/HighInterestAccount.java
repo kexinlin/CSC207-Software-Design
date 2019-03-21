@@ -11,8 +11,20 @@ import java.util.Date;
 
 public class HighInterestAccount extends Account{
 	// The account owns higher interest, but each time you take money out, higher fee is required.
-	private double interestRate = 0.5/100;
+	private double interestRate;
 
+	/**
+	 * Create an instance of ChequingAccount
+	 *
+	 * @param balance        the balance of the account
+	 * @param dateOfCreation the currentTime of creation
+	 * @param accountId      account id
+	 * @param owner          owner of the account
+	 */
+	public HighInterestAccount(double balance, Date dateOfCreation, String accountId, User owner) {
+		super(balance, dateOfCreation, accountId, owner);
+		this.interestRate = 0.5/100;
+	}
 	/**
 	 * Take `amount` of money out of the account.
 	 * NoEnoughMoneyException will also be raised when the amount exceeds what is allowed.
@@ -21,11 +33,11 @@ public class HighInterestAccount extends Account{
 	 */
 	@Override
 	public void takeMoneyOut(double amount) throws NoEnoughMoneyException {
-		if (this.balance < amount) {
+		if (this.balance < amount * (1.05)) {
 			throw new NoEnoughMoneyException("Sorry, operation failed. " +
 				"The amount exceeds existing balance in this account");
 		}
-		this.balance -= amount;		// TODO: change to a higher fee
+		this.balance -= amount * (1.05);		// a higher fee is required
 	}
 
 	/**
@@ -48,5 +60,12 @@ public class HighInterestAccount extends Account{
 	@Override
 	public int balanceFactor(){
 		return 1;
+	}
+
+	/**
+	 * Increase the saving account balance bt a factor of 0.1%.
+	 */
+	public void increaseInterest() {
+		this.balance *= (1 + interestRate);
 	}
 }
