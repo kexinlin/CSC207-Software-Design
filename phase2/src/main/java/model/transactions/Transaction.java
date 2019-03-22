@@ -1,28 +1,46 @@
 package model.transactions;
 
+import model.Money;
+import model.transactors.Transactor;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public abstract class Transaction {
-	private double amount;
+public class Transaction {
+	private Money amount;
 	private Date transTime;
+	private Transactor source, dest;
+	private String comment;
 
 	/**
-	 * Construct a new TransferTransaction.
+	 * Construct a new Transaction.
 	 *
 	 * @param amount the amount of transaction
 	 * @param time the time of transaction
+	 * @param source the dealer where the money comes from
+	 * @param dest the dealer where the money goes to
 	 */
-	Transaction(double amount, Date time) {
+	public Transaction(Money amount, Date time, Transactor source, Transactor dest) {
 		this.amount = amount;
 		this.transTime = time;
+		this.source = source;
+		this.dest = dest;
+		this.comment = "";
+	}
+
+	public Transaction(Money amount, Date time, Transactor source, Transactor dest, String comment) {
+		this.amount = amount;
+		this.transTime = time;
+		this.source = source;
+		this.dest = dest;
+		this.comment = comment;
 	}
 
 	/**
 	 * Gets the amount of money involved in the transaction
 	 * @return the amount of money involved in the transaction.
 	 */
-	public double getAmount() {
+	public Money getAmount() {
 		return amount;
 	}
 
@@ -41,5 +59,33 @@ public abstract class Transaction {
 	String getDateStr() {
 		SimpleDateFormat format = new SimpleDateFormat("MMM d, yyyy");
 		return format.format(getDate());
+	}
+
+	/**
+	 * Gets the source for this transaction.
+	 * @return the source for this transaction.
+	 */
+	public Transactor getSource() {
+		return source;
+	}
+
+	/**
+	 * Gets the destination for this transaction.
+	 * @return the destination for this transaction.
+	 */
+	public Transactor getDest() {
+		return dest;
+	}
+
+	/**
+	 * Gets a human-readable representation of this transaction, including
+	 * the amount, the source and destination account and transaction date
+	 * @return a string representing the transaction
+	 */
+	@Override
+	public String toString() {
+		return "Transferred " + getAmount() + " from " + getSource().getId()
+			+ " to " + getDest().getId() + " on " + getDateStr()
+			+ (comment.length() > 0 ? "for " + comment : "");
 	}
 }

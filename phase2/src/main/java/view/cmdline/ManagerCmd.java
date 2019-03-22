@@ -1,8 +1,10 @@
 package view.cmdline;
 
 import model.Cash;
+import model.CashCollection;
+import model.Money;
 import model.Request;
-import model.accounts.Account;
+import model.transactors.Account;
 import model.exceptions.AccountNotExistException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
@@ -178,7 +180,12 @@ class ManagerCmd {
 			return;
 		}
 		try {
-			ui.getATM().getDepositController().stockCash();
+			Money m = ui.getATM().getDepositController().getDepositMoney();
+			if (m instanceof CashCollection) {
+				ui.getATM().stockCash(((CashCollection) m).getCashMap());
+			} else {
+				throw new InvalidOperationException("The envelope does not contain cash.");
+			}
 		} catch (InvalidOperationException e) {
 			ui.getError().println("The thing you put in the machine is not cash.");
 			return;

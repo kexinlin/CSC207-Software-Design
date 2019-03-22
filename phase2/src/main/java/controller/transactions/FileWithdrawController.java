@@ -2,7 +2,7 @@ package controller.transactions;
 
 import controller.ATM;
 import model.Cash;
-import model.accounts.Account;
+import model.transactors.Account;
 import model.exceptions.InsufficientCashException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
@@ -59,9 +59,8 @@ public class FileWithdrawController implements WithdrawController {
 	 * @throws InvalidOperationException
 	 */
 	@Override
-	public void withdrawMoney(Account acc, double amount)
-		throws InvalidOperationException, InsufficientCashException, NoEnoughMoneyException {
-		HashMap<Cash, Integer> cashMap = atm.getCashController().withdrawCash(acc, amount);
+	public void withdrawMoney(HashMap<Cash, Integer> cashMap)
+		throws InvalidOperationException, InsufficientCashException {
 		writeWithdrawFile(cashMap);
 	}
 

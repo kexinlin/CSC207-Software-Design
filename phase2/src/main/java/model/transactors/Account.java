@@ -1,5 +1,6 @@
-package model.accounts;
+package model.transactors;
 
+import model.Money;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
 import model.exceptions.NoTransactionException;
@@ -9,8 +10,8 @@ import model.persons.User;
 import java.util.ArrayList;
 import java.util.Date;
 
-public abstract class Account {
-	double balance;
+public abstract class Account extends Transactor {
+	Money balance;
 	private Date dateOfCreation;
 	private String accountId;
 	private User owner;
@@ -24,7 +25,7 @@ public abstract class Account {
 	 * @param accountId      account id
 	 * @param owner          owner of the account
 	 */
-	Account(double balance, Date dateOfCreation, String accountId, User owner) {
+	Account(Money balance, Date dateOfCreation, String accountId, User owner) {
 		this.balance = balance;
 		this.dateOfCreation = dateOfCreation;
 		this.accountId = accountId;
@@ -38,7 +39,7 @@ public abstract class Account {
 	 *
 	 * @return balance of the account
 	 */
-	public double getBalance() {
+	public Money getBalance() {
 		return this.balance;
 	}
 
@@ -48,7 +49,7 @@ public abstract class Account {
 	 *
 	 * @return account id
 	 */
-	public String getAccountId() {
+	public String getId() {
 		return accountId;
 	}
 
@@ -81,7 +82,7 @@ public abstract class Account {
 	 *
 	 * @param amount the amount of money to take out.
 	 */
-	public abstract void takeMoneyOut(double amount) throws NoEnoughMoneyException, InvalidOperationException;
+	public abstract void takeMoneyOut(Money amount) throws NoEnoughMoneyException, InvalidOperationException;
 
 
 	/**
@@ -89,7 +90,7 @@ public abstract class Account {
 	 *
 	 * @param amount the amount of money to put in
 	 */
-	public abstract void putMoneyIn(double amount);
+	public abstract void putMoneyIn(Money amount);
 
 	/**
 	 * Return whether `this.log` contains no transaction.

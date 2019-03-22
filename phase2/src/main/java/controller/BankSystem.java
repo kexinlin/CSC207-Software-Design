@@ -1,13 +1,11 @@
 package controller;
 
 import model.Message;
+import model.Money;
 import model.Request;
 import controller.transactions.BillController;
 import controller.transactions.FileBillController;
-import model.accounts.Account;
-import model.accounts.ChequingAccount;
-import model.accounts.CreditCardAccount;
-import model.accounts.SavingAccount;
+import model.transactors.*;
 import model.exceptions.AccountNotExistException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
@@ -19,6 +17,8 @@ import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BankSystem {
 	private Date currentTime;
@@ -31,6 +31,8 @@ public class BankSystem {
 	private ArrayList<Transaction> transactions;
 	private AccountFactory accountFactory;
 	private ArrayList<Message> messages;
+	private HashMap<String, OutgoingBill> billPool;
+	private MoneyEnvelope dummyEnvelope = new MoneyEnvelope(null);
 
 	private static final String NUMBERS = "0123456789";  // for randomly generating accountId;
 	private static SecureRandom rnd = new SecureRandom(); // for randomly generating accountId;
@@ -54,6 +56,7 @@ public class BankSystem {
 		this.transactions = new ArrayList<>();
 		this.accountFactory = new AccountFactory();
 		this.messages = new ArrayList<>();
+		this.billPool = new HashMap<>();
 		recordController.readRecords();
 	}
 
@@ -126,7 +129,7 @@ public class BankSystem {
 	}
 
 	/**
-	 * Get a HashMap of account id and account object for all accounts in this bank system.
+	 * Get a HashMap of account id and account object for all transactors in this bank system.
 	 * @return
 	 */
 	public HashMap<String, Account> getAccounts() {
@@ -178,7 +181,7 @@ public class BankSystem {
 	}
 
 	/**
-	 * @return a ArrayList that contain all the requests for creating accounts from User,
+	 * @return a ArrayList that contain all the requests for creating transactors from User,
 	 * which haven't yet been verified by BankManager
 	 */
 	public ArrayList<Request> getRequests() {
@@ -207,9 +210,9 @@ public class BankSystem {
 		User owner = request.getUser();
 		String accountId = randomString();
 		Account newAccount = accountFactory.getAccount(request.getAccountType()
-			,0, getCurrentTime(), accountId, owner);
+			, new Money(0), getCurrentTime(), accountId, owner);
 
-		// if there were no primary chequing accounts
+		// if there were no primary chequing transactors
 		// make this the default one.
 		if (newAccount instanceof ChequingAccount &&
 			owner.getAccounts().stream()
@@ -229,65 +232,17 @@ public class BankSystem {
 	 */
 	public void undoTransaction(Transaction tx) throws
 		InvalidOperationException, NoEnoughMoneyException {
-		if (tx instanceof PayBillTransaction) {
-			throw new InvalidOperationException("Sorry, you cannot undo a transaction " +
-				"for paying bill.");
-		} else if (tx instanceof TransferTransaction) {
-			undoTransfer((TransferTransaction) tx);
-		} else if (tx instanceof WithdrawTransaction) {
-			undoWithdraw((WithdrawTransaction) tx);
-		} else if (tx instanceof DepositTransaction) {
-			undoDeposit((DepositTransaction) tx);
+		if (tx.getSource() instanceof Account
+			&& tx.getDest() instanceof Account) {
+			Transaction reverseTx = new Transaction(tx.getAmount(), tx.getDate(),
+				tx.getDest(), tx.getSource(),
+				"Reverted the following: " + tx.toString());
+			proceedTransaction(reverseTx);
+		} else {
+			throw new InvalidOperationException(
+				"Cannot undo transactions involving non-accounts.");
 		}
 	}
-
-	/**
-	 * Undo a transfer transaction. A helper function for undoTransaction.
-	 *
-	 * @param lastTrans the transaction that needs to be undone
-	 * @throws NoEnoughMoneyException    when the account taken money out does not have enough money
-	 * @throws InvalidOperationException when certain invalid operation is done
-	 */
-	private void undoTransfer(TransferTransaction lastTrans) throws NoEnoughMoneyException,
-		InvalidOperationException {
-		double amount = lastTrans.getAmount();
-		Account source = (lastTrans).getFromAcc();
-		Account dest = (lastTrans).getToAcc();
-		dest.takeMoneyOut(amount);
-		source.putMoneyIn(amount);
-		Transaction newTrans = new TransferTransaction(amount, getCurrentTime(), dest, source);
-		addTransaction(newTrans);
-	}
-
-	/**
-	 * Undo a withdraw transaction. A helper function for undoTransaction.
-	 *
-	 * @param lastTrans the transaction that needs to be undone
-	 */
-	private void undoWithdraw(WithdrawTransaction lastTrans) {
-		double amount = lastTrans.getAmount();
-		Account acc = (lastTrans).getAcc();
-		acc.putMoneyIn(amount);
-		Transaction newTrans = new DepositTransaction(amount, getCurrentTime(), acc);
-		addTransaction(newTrans);
-	}
-
-	/**
-	 * Undo a deposit transaction. A helper function for undoTransaction.
-	 *
-	 * @param lastTrans the transaction that needs to be undone
-	 * @throws NoEnoughMoneyException    when the account taken money out does not have enough money
-	 * @throws InvalidOperationException when certain invalid operation is done
-	 */
-	private void undoDeposit(DepositTransaction lastTrans) throws NoEnoughMoneyException,
-		InvalidOperationException {
-		double amount = lastTrans.getAmount();
-		Account acc = (lastTrans).getAcc();
-		acc.takeMoneyOut(amount);
-		Transaction newTrans = new WithdrawTransaction(amount, getCurrentTime(), acc);
-		addTransaction(newTrans);
-	}
-
 
 	/**
 	 * Transfer money from one account into another account.
@@ -307,10 +262,9 @@ public class BankSystem {
 				"credit card account is not supported.");
 		}
 
-		fromAcc.takeMoneyOut(amount);
-		toAcc.putMoneyIn(amount);
-		Transaction newTrans = new TransferTransaction(amount, getCurrentTime(), fromAcc, toAcc);
-		addTransaction(newTrans);
+		Transaction newTrans = new Transaction(new Money(amount),
+			getCurrentTime(), fromAcc, toAcc);
+		proceedTransaction(newTrans);
 	}
 
 	/**
@@ -329,54 +283,35 @@ public class BankSystem {
 	}
 
 	/**
-	 * Add the account `acc` into `this.accounts` as well as the owner of the account.
+	 * Add the account `acc` into `this.transactors` as well as the owner of the account.
 	 *
 	 * @param acc the account to add
 	 */
 	public void addAccount(Account acc) {
-		accounts.put(acc.getAccountId(), acc);
+		accounts.put(acc.getId(), acc);
 		acc.getOwner().addAccount(acc);
 	}
 
 	/**
-	 * Add the transaction tx to transaction history of the bank system, accounts, and user(s)
+	 * Add the transaction tx to transaction history of the bank system, transactors, and user(s)
 	 * @param tx the transaction to add.
 	 */
 	public void addTransaction(Transaction tx) {
 		this.transactions.add(tx);
 
-		if (tx instanceof TransferTransaction) {
-			TransferTransaction transferTx = (TransferTransaction) tx;
-			Account fromAcc = transferTx.getFromAcc();
-			Account toAcc = transferTx.getToAcc();
-
-			// add transaction record to both accounts
-			fromAcc.addTrans(transferTx);
-			toAcc.addTrans(transferTx);
-
-			// add transaction record to both user
-			fromAcc.getOwner().addTransaction(transferTx);
-			if (!fromAcc.getOwner().equals(toAcc.getOwner())) {
-				toAcc.getOwner().addTransaction(transferTx);
+		// only accounts record their transactions.
+		if (tx.getSource() instanceof Account) {
+			Account fromAcc = (Account) tx.getSource();
+			fromAcc.addTrans(tx);
+			fromAcc.getOwner().addTransaction(tx);
+		}
+		if (tx.getDest() instanceof Account) {
+			Account toAcc = (Account) tx.getDest();
+			toAcc.addTrans(tx);
+			if (tx.getSource() instanceof Account
+				&& !((Account)tx.getSource()).getOwner().equals(toAcc.getOwner())) {
+				toAcc.getOwner().addTransaction(tx);
 			}
-		} else if (tx instanceof DepositTransaction) {
-			DepositTransaction depositTx = (DepositTransaction) tx;
-			Account acc = depositTx.getAcc();
-
-			acc.addTrans(depositTx);
-			acc.getOwner().addTransaction(depositTx);
-		} else if (tx instanceof WithdrawTransaction) {
-			WithdrawTransaction withdrawTx = (WithdrawTransaction) tx;
-			Account acc = withdrawTx.getAcc();
-
-			acc.addTrans(withdrawTx);
-			acc.getOwner().addTransaction(withdrawTx);
-		} else if (tx instanceof PayBillTransaction) {
-			PayBillTransaction payBillTx = (PayBillTransaction) tx;
-			Account acc = payBillTx.getSource();
-
-			acc.addTrans(payBillTx);
-			acc.getOwner().addTransaction(payBillTx);
 		}
 	}
 
@@ -403,26 +338,25 @@ public class BankSystem {
 	}
 
 	/**
-	 * Records payment of `amount` from `acc` to `destinationName`
 	 *
-	 * @param acc       the account to take money from
-	 * @param payeeName the name of the payee
-	 * @param amount    the amount of money
-	 * @throws NoEnoughMoneyException    if `acc` does not have enough money to withdraw
-	 * @throws InvalidOperationException
 	 */
-	public void payBill(Account acc, String payeeName, double amount)
+	public void proceedTransaction(Transaction tx)
 		throws NoEnoughMoneyException, InvalidOperationException {
-		acc.takeMoneyOut(amount);
+		tx.getSource().takeMoneyOut(tx.getAmount());
 		try {
-			billController.recordPayment(acc, payeeName, amount);
-		} catch (InvalidOperationException e) { // recording failed, restore prev. state.
-			acc.putMoneyIn(amount);
+			tx.getDest().putMoneyIn(tx.getAmount());
+		} catch (InvalidOperationException e) {
+			// if dest cannot receive the money (e.g. there is not enough cash
+			// in the machine), revert this
+			tx.getSource().putMoneyIn(tx.getAmount());
 			throw e;
 		}
-		Transaction tx = new PayBillTransaction(amount, getCurrentTime(), acc, payeeName);
 
 		addTransaction(tx);
+	}
+
+	public Transaction makeTx(double amount, Transactor source, Transactor dest) {
+		return new Transaction(new Money(amount), getCurrentTime(), source, dest);
 	}
 
 	/**
@@ -473,5 +407,41 @@ public class BankSystem {
 	public void removeMessage(Message msg) {
 		this.messages.remove(msg);
 		msg.getUser().removeMessage(msg);
+	}
+
+	public Transactor getTransactor(String s) {
+		Matcher m = Pattern.compile("<bill-(.+)>").matcher(s);
+		if (m.matches()) {
+			String payeeName = m.group(1);
+			OutgoingBill bill = billPool.get(payeeName);
+			if (bill != null) {
+				return bill;
+			} else {
+				bill = new OutgoingBill(this, payeeName);
+				billPool.put(payeeName, bill);
+				return bill;
+			}
+		}
+		if (s.equals("<envelope>")) {
+			return dummyEnvelope;
+		}
+		try {
+			return getAccountById(s);
+		} catch (AccountNotExistException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * Performs the full operation of paying a bill.
+	 * @param source
+	 * @param payeeName
+	 * @param amount
+	 */
+	public void payBill(Account source, String payeeName, double amount)
+		throws NoEnoughMoneyException, InvalidOperationException {
+		Transactor payee = getTransactor("<bill-" + payeeName + ">");
+		proceedTransaction(
+			new Transaction(new Money(amount), getCurrentTime(), source, payee));
 	}
 }

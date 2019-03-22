@@ -1,7 +1,8 @@
 package controller.transactions;
 
 import controller.ATM;
-import model.accounts.Account;
+import model.Money;
+import model.transactors.Account;
 import model.exceptions.InvalidOperationException;
 
 public interface DepositController {
@@ -20,10 +21,5 @@ public interface DepositController {
 	/**
 	 * Deposits the money read from the device into the Account.
 	 */
-	void depositMoney(Account acc) throws InvalidOperationException;
-
-	/**
-	 * Put the cash into the machine, but not any of the accounts.
-	 */
-	void stockCash() throws InvalidOperationException;
+	Money getDepositMoney() throws InvalidOperationException;
 }

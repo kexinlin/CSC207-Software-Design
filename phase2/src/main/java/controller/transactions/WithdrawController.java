@@ -1,10 +1,13 @@
 package controller.transactions;
 
 import controller.ATM;
-import model.accounts.Account;
+import model.Cash;
+import model.transactors.Account;
 import model.exceptions.InsufficientCashException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
+
+import java.util.HashMap;
 
 public interface WithdrawController {
 	/**
@@ -20,10 +23,9 @@ public interface WithdrawController {
 	ATM getATM();
 
 	/**
-	 * Take money out of the account and the machine.
-	 * @param acc the account to take from
-	 * @param amount the amount of money to take
+	 * Put the money into the envelope.
+	 * @param cashMap the HashMap containing types and numbers of different cash.
 	 */
-	void withdrawMoney(Account acc, double amount)
-		throws InvalidOperationException, InsufficientCashException, NoEnoughMoneyException;
+	void withdrawMoney(HashMap<Cash, Integer> cashMap)
+		throws InvalidOperationException, InsufficientCashException;
 }

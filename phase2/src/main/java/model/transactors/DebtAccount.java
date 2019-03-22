@@ -1,6 +1,6 @@
-package model.accounts;
+package model.transactors;
 
-import model.accounts.Account;
+import model.Money;
 import model.persons.User;
 
 import java.util.Date;
@@ -13,7 +13,7 @@ public abstract class DebtAccount extends Account {
 	 * @param accountId account id
 	 * @param owner owner of the account
 	 */
-	DebtAccount(double balance, Date dateOfCreation, String accountId, User owner) {
+	DebtAccount(Money balance, Date dateOfCreation, String accountId, User owner) {
 		super(balance, dateOfCreation, accountId, owner);
 	}
 
@@ -23,8 +23,8 @@ public abstract class DebtAccount extends Account {
 	 * @param amount the amount of money to take out.
 	 */
 	@Override
-	public void takeMoneyOut(double amount) {
-		this.balance += amount;
+	public void takeMoneyOut(Money amount) {
+		this.balance = this.balance.add(amount);
 	}
 
 	/**
@@ -33,8 +33,8 @@ public abstract class DebtAccount extends Account {
 	 * @param amount the amount of money to put in
 	 */
 	@Override
-	public void putMoneyIn(double amount) {
-		this.balance -= amount;
+	public void putMoneyIn(Money amount) {
+		this.balance = this.balance.subtract(amount);
 
 	}
 

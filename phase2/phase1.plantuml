@@ -21,7 +21,7 @@ title __PHASE1's Class Diagram__\n
   
 
   package model {
-    package model.accounts {
+    package model.transactors {
       abstract class Account {
       }
     }
@@ -57,7 +57,7 @@ title __PHASE1's Class Diagram__\n
   
 
   package model {
-    package model.accounts {
+    package model.transactors {
       abstract class AssetAccount {
       }
     }
@@ -121,7 +121,7 @@ title __PHASE1's Class Diagram__\n
   
 
   package model {
-    package model.accounts {
+    package model.transactors {
       class ChequingAccount {
       }
     }
@@ -137,7 +137,7 @@ title __PHASE1's Class Diagram__\n
   
 
   package model {
-    package model.accounts {
+    package model.transactors {
       class CreditCardAccount {
       }
     }
@@ -145,7 +145,7 @@ title __PHASE1's Class Diagram__\n
   
 
   package model {
-    package model.accounts {
+    package model.transactors {
       abstract class DebtAccount {
       }
     }
@@ -217,7 +217,7 @@ title __PHASE1's Class Diagram__\n
   
 
   package model {
-    package model.accounts {
+    package model.transactors {
       class LineOfCreditAccount {
       }
     }
@@ -297,7 +297,7 @@ title __PHASE1's Class Diagram__\n
   
 
   package model {
-    package model.accounts {
+    package model.transactors {
       class SavingAccount {
       }
     }

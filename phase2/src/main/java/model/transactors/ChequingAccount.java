@@ -1,13 +1,14 @@
-package model.accounts;
+package model.transactors;
 
+import model.Money;
 import model.exceptions.NoEnoughMoneyException;
 import model.persons.User;
 
 import java.util.Date;
 
 public class ChequingAccount extends AssetAccount {
-	private double maximumOverdraftLimit;
-	private double beforeOverdraftLimit;
+	private Money maximumOverdraftLimit = new Money(0);
+	private Money beforeOverdraftLimit = new Money(-100);
 	/**
 	 * Create an instance of ChequingAccount
 	 *
@@ -16,10 +17,8 @@ public class ChequingAccount extends AssetAccount {
 	 * @param accountId      account id
 	 * @param owner          owner of the account
 	 */
-	public ChequingAccount(double balance, Date dateOfCreation, String accountId, User owner) {
+	public ChequingAccount(Money balance, Date dateOfCreation, String accountId, User owner) {
 		super(balance, dateOfCreation, accountId, owner);
-		beforeOverdraftLimit = 0;
-		maximumOverdraftLimit = -100;
 	}
 
 
@@ -30,14 +29,14 @@ public class ChequingAccount extends AssetAccount {
 	 * @param amount the amount of money to take out.
 	 */
 	@Override
-	public void takeMoneyOut(double amount) throws NoEnoughMoneyException {
-		if (this.balance < this.beforeOverdraftLimit) {
+	public void takeMoneyOut(Money amount) throws NoEnoughMoneyException {
+		if (this.balance.compareTo(this.beforeOverdraftLimit) < 0) {
 			throw new NoEnoughMoneyException("Sorry, operation failed. " +
 				"Your balance in this account is negative.");
-		} else if (this.balance - amount < this.maximumOverdraftLimit) {
+		} else if (this.balance.subtract(amount).compareTo(this.maximumOverdraftLimit) < 0) {
 			throw new NoEnoughMoneyException("Sorry, operation failed. " +
 				"Your balance cannot decrease below -$100.");
 		}
-		this.balance -= amount;
+		this.balance = this.balance.subtract(amount);
 	}
 }

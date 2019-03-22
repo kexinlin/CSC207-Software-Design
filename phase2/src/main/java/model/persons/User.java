@@ -1,7 +1,7 @@
 package model.persons;
 
 import model.Message;
-import model.accounts.*;
+import model.transactors.*;
 import model.transactions.Transaction;
 
 import java.util.ArrayList;
@@ -84,13 +84,13 @@ public class User implements Loginable {
 	 */
 	public double getNetTotal() {
 		return accounts.stream()
-			.mapToDouble(acc -> acc.getBalance() * acc.balanceFactor())
+			.mapToDouble(acc -> acc.getBalance().getValue() * acc.balanceFactor())
 			.sum();
 	}
 
 
 	/**
-	 * return all available accounts
+	 * return all available transactors
 	 *
 	 * @return
 	 */

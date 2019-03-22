@@ -1,6 +1,7 @@
 package controller;
 
-import model.accounts.*;
+import model.Money;
+import model.transactors.*;
 import model.persons.User;
 
 import java.util.Date;
@@ -16,7 +17,7 @@ public class AccountFactory {
 	 * @param owner the owner
 	 * @return the account created, or null if type is invalid
 	 */
-	public Account getAccount(String type, double balance,
+	public Account getAccount(String type, Money balance,
 							  Date time, String accountId, User owner) {
 		switch (type) {
 			case "chq":

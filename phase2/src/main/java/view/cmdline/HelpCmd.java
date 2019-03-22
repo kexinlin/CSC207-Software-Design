@@ -20,8 +20,8 @@ class HelpCmd {
 				+ "help\t-\tDisplay this help information\n"
 				+ "logout\t-\tLog out\n"
 				+ "exit\t-\tQuit the program\n"
-				+ "ls  \t-\tList accounts\n"
-				+ "mv  \t-\tTransfer between your accounts\n"
+				+ "ls  \t-\tList transactors\n"
+				+ "mv  \t-\tTransfer between your transactors\n"
 				+ "passwd\t-\tChange password\n"
 				+ "deposit\t-\tDeposit cash or cheque\n"
 				+ "withdraw\t-\tWithdraw cash\n"
@@ -53,16 +53,16 @@ class HelpCmd {
 			"If COMMAND presents, display the help information for COMMAND.\n" +
 			"Otherwise, display a list of available commands.\n");
 
-		commandHelp.put("ls", "ls -- list or show accounts\n" +
+		commandHelp.put("ls", "ls -- list or show transactors\n" +
 			"Usage: ls [QUERY]\n" +
 			"\n" +
 			"If QUERY presents, display the information about the account which " +
 			"matches QUERY.\n" +
-			"Otherwise, if you log in as a user, show a list of your accounts.\n" +
-			"If you log in as a bank manager, show a list of all accounts.\n" +
+			"Otherwise, if you log in as a user, show a list of your transactors.\n" +
+			"If you log in as a bank manager, show a list of all transactors.\n" +
 			"\n" +
 			"Must be logged in to use this command.\n" +
-			"A user can only view their own accounts.\n" +
+			"A user can only view their own transactors.\n" +
 			"\n" +
 			"QUERY string can be the account ID of your account, or a " +
 			"username, or a `type order` " +
@@ -74,7 +74,7 @@ class HelpCmd {
 			"`ls`s. This program will cache the type and order every time after you " +
 			" `ls`. Only the cached info will be queried.\n");
 
-		commandHelp.put("mv", "mv -- move between accounts\n" +
+		commandHelp.put("mv", "mv -- move between transactors\n" +
 			"Usage: mv FROM-QUERY TO-QUERY AMOUNT\n" +
 			"\n" +
 			"Move AMOUNT of money from the account denoted by FROM-QUERY " +
@@ -156,10 +156,10 @@ class HelpCmd {
 			"\n" +
 			"Request the bank manager to create a account of TYPE.\n" +
 			"The available TYPE strings are:\n" +
-			"chq -- chequing accounts\n" +
-			"sav -- saving accounts\n" +
-			"cre -- credit card accounts\n" +
-			"loc -- line of credit accounts\n" +
+			"chq -- chequing transactors\n" +
+			"sav -- saving transactors\n" +
+			"cre -- credit card transactors\n" +
+			"loc -- line of credit transactors\n" +
 			"\n" +
 			"You must log in as a user to use this command.\n" +
 			"\n" +

@@ -2,8 +2,15 @@ package controller;
 
 import controller.transactions.*;
 import model.Cash;
+import model.CashCollection;
+import model.Money;
 import model.exceptions.InsufficientCashException;
+import model.exceptions.InvalidOperationException;
+import model.exceptions.NoEnoughMoneyException;
 import model.persons.Loginable;
+import model.transactions.Transaction;
+import model.transactors.Account;
+import model.transactors.MoneyEnvelope;
 
 import java.util.HashMap;
 
@@ -12,13 +19,13 @@ public class ATM {
 	private Loginable loggedIn;
 	private HashMap<Cash, Integer> billAmount;
 	private CashController cashController;
-	private ChequeController chequeController;
 	private DepositController depositController;
 	private WithdrawController withdrawController;
 	private ATMRecordController atmRecordController;
 	private AlertController alertController;
 	private String atmRecordFileName;
 	private String alertFileName;
+	private MoneyEnvelope envelope;
 
 	/**
 	 * Constructs an ATM.
@@ -37,7 +44,6 @@ public class ATM {
 			billAmount.put(x, 0);
 		}
 		this.cashController = new CashController(this);
-		this.chequeController = new ChequeController(this);
 		this.depositController = new FileDepositController(this);
 		this.withdrawController = new FileWithdrawController(this);
 
@@ -45,6 +51,7 @@ public class ATM {
 		this.alertController = new AlertController(this, bankSystem);
 
 		atmRecordController.readRecords();
+		this.envelope = new MoneyEnvelope(this);
 	}
 
 	/**
@@ -246,19 +253,65 @@ public class ATM {
 	}
 
 	/**
-	 * Gets the cheque controller.
-	 *
-	 * @return cheque controller.
-	 */
-	public ChequeController getChequeController() {
-		return this.chequeController;
-	}
-
-
-	/**
 	 * save records to file.
 	 */
 	public void close() {
 		atmRecordController.writeRecords();
+	}
+
+	/**
+	 * Performs a full process of withdrawing. Calculates the amount
+	 * of cash needed. Takes the cash out of the machine. Reduces the amount
+	 * of fund on the account. Puts the cash into the envelope. Records the
+	 * transaction.
+	 * @param acc the account to withdraw money from
+	 * @param amount the amount of money to withdraw
+	 * @throws InvalidOperationException if the account does not support withdrawing
+	 * or error during giving out the cash.
+	 * @throws InsufficientCashException if the atm does not have enough cash
+	 * @throws NoEnoughMoneyException if the account does not have enough fund
+	 */
+	public void withdrawMoney(Account acc, double amount)
+		throws InvalidOperationException, InsufficientCashException, NoEnoughMoneyException {
+		CashCollection col = getCashController().getCashToWithdraw(amount);
+		Transaction tx = new Transaction(col, getBankSystem().getCurrentTime(),
+			acc, envelope);
+		getBankSystem().proceedTransaction(tx);
+	}
+
+	public MoneyEnvelope getEnvelope() {
+		return envelope;
+	}
+
+	/**
+	 * Performs a full process of deposit. Gets the money to deposit from the envelope.
+	 * If the envelope contains cash, puts the cash into the machine. Adds fund to the
+	 * account. Records the transaction.
+	 * @param acc the account to deposit.
+	 */
+	public void depositMoney(Account acc)
+		throws InvalidOperationException {
+		Money money = getDepositController().getDepositMoney();
+		Transaction tx = new Transaction(money, getBankSystem().getCurrentTime(),
+			envelope, acc);
+		try {
+			getBankSystem().proceedTransaction(tx);
+		} catch (NoEnoughMoneyException e) {
+			e.printStackTrace();
+			throw new InvalidOperationException("This should not happen.");
+		}
+	}
+
+	/**
+	 * Deduct cash specified by cashMap from the machine, and put the cash into the
+	 * envelope.
+	 * @param cashMap the cash to withdraw, as a HashMap.
+	 * @throws InvalidOperationException if error during putting the cash into the envelope.
+	 * @throws InsufficientCashException if atm does not have enough cash.
+	 */
+	public void withdrawCash(HashMap<Cash, Integer> cashMap)
+		throws InvalidOperationException, InsufficientCashException {
+		deductCash(cashMap);
+		getWithdrawController().withdrawMoney(cashMap);
 	}
 }

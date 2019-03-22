@@ -3,7 +3,7 @@
 title __ACCOUNTS's Class Diagram__\n
 
   package model {
-    package model.accounts {
+    package model.transactors {
       abstract class Account {
           ~ balance : double
           - dateOfCreation : Date
@@ -26,7 +26,7 @@ title __ACCOUNTS's Class Diagram__\n
   
 
   package model {
-    package model.accounts {
+    package model.transactors {
       abstract class AssetAccount {
           ~ AssetAccount()
           + balanceFactor()
@@ -37,7 +37,7 @@ title __ACCOUNTS's Class Diagram__\n
   
 
   package model {
-    package model.accounts {
+    package model.transactors {
       class ChequingAccount {
           - maximumOverdraftLimit : double
           - beforeOverdraftLimit : double
@@ -49,7 +49,7 @@ title __ACCOUNTS's Class Diagram__\n
   
 
   package model {
-    package model.accounts {
+    package model.transactors {
       class CreditCardAccount {
           + CreditCardAccount()
       }
@@ -58,7 +58,7 @@ title __ACCOUNTS's Class Diagram__\n
   
 
   package model {
-    package model.accounts {
+    package model.transactors {
       abstract class DebtAccount {
           ~ DebtAccount()
           + takeMoneyOut()
@@ -70,7 +70,7 @@ title __ACCOUNTS's Class Diagram__\n
   
 
   package model {
-    package model.accounts {
+    package model.transactors {
       class LineOfCreditAccount {
           + LineOfCreditAccount()
       }
@@ -79,7 +79,7 @@ title __ACCOUNTS's Class Diagram__\n
   
 
   package model {
-    package model.accounts {
+    package model.transactors {
       class SavingAccount {
           - interestRate : double
           + SavingAccount()

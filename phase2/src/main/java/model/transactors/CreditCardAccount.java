@@ -1,5 +1,6 @@
-package model.accounts;
+package model.transactors;
 
+import model.Money;
 import model.persons.User;
 
 import java.util.Date;
@@ -13,7 +14,7 @@ public class CreditCardAccount extends DebtAccount {
 	 * @param accountId      account id
 	 * @param owner          owner of the account
 	 */
-	public CreditCardAccount(double balance, Date dateOfCreation, String accountId, User owner) {
+	public CreditCardAccount(Money balance, Date dateOfCreation, String accountId, User owner) {
 		super(balance, dateOfCreation, accountId, owner);
 	}
 

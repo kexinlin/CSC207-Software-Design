@@ -3,7 +3,7 @@ package view.cmdline;
 import controller.ATM;
 import controller.AccountFactory;
 import controller.BankSystem;
-import model.accounts.*;
+import model.transactors.*;
 import model.persons.BankManager;
 import model.persons.Loginable;
 import model.persons.User;
@@ -96,7 +96,7 @@ public class CommandLineUI implements UI {
 
 	/**
 	 * Gets current account list for this ui.
-	 * @return an ArrayList containing current accounts
+	 * @return an ArrayList containing current transactors
 	 */
 	public ArrayList<Account> getCurAccounts() {
 		return curAccounts;
@@ -275,7 +275,7 @@ public class CommandLineUI implements UI {
 	}
 
 	/**
-	 * Search for `query` in all accounts.
+	 * Search for `query` in all transactors.
 	 * @param query Account ID, `type-order`, or username
 	 * @return the account matches `query`.
 	 * if query is a username, return that user's primary chequing account.

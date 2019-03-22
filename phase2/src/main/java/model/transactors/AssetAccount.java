@@ -1,11 +1,12 @@
-package model.accounts;
+package model.transactors;
 
+import model.Money;
 import model.persons.User;
 
 import java.util.Date;
 
 public abstract class AssetAccount extends Account {
-	AssetAccount(double balance, Date dateOfCreation, String accountId, User owner) {
+	AssetAccount(Money balance, Date dateOfCreation, String accountId, User owner) {
 		super(balance, dateOfCreation, accountId, owner);
 	}
 
@@ -29,7 +30,7 @@ public abstract class AssetAccount extends Account {
 	 * @param amount the amount of money to put in
 	 */
 	@Override
-	public void putMoneyIn(double amount) {
-		this.balance += amount;
+	public void putMoneyIn(Money amount) {
+		this.balance = this.balance.add(amount);
 	}
 }

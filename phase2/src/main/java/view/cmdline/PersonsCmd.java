@@ -1,8 +1,8 @@
 package view.cmdline;
 
 import model.Message;
-import model.accounts.Account;
-import model.accounts.ChequingAccount;
+import model.transactors.Account;
+import model.transactors.ChequingAccount;
 import model.persons.Loginable;
 import model.persons.User;
 
@@ -164,7 +164,7 @@ class PersonsCmd {
 				ui.getOutput().println("You do not have a primary chequing account.");
 				return;
 			}
-			ui.getOutput().println("Your primary account is: " + acc.getAccountId());
+			ui.getOutput().println("Your primary account is: " + acc.getId());
 			return;
 		}
 		Account acc = ui.searchAccount(data);

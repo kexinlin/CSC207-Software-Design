@@ -1,8 +1,9 @@
 package view.cmdline;
 
 import controller.AccountFactory;
+import model.Money;
 import model.Request;
-import model.accounts.*;
+import model.transactors.*;
 import model.exceptions.NoTransactionException;
 import model.persons.Loginable;
 import model.persons.User;
@@ -16,7 +17,7 @@ class AccountsCmd {
 	private AccountFactory accountFactory;
 
 	/**
-	 * Constructs the accounts command
+	 * Constructs the transactors command
 	 * @param ui the ui to use
 	 */
 	AccountsCmd(CommandLineUI ui) {
@@ -25,7 +26,7 @@ class AccountsCmd {
 	}
 
 	/**
-	 * List accounts of current user.
+	 * List transactors of current user.
 	 * Must log in as a user to use.
 	 */
 	void listAccounts() {
@@ -36,8 +37,8 @@ class AccountsCmd {
 		}
 
 		ArrayList<Account> accounts;
-		// the user can only view their own accounts,
-		// the bank manager can view all people's accounts.
+		// the user can only view their own transactors,
+		// the bank manager can view all people's transactors.
 		if (l instanceof User) {
 			// we clone the array list since we do not want to surprise users
 			// when another account is added between lines.
@@ -59,7 +60,7 @@ class AccountsCmd {
 				ui.getOutput().print(acc.getOwner().getUsername() + "\t");
 			}
 			ui.getOutput().println(typeStr + i + "\t\t"
-				+ acc.getAccountId() + "\t" + acc.getBalance());
+				+ acc.getId() + "\t" + acc.getBalance());
 			++i;
 		}
 		if (l instanceof User) {
@@ -96,7 +97,7 @@ class AccountsCmd {
 		SimpleDateFormat format = new SimpleDateFormat("MMM d, YYYY");
 
 		ui.getOutput().println("Acc Id\tType\tBalance\tDate of Creation");
-		ui.getOutput().println(acc.getAccountId() + "\t" + accountFactory.getAccountType(acc)
+		ui.getOutput().println(acc.getId() + "\t" + accountFactory.getAccountType(acc)
 			+ "\t" + acc.getBalance() + "\t" + format.format(acc.getDateOfCreation()));
 		Transaction tx;
 		try {
@@ -118,7 +119,7 @@ class AccountsCmd {
 		}
 
 		// get a fake account, just to make sure this type exists.
-		Account fakeAcc = accountFactory.getAccount(query, 0
+		Account fakeAcc = accountFactory.getAccount(query, new Money(0)
 			, ui.getBankSystem().getCurrentTime(), "", null);
 		if (fakeAcc == null) {
 			ui.getError().println(query + " is not a valid type of account.");
@@ -127,7 +128,7 @@ class AccountsCmd {
 		Request request = new Request(user, query, "Requested"
 			+ ui.getBankSystem().getCurrentTime().toString());
 		ui.getBankSystem().getRequests().add(request);
-		ui.getOutput().println("The creation of accounts has been sent. " +
+		ui.getOutput().println("The creation of transactors has been sent. " +
 			"Please wait for bank managers to process it.");
 	}
 }

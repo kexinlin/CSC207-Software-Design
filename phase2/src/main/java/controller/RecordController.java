@@ -1,8 +1,9 @@
 package controller;
 
 import model.Message;
+import model.Money;
 import model.Request;
-import model.accounts.*;
+import model.transactors.*;
 import model.exceptions.AccountNotExistException;
 import model.persons.BankManager;
 import model.persons.Loginable;
@@ -181,122 +182,18 @@ class RecordController {
 	 * @param data the line containing the transaction, excluding the first column.
 	 */
 	private void processTx(String data) {
-		String[] entries = data.split(",", 2);
-		if (entries.length != 2) {
+		String[] entries = data.split(",", 4);
+		if (entries.length != 4) {
 			return;
-		}
-		boolean ret;
-		switch (entries[0]) {
-			case "transfer":
-				ret = processTransfer(entries[1]);
-				break;
-
-			case "deposit":
-			case "withdraw":
-				ret = processDepositWithdraw(entries[0], entries[1]);
-				break;
-
-			case "paybill":
-				ret = processPayBill(entries[1]);
-				break;
-
-			default:
-				ret = false;
-				break;
-		}
-		if (!ret) {
-			System.err.println("Error processing transaction.");
-		}
-	}
-
-	/**
-	 * Reads a deposit or withdraw transaction from the file and add it to the
-	 * transaction list
-	 * @param type the type of transaction. either "deposit" or "withdraw"
-	 * @param data the line containing the transaction, excluding the first two columns
-	 * @return whether it succeeds or not
-	 */
-	private boolean processDepositWithdraw(String type, String data) {
-		String[] entries = data.split(",", 3);
-		if (entries.length != 3) {
-			return false;
-		}
-		String accId = entries[0];
-		Account acc;
-		try {
-			acc = bankSystem.getAccountById(accId);
-		} catch (AccountNotExistException e) {
-			return false;
-		}
-		Date date;
-		double amount;
-		try {
-			date = new Date(Long.valueOf(entries[1]));
-			amount = Double.valueOf(entries[2]);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-
-		Transaction tx = type.equals("deposit")
-			? new DepositTransaction(amount, date, acc)
-			: new WithdrawTransaction(amount, date, acc);
-		bankSystem.addTransaction(tx);
-		return true;
-	}
-
-	/**
-	 * Reads a pay-bill transaction and add it to the transaction list
-	 * @param data the line containing the transaction, excluding the first two columns
-	 * @return whether it succeeds or not
-	 */
-	private boolean processPayBill(String data) {
-		String[] entries = data.split(",", 4);
-		if (entries.length != 4) {
-			return false;
-		}
-
-		String fromAccId = entries[0];
-		String payee = entries[1];
-		Account fromAcc;
-		try {
-			fromAcc = bankSystem.getAccountById(fromAccId);
-		} catch (AccountNotExistException e) {
-			return false;
-		}
-
-		Date date;
-		double amount;
-		try {
-			date = new Date(Long.valueOf(entries[2]));
-			amount = Double.valueOf(entries[3]);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-
-		Transaction tx = new PayBillTransaction(amount, date, fromAcc, payee);
-		bankSystem.addTransaction(tx);
-		return true;
-	}
-
-	/**
-	 * Reads a transfer transaction and add it to the transaction list
-	 * @param data the line containing the transaction, excluding the first two columns
-	 * @return whether it succeeds or not
-	 */
-	private boolean processTransfer(String data) {
-		String[] entries = data.split(",", 4);
-		if (entries.length != 4) {
-			return false;
 		}
 
 		String fromAccId = entries[0];
 		String toAccId = entries[1];
-		Account fromAcc, toAcc;
-		try {
-			fromAcc = bankSystem.getAccountById(fromAccId);
-			toAcc = bankSystem.getAccountById(toAccId);
-		} catch (AccountNotExistException e) {
-			return false;
+		Transactor fromAcc, toAcc;
+		fromAcc = bankSystem.getTransactor(fromAccId);
+		toAcc = bankSystem.getTransactor(toAccId);
+		if (fromAcc == null || toAcc == null) {
+			return;
 		}
 
 		Date date;
@@ -305,12 +202,11 @@ class RecordController {
 			date = new Date(Long.valueOf(entries[2]));
 			amount = Double.valueOf(entries[3]);
 		} catch (NumberFormatException e) {
-			return false;
+			return;
 		}
 
-		Transaction tx = new TransferTransaction(amount, date, fromAcc, toAcc);
+		Transaction tx = new Transaction(new Money(amount), date, fromAcc, toAcc);
 		bankSystem.addTransaction(tx);
-		return true;
 	}
 
 	/**
@@ -338,7 +234,7 @@ class RecordController {
 		}
 
 		Account account = accountFactory.getAccount(type,
-			balance, dateCreated, accountId, (User)owner);
+			new Money(balance), dateCreated, accountId, (User)owner);
 		bankSystem.addAccount(account);
 	}
 
@@ -393,7 +289,7 @@ class RecordController {
 					recordManager(writer, (BankManager) l);
 				}
 			}
-			// then, accounts
+			// then, transactors
 			for (Account a : bankSystem.getAccounts().values()) {
 				recordAccount(writer, a);
 			}
@@ -435,7 +331,7 @@ class RecordController {
 		}
 		writer.write("set,primary-acc,"
 			+ acc.getOwner().getUsername() + ","
-			+ acc.getAccountId() + "\n");
+			+ acc.getId() + "\n");
 	}
 
 	/**
@@ -474,7 +370,7 @@ class RecordController {
 			+ accountFactory.getAccountType(account) + ","
 			+ account.getBalance() + ","
 			+ account.getDateOfCreation().getTime() + ","
-			+ account.getAccountId() + ","
+			+ account.getId() + ","
 			+ account.getOwner().getUsername() + "\n");
 	}
 
@@ -511,21 +407,9 @@ class RecordController {
 	 */
 	private void recordTransaction(BufferedWriter writer, Transaction tx) throws IOException {
 		StringBuilder builder = new StringBuilder("tx,");
-		if (tx instanceof DepositTransaction) {
-			builder.append("deposit,")
-				.append(((DepositTransaction) tx).getAcc().getAccountId()).append(",");
-		} else if (tx instanceof WithdrawTransaction) {
-			builder.append("withdraw,")
-				.append(((WithdrawTransaction) tx).getAcc().getAccountId()).append(",");
-		} else if (tx instanceof PayBillTransaction) {
-			builder.append("paybill,")
-				.append(((PayBillTransaction) tx).getSource().getAccountId()).append(",")
-				.append(((PayBillTransaction) tx).getPayeeName()).append(",");
-		} else if (tx instanceof TransferTransaction) {
-			builder.append("transfer,")
-				.append(((TransferTransaction) tx).getFromAcc().getAccountId()).append(",")
-				.append(((TransferTransaction) tx).getToAcc().getAccountId()).append(",");
-		}
+		builder
+			.append(tx.getSource().getId()).append(",")
+			.append(tx.getDest().getId()).append(",");
 		builder.append(tx.getDate().getTime()).append(",")
 			.append(tx.getAmount())
 			.append("\n");

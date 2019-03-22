@@ -1,10 +1,12 @@
 package view.cmdline;
 
-import model.accounts.Account;
+import model.transactions.Transaction;
+import model.transactors.Account;
 import model.exceptions.InsufficientCashException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
 import model.persons.User;
+import model.transactors.Transactor;
 
 class TxCmd {
 	private CommandLineUI ui;
@@ -52,11 +54,10 @@ class TxCmd {
 
 		// after all checking, do the transaction
 		try {
-			ui.getBankSystem().transferMoney(source, dest, amount);
+			ui.getBankSystem().proceedTransaction(
+				ui.getBankSystem().makeTx(amount, source, dest));
 			ui.getOutput().println("Transaction succeeded.");
-		} catch (InvalidOperationException e) {
-			ui.getError().println("Transaction failed. " + e);
-		} catch (NoEnoughMoneyException e) {
+		} catch (InvalidOperationException|NoEnoughMoneyException e) {
 			ui.getError().println("Transaction failed. " + e);
 		}
 	}
@@ -83,7 +84,7 @@ class TxCmd {
 		}
 
 		try {
-			ui.getATM().getDepositController().depositMoney(acc);
+			ui.getATM().depositMoney(acc);
 		} catch (InvalidOperationException e) {
 			ui.getError().println("Error making a deposit: " + e);
 			return;
@@ -159,7 +160,7 @@ class TxCmd {
 			return;
 		}
 		try {
-			ui.getATM().getWithdrawController().withdrawMoney(acc, amount);
+			ui.getATM().withdrawMoney(acc, amount);
 		} catch (InvalidOperationException e) {
 			ui.getError().println("Error when giving you money.");
 			return;
