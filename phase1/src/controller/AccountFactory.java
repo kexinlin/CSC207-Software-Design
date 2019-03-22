@@ -25,7 +25,7 @@ public class AccountFactory {
 			case "sav":
 				return new SavingAccount(balance, time, accountId, owner);
 
-			case "cre":
+			case "cre":		//TODO: Add the parameter limit
 				return new CreditCardAccount(balance, time, accountId, owner);
 
 			case "loc":
