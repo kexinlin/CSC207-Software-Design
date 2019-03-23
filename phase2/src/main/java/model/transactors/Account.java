@@ -16,7 +16,7 @@ public abstract class Account extends Transactor {
 	private Date dateOfCreation;
 	private String accountId;
 	private AccountOwner primaryOwner;
-	private Collection<AccountOwner> coOwners;
+	private ArrayList<AccountOwner> coOwners;
 	private ArrayList<Transaction> logs;
 
 	/**
@@ -36,22 +36,12 @@ public abstract class Account extends Transactor {
 		this.logs = new ArrayList<>();
 	}
 
-	/**
-	 * Create an instance of account
-	 *
-	 * @param balance        the balance of the account
-	 * @param dateOfCreation the currentTime of creation
-	 * @param accountId      account id
-	 * @param owner          owner of the account
-	 */
-	Account(Money balance, Date dateOfCreation, String accountId,
-			AccountOwner owner, Collection<AccountOwner> coOwners) {
-		this.balance = balance;
-		this.dateOfCreation = dateOfCreation;
-		this.accountId = accountId;
-		this.primaryOwner = owner;
-		this.coOwners = new ArrayList<>(coOwners);
-		this.logs = new ArrayList<>();
+	public ArrayList<AccountOwner> getCoOwners() {
+		return coOwners;
+	}
+
+	public void addCoOwner(AccountOwner owner) {
+		coOwners.add(owner);
 	}
 
 	/**
