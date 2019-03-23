@@ -1,12 +1,7 @@
 package view.GUI;
 
-import javafx.beans.InvalidationListener;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.property.adapter.JavaBeanStringPropertyBuilder;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,19 +11,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.persons.Loginable;
 import model.persons.User;
 import model.transactors.Account;
-import sun.java2d.pipe.SpanShapeRenderer;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Observable;
 
 public class UserHomeController extends GUIHomeController {
 
@@ -50,7 +40,7 @@ public class UserHomeController extends GUIHomeController {
 
 	@FXML
 	public void showLabel() {
-		StringProperty valueProperty = new SimpleStringProperty(((User) loginable).getName());
+		StringProperty valueProperty = new SimpleStringProperty(((User) currentUser).getName());
 		name.textProperty().bind(valueProperty);
 	}
 
@@ -58,7 +48,7 @@ public class UserHomeController extends GUIHomeController {
 	@FXML
 	public void showTable() {
 
-		ArrayList<Account> accList = ((User) loginable).getAccounts();
+		ArrayList<Account> accList = ((User) currentUser).getAccounts();
 
 		data.addAll(accList);
 
@@ -97,13 +87,17 @@ public class UserHomeController extends GUIHomeController {
 	@FXML
 	public void loadWindow(String location, String title){
 		try {
-			Parent parent = FXMLLoader.load(getClass().getResource(location));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(location));
+			Parent parent = loader.load();
 			Stage stage = new Stage(StageStyle.DECORATED);
 			stage.setTitle(title);
+
+			GUIHomeController homeController = loader.getController();
+			homeController.setGUIManager(guiManager);
+			homeController.setCurrentUser(getCurrentUser());
+
 			stage.setScene(new Scene(parent));
-
 			stage.show();
-
 
 		} catch (IOException e) {
 			e.printStackTrace();

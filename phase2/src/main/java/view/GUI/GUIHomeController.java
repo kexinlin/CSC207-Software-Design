@@ -5,20 +5,18 @@ import model.persons.Loginable;
 
 public abstract class GUIHomeController extends GUIController{
 
-	Loginable loginable;
+	Loginable currentUser;
 
 	@FXML
 	public void setCurrentUser(Loginable loginable){
-		this.loginable = loginable;
+		this.currentUser = loginable;
+	}
+
+	public Loginable getCurrentUser() {
+		return currentUser;
 	}
 
 	@FXML
-	public abstract void showLabel();
-
-	@FXML
-	public void show() {
-		showLabel();
-	}
-
+	public abstract void show();
 
 }
