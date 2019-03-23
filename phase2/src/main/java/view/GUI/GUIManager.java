@@ -3,6 +3,8 @@ package view.GUI;
 import controller.ATM;
 import controller.BankSystem;
 
+import java.util.Stack;
+
 public class GUIManager {
 
 	ATM atm;
@@ -16,6 +18,14 @@ public class GUIManager {
 	GUIManager(ATM atm, BankSystem bankSystem){
 		this.atm = atm;
 		this.bankSystem = bankSystem;
+	}
+
+	public ATM getAtm() {
+		return atm;
+	}
+
+	public BankSystem getBankSystem() {
+		return bankSystem;
 	}
 
 }

@@ -11,14 +11,19 @@ import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 
 
-public class LoginController {
+public class LoginController  {
 
 	@FXML
 	TextField usernameInput;
 	@FXML
 	PasswordField passwordInput;
 
+	private GUIManager guiManager;
 
+
+	public void setGUIManager(GUIManager guiManager){
+		this.guiManager = guiManager;
+	}
 
 	@FXML
 	public void LoginButtonOnClick(ActionEvent actionEvent) throws IOException {
@@ -27,25 +32,30 @@ public class LoginController {
 		System.out.println(username);
 		System.out.println(password);
 
-
 		if(username.equals("")||password.equals("")){
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setContentText("Please enter your username or password");
-			alert.setHeaderText("LoginController fails");
+			alert.setHeaderText("Login failed");
 			alert.show();
 		}
 
-		else if (!username.equals(password)) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Wrong password");
-			alert.setHeaderText("LoginController fail");
-			alert.show();
+		else if (guiManager.getAtm().login(username, password)) {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/UserHomeScene.fxml"));
+			AnchorPane userHomeScene = loader.load();
+
+			UserHomeController userHomeController = loader.getController();
+			userHomeController.setGUIManager(guiManager);
+			userHomeController.setCurrentUser(guiManager.bankSystem.getLoginable(username));
+
+			userHomeController.show();
+
+			Main.root.getChildren().setAll(userHomeScene);
 		}
 		else {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/UserHomeScene.fxml"));
-			AnchorPane ap = loader.load();
-			Main.root.getChildren().setAll(ap);
-
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setContentText("Incorrect password. Please check your password again.");
+			alert.setHeaderText("Login failed");
+			alert.show();
 		}
 	}
 }

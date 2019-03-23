@@ -12,25 +12,39 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import model.persons.Loginable;
+import model.persons.User;
 
 import java.util.Observable;
 
 public class UserHomeController {
-	String username = "test";
+	GUIManager guiManager;
+	Loginable user;
+
 
 	@FXML
 	Label test;
 
+	@FXML
+	public void setGUIManager(GUIManager guiManager){
+		this.guiManager = guiManager;
+	}
+
+	@FXML
+	public void setCurrentUser(Loginable user){
+		this.user = user;
+	}
 
 	@FXML
 	public void showLabel(){
-		StringProperty valueProperty = new SimpleStringProperty(username);
+		StringProperty valueProperty = new SimpleStringProperty(user.getUsername());
 		test.textProperty().bind(valueProperty);
+		System.out.println(user);
 
 	}
 
 	@FXML
-	public void initialize(){
+	public void show(){
 		showLabel();
 	}
 
