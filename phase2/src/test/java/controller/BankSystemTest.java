@@ -45,7 +45,7 @@ public class BankSystemTest {
 			Account acc = bankSystem.getAccountById("874637");
 			assertNotNull(acc);
 			// it should gain 0.1% interest.
-			assertEquals(100.1, acc.getBalance().getValue(), 0.0001);
+			assertEquals(100.1, acc.getBalance().getMoneyValue(), 0.0001);
 		} catch (AccountNotExistException e) {
 			fail("Cannot find the account.");
 		}

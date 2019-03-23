@@ -1,5 +1,6 @@
 package model.transactors;
 
+import javafx.beans.property.SimpleObjectProperty;
 import model.Money;
 import model.exceptions.NoEnoughMoneyException;
 import model.persons.AccountOwner;
@@ -30,13 +31,13 @@ public class ChequingAccount extends AssetAccount {
 	 */
 	@Override
 	public void takeMoneyOut(Money amount) throws NoEnoughMoneyException {
-		if (this.balance.compareTo(this.beforeOverdraftLimit) < 0) {
+		if (this.balance.getValue().compareTo(this.beforeOverdraftLimit) < 0) {
 			throw new NoEnoughMoneyException("Sorry, operation failed. " +
 				"Your balance in this account is negative.");
-		} else if (this.balance.subtract(amount).compareTo(this.maximumOverdraftLimit) < 0) {
+		} else if (this.balance.getValue().subtract(amount).compareTo(this.maximumOverdraftLimit) < 0) {
 			throw new NoEnoughMoneyException("Sorry, operation failed. " +
 				"Your balance cannot decrease below -$100.");
 		}
-		this.balance = this.balance.subtract(amount);
+		this.balance = new SimpleObjectProperty<>(this.balance.getValue().subtract(amount));
 	}
 }

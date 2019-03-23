@@ -73,7 +73,7 @@ public abstract class AccountOwner implements Loginable {
 	 */
 	public double getNetTotal() {
 		return accounts.stream()
-			.mapToDouble(acc -> acc.getBalance().getValue() * acc.balanceFactor())
+			.mapToDouble(acc -> acc.getBalance().getMoneyValue() * acc.balanceFactor())
 			.sum();
 	}
 

@@ -1,5 +1,7 @@
 package model.transactors;
 
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import model.Money;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
@@ -12,10 +14,11 @@ import java.util.Collection;
 import java.util.Date;
 
 public abstract class Account extends Transactor {
-	Money balance;
-	private Date dateOfCreation;
-	private String accountId;
+	SimpleObjectProperty<Money> balance;
+	private SimpleObjectProperty<Date> dateOfCreation;
+	private SimpleStringProperty accountId;
 	private AccountOwner primaryOwner;
+	private SimpleStringProperty accountType;
 	private Collection<AccountOwner> coOwners;
 	private ArrayList<Transaction> logs;
 
@@ -28,12 +31,15 @@ public abstract class Account extends Transactor {
 	 * @param owner          owner of the account
 	 */
 	Account(Money balance, Date dateOfCreation, String accountId, AccountOwner owner) {
-		this.balance = balance;
-		this.dateOfCreation = dateOfCreation;
-		this.accountId = accountId;
+		this.balance = new SimpleObjectProperty<>(balance);
+		this.dateOfCreation = new SimpleObjectProperty<>(dateOfCreation);
+		this.accountId = new SimpleStringProperty(accountId);
 		this.primaryOwner = owner;
 		this.coOwners = new ArrayList<>();
 		this.logs = new ArrayList<>();
+
+		String[] typeClass = String.valueOf(this.getClass()).split("\\.");
+		this.accountType = new SimpleStringProperty(typeClass[typeClass.length-1]);
 	}
 
 	/**
@@ -46,9 +52,9 @@ public abstract class Account extends Transactor {
 	 */
 	Account(Money balance, Date dateOfCreation, String accountId,
 			AccountOwner owner, Collection<AccountOwner> coOwners) {
-		this.balance = balance;
-		this.dateOfCreation = dateOfCreation;
-		this.accountId = accountId;
+		this.balance = new SimpleObjectProperty<>(balance);
+		this.dateOfCreation = new SimpleObjectProperty<>(dateOfCreation);
+		this.accountId = new SimpleStringProperty(accountId);
 		this.primaryOwner = owner;
 		this.coOwners = new ArrayList<>(coOwners);
 		this.logs = new ArrayList<>();
@@ -60,9 +66,24 @@ public abstract class Account extends Transactor {
 	 * @return balance of the account
 	 */
 	public Money getBalance() {
-		return this.balance;
+		return this.balance.getValue();
 	}
 
+	public String getAccountType() {
+		return accountType.get();
+	}
+
+	public String getAccountId() {
+		return accountId.get();
+	}
+
+	public SimpleStringProperty accountIdProperty() {
+		return accountId;
+	}
+
+	public SimpleStringProperty accountTypeProperty() {
+		return accountType;
+	}
 
 	/**
 	 * Gets the account id of this account.
@@ -70,7 +91,7 @@ public abstract class Account extends Transactor {
 	 * @return account id
 	 */
 	public String getId() {
-		return accountId;
+		return accountId.getValue();
 	}
 
 
@@ -80,7 +101,7 @@ public abstract class Account extends Transactor {
 	 * @return date of creation
 	 */
 	public Date getDateOfCreation() {
-		return this.dateOfCreation;
+		return this.dateOfCreation.getValue();
 	}
 
 

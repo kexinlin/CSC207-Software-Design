@@ -1,5 +1,6 @@
 package model.transactors;
 
+import javafx.beans.property.SimpleObjectProperty;
 import model.Money;
 import model.persons.AccountOwner;
 
@@ -31,6 +32,6 @@ public abstract class AssetAccount extends Account {
 	 */
 	@Override
 	public void putMoneyIn(Money amount) {
-		this.balance = this.balance.add(amount);
+		this.balance = new SimpleObjectProperty<>(this.balance.getValue().add(amount));
 	}
 }
