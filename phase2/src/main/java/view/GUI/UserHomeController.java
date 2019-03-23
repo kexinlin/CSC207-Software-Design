@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import model.persons.Loginable;
 import model.persons.User;
 
@@ -20,13 +21,16 @@ import java.util.Observable;
 public class UserHomeController extends GUIHomeController {
 
 	@FXML
-	Label test;
+	Label name;
 
 
 	@FXML
 	public void showLabel() {
-		StringProperty valueProperty = new SimpleStringProperty(loginable.getUsername());
-		test.textProperty().bind(valueProperty);
+		StringProperty valueProperty = new SimpleStringProperty(((User)loginable).getName());
+		name.textProperty().bind(valueProperty);
 	}
 
+	public void LogOutButtonOnClick(ActionEvent actionEvent) {
+
+	}
 }

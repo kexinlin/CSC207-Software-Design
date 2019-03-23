@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.chart.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -7,8 +8,41 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI.UserHomeController">
+<AnchorPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI.UserHomeController">
    <children>
-      <Label fx:id="test" layoutX="82.0" layoutY="93.0" text="Label" />
+      <Label fx:id="name" layoutX="55.0" layoutY="12.0" text="Label">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="15.0" layoutY="12.0" text="Hello">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <TabPane layoutX="12.0" layoutY="41.0" prefHeight="443.0" prefWidth="778.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="My Accounts">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+            <Tab text="Payments &amp; Transfers">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+          <Tab text="My Profiles">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="238.0" prefWidth="570.0" />
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+      <Button layoutX="735.0" layoutY="12.0" mnemonicParsing="false" onAction="#LogOutButtonOnClick" prefHeight="17.0" prefWidth="54.0" text="Log out">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>
