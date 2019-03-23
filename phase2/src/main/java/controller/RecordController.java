@@ -3,11 +3,9 @@ package controller;
 import model.Message;
 import model.Money;
 import model.Request;
+import model.persons.*;
 import model.transactors.*;
 import model.exceptions.AccountNotExistException;
-import model.persons.BankManager;
-import model.persons.Loginable;
-import model.persons.User;
 import model.transactions.*;
 
 import java.io.*;
@@ -40,6 +38,7 @@ class RecordController {
 	 * Format for this file is:
 	 *
 	 * user,NAME,USERNAME,PASSWORD
+	 * user-employee,USERNAME,PASSWORD
 	 * manager,USERNAME,PASSWORD
 	 * account,TYPE,BALANCE,DATE-OF-CREATION,ACC-ID,OWNER-USERNAME
 	 * tx,transfer,FROM-ACC-ID,TO-ACC-ID,DATE,AMOUNT
@@ -70,6 +69,10 @@ class RecordController {
 						processManager(entries[1]);
 						break;
 
+					case "user-employee":
+						processUserEmployee(entries[1]);
+						break;
+
 					case "account":
 						processAccount(entries[1]);
 						break;
@@ -94,7 +97,7 @@ class RecordController {
 						break;
 				}
 			}
-		} catch (IOException e) {
+		} catch (IOException ignore) {
 
 		}
 
@@ -117,10 +120,10 @@ class RecordController {
 			}
 			String username = e[0];
 			Loginable l = bankSystem.getLoginable(username);
-			if (!(l instanceof User)) {
+			if (!(l instanceof AccountOwner)) {
 				return;
 			}
-			User user = (User) l;
+			AccountOwner user = (AccountOwner) l;
 			String accId = e[1];
 			Account acc;
 			try {
@@ -133,6 +136,7 @@ class RecordController {
 			}
 			user.setPrimaryCheuqingAccount((ChequingAccount) acc);
 		}
+		// TODO record co-owners
 	}
 
 	/**
@@ -146,7 +150,7 @@ class RecordController {
 		}
 
 		String username = entries[0];
-		User user = (User) bankSystem.getLoginable(username);
+		AccountOwner user = (AccountOwner) bankSystem.getLoginable(username);
 		if (user == null) {
 			return;
 		}
@@ -167,7 +171,7 @@ class RecordController {
 		}
 
 		String username = entries[0];
-		User user = (User) bankSystem.getLoginable(username);
+		AccountOwner user = (AccountOwner) bankSystem.getLoginable(username);
 		if (user == null) {
 			return;
 		}
@@ -229,12 +233,12 @@ class RecordController {
 		}
 		String accountId = entries[3];
 		Loginable owner = bankSystem.getLoginable(entries[4]);
-		if (! (owner instanceof User)) {
+		if (! (owner instanceof AccountOwner)) {
 			return;
 		}
 
 		Account account = accountFactory.getAccount(type,
-			new Money(balance), dateCreated, accountId, (User)owner);
+			new Money(balance), dateCreated, accountId, (AccountOwner)owner);
 		bankSystem.addAccount(account);
 	}
 
@@ -270,8 +274,21 @@ class RecordController {
 		String username = entries[1];
 		String password = entries[2];
 
-		User user = new User(name, username, password);
+		AccountOwner user = new User(name, username, password);
 		bankSystem.addLoginable(user);
+	}
+
+	private void processUserEmployee(String data) {
+		String[] entries = data.split(",", 2);
+		if (entries.length != 2) {
+			// wrong format
+			return;
+		}
+		String username = entries[0];
+		String password = entries[1];
+
+		UserEmployee employee = new UserEmployee(username, password);
+		bankSystem.addLoginable(employee);
 	}
 
 	/**
@@ -285,6 +302,8 @@ class RecordController {
 			for (Loginable l : bankSystem.getLoginables().values()) {
 				if (l instanceof User) {
 					recordUser(writer, (User) l);
+				} else if (l instanceof UserEmployee) {
+					recordUserEmployee(writer, (UserEmployee)l);
 				} else if (l instanceof BankManager) {
 					recordManager(writer, (BankManager) l);
 				}
@@ -307,11 +326,12 @@ class RecordController {
 			}
 			// then, settings
 			for (Loginable l : bankSystem.getLoginables().values()) {
-				if (l instanceof User) {
-					Account acc = ((User) l).getPrimaryChequingAccount();
+				if (l instanceof AccountOwner) {
+					Account acc = ((AccountOwner) l).getPrimaryChequingAccount();
 					recordPrimaryAcc(writer, acc);
 				}
 			}
+			// TODO record co-owners
 			writer.close();
 		} catch (IOException e) {
 			System.out.println("Cannot save records");
@@ -397,6 +417,13 @@ class RecordController {
 		writer.write("manager,"
 			+ manager.getUsername() + ","
 			+ manager.getPassword() + "\n");
+	}
+
+	private void recordUserEmployee(BufferedWriter writer, UserEmployee employee)
+		throws IOException {
+		writer.write("user-employee,"
+			+ employee.getUsername() + ","
+			+ employee.getPassword() + "\n");
 	}
 
 	/**

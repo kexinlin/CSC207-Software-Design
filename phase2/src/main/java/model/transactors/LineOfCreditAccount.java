@@ -1,7 +1,7 @@
 package model.transactors;
 
 import model.Money;
-import model.persons.User;
+import model.persons.AccountOwner;
 
 import java.util.Date;
 
@@ -14,7 +14,7 @@ public class LineOfCreditAccount extends DebtAccount {
 	 * @param accountId      account id
 	 * @param owner          owner of the account
 	 */
-	public LineOfCreditAccount(Money balance, Date dateOfCreation, String accountId, User owner) {
+	public LineOfCreditAccount(Money balance, Date dateOfCreation, String accountId, AccountOwner owner) {
 		super(balance, dateOfCreation, accountId, owner);
 	}
 

@@ -1,10 +1,10 @@
 package view.cmdline;
 
 import model.Message;
+import model.persons.AccountOwner;
 import model.transactors.Account;
 import model.transactors.ChequingAccount;
 import model.persons.Loginable;
-import model.persons.User;
 
 import java.io.IOException;
 
@@ -64,7 +64,7 @@ class PersonsCmd {
 				return;
 			}
 			// users can only change *their* password
-			if (loggedIn instanceof User
+			if (loggedIn instanceof AccountOwner
 				&& !username.equals(loggedIn.getUsername())) {
 				ui.getError().println("You cannot change other user's password.");
 				return;
@@ -98,7 +98,7 @@ class PersonsCmd {
 		ui.getOutput().println(Message.getText());
 	}
 
-	private void showMessages(User user) {
+	private void showMessages(AccountOwner user) {
 		int i = 0;
 		for (Message msg : user.getMessages()) {
 			ui.getOutput().print("Msg #" + i + ": ");
@@ -107,7 +107,7 @@ class PersonsCmd {
 		}
 	}
 
-	private Message getMessage(User user, String s) {
+	private Message getMessage(AccountOwner user, String s) {
 		int order;
 		try {
 			order = Integer.valueOf(s);
@@ -121,7 +121,7 @@ class PersonsCmd {
 		}
 	}
 
-	private void deleteMessage(User user, String query) {
+	private void deleteMessage(AccountOwner user, String query) {
 		Message msg = getMessage(user, query);
 		if (msg == null) {
 			return;
@@ -130,7 +130,7 @@ class PersonsCmd {
 	}
 
 	void processMessages(String data) {
-		User user = ui.checkUserLogin();
+		AccountOwner user = ui.checkUserLogin();
 		if (user == null) {
 			return;
 		}
@@ -154,7 +154,7 @@ class PersonsCmd {
 	 * @param data the query string of the account.
 	 */
 	void setPrimary(String data) {
-		User user = ui.checkUserLogin();
+		AccountOwner user = ui.checkUserLogin();
 		if (user == null) {
 			return;
 		}

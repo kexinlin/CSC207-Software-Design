@@ -1,19 +1,19 @@
 package view.cmdline;
 
-import model.Cash;
-import model.CashCollection;
-import model.Money;
-import model.Request;
+import model.*;
+import model.persons.AccountOwner;
+import model.persons.Employee;
+import model.persons.User;
 import model.transactors.Account;
 import model.exceptions.AccountNotExistException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
 import model.exceptions.NoTransactionException;
-import model.persons.BankManager;
-import model.persons.User;
 
 import java.io.IOException;
 import java.util.Map;
+
+import static model.ManagerAction.*;
 
 class ManagerCmd {
 	private CommandLineUI ui;
@@ -83,7 +83,7 @@ class ManagerCmd {
 	 * @param data optionally, # of request and whether the bank manager accepts it.
 	 */
 	void processRequests(String data) {
-		BankManager manager = ui.checkBankManagerLogin();
+		Employee manager = ui.checkEmployeeCan(PROCESS_REQUESTS);
 		if (manager == null) {
 			return;
 		}
@@ -104,7 +104,7 @@ class ManagerCmd {
 	 * @param username the username to create.
 	 */
 	void addUser(String username) {
-		BankManager manager = ui.checkBankManagerLogin();
+		Employee manager = ui.checkEmployeeCan(ADD_USER);
 		if (manager == null) {
 			return;
 		}
@@ -140,7 +140,7 @@ class ManagerCmd {
 			return;
 		}
 
-		User user = new User(name, username, password);
+		AccountOwner user = new User(name, username, password);
 		ui.getBankSystem().addLoginable(user);
 		ui.getOutput().println("Successfully added user.");
 	}
@@ -150,7 +150,7 @@ class ManagerCmd {
 	 * @param accId the id of the account.
 	 */
 	void undoTx(String accId) {
-		BankManager manager = ui.checkBankManagerLogin();
+		Employee manager = ui.checkEmployeeCan(UNDO_TX);
 		if (manager == null) {
 			return;
 		}
@@ -175,7 +175,7 @@ class ManagerCmd {
 	 * put cash into the machine.
 	 */
 	void stockCash() {
-		BankManager manager = ui.checkBankManagerLogin();
+		Employee manager = ui.checkEmployeeCan(STOCK_CASH);
 		if (manager == null) {
 			return;
 		}
@@ -197,7 +197,7 @@ class ManagerCmd {
 	 * display the amount of different kinds of cash
 	 */
 	void showCash() {
-		BankManager manager = ui.checkBankManagerLogin();
+		Employee manager = ui.checkEmployeeCan(SHOW_CASH);
 		if (manager == null) {
 			return;
 		}

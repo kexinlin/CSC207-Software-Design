@@ -5,12 +5,13 @@ import model.Money;
 import model.Request;
 import controller.transactions.BillController;
 import controller.transactions.FileBillController;
+import model.persons.AccountOwner;
+import model.persons.User;
 import model.transactors.*;
 import model.exceptions.AccountNotExistException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
 import model.persons.Loginable;
-import model.persons.User;
 import model.transactions.*;
 
 import java.security.SecureRandom;
@@ -145,7 +146,7 @@ public class BankSystem {
 	}
 
 	/**
-	 * Create a new User and save into `this.loginables`.
+	 * Create a new AccountOwner and save into `this.loginables`.
 	 *
 	 * @param name     the name of the user
 	 * @param username the username of the user
@@ -157,7 +158,7 @@ public class BankSystem {
 			throw new InvalidOperationException("Sorry, " +
 				"your username is already taken. Please try another one.");
 		}
-		User u = new User(name, username, password);
+		AccountOwner u = new User(name, username, password);
 
 		this.loginables.put(username, u);
 	}
@@ -181,7 +182,7 @@ public class BankSystem {
 	}
 
 	/**
-	 * @return a ArrayList that contain all the requests for creating transactors from User,
+	 * @return a ArrayList that contain all the requests for creating transactors from AccountOwner,
 	 * which haven't yet been verified by BankManager
 	 */
 	public ArrayList<Request> getRequests() {
@@ -203,11 +204,11 @@ public class BankSystem {
 	/**
 	 * Create an account based on the input Request.
 	 *
-	 * @param request a request from a User containing the information for creating an account,
+	 * @param request a request from a AccountOwner containing the information for creating an account,
 	 *                which has been verified by a BankManager.
 	 */
 	private void createAccount(Request request) {
-		User owner = request.getUser();
+		AccountOwner owner = request.getUser();
 		String accountId = randomString();
 		Account newAccount = accountFactory.getAccount(request.getAccountType()
 			, new Money(0), getCurrentTime(), accountId, owner);

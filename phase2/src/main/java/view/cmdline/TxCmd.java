@@ -1,12 +1,10 @@
 package view.cmdline;
 
-import model.transactions.Transaction;
 import model.transactors.Account;
 import model.exceptions.InsufficientCashException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
-import model.persons.User;
-import model.transactors.Transactor;
+import model.persons.AccountOwner;
 
 class TxCmd {
 	private CommandLineUI ui;
@@ -25,7 +23,7 @@ class TxCmd {
 	 *
 	 */
 	void moveMoney(String args) {
-		User user = ui.checkUserLogin();
+		AccountOwner user = ui.checkUserLogin();
 		if (user == null) {
 			return;
 		}
@@ -69,7 +67,7 @@ class TxCmd {
 	 *
 	 */
 	void deposit(String query) {
-		User user = ui.checkUserLogin();
+		AccountOwner user = ui.checkUserLogin();
 		if (user == null) {
 			return;
 		}
@@ -93,7 +91,7 @@ class TxCmd {
 	}
 
 	void payBill(String args) {
-		User user = ui.checkUserLogin();
+		AccountOwner user = ui.checkUserLogin();
 		if (user == null) {
 			return;
 		}
@@ -136,7 +134,7 @@ class TxCmd {
 	 * @param data the query string of the account.
 	 */
 	void withdraw(String data) {
-		User user = ui.checkUserLogin();
+		AccountOwner user = ui.checkUserLogin();
 		if (user == null) {
 			return;
 		}

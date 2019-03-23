@@ -2,7 +2,7 @@ package model.transactors;
 
 import model.Money;
 import model.exceptions.NoEnoughMoneyException;
-import model.persons.User;
+import model.persons.AccountOwner;
 
 import java.util.Date;
 
@@ -17,7 +17,7 @@ public class ChequingAccount extends AssetAccount {
 	 * @param accountId      account id
 	 * @param owner          owner of the account
 	 */
-	public ChequingAccount(Money balance, Date dateOfCreation, String accountId, User owner) {
+	public ChequingAccount(Money balance, Date dateOfCreation, String accountId, AccountOwner owner) {
 		super(balance, dateOfCreation, accountId, owner);
 	}
 

@@ -19,4 +19,6 @@ public interface Loginable {
 	 * @return true if the change succeeds, false otherwise.
 	 */
 	boolean setPassword(String password);
+
+	String getPassword();
 }

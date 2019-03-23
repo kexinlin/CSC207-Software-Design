@@ -22,8 +22,8 @@ public class CashController {
 	}
 
 	/**
-	 * Get the amount of bills gives the User who withdraw money
-	 * @param amount the amount of money that User wants to withdraw
+	 * Get the amount of bills gives the AccountOwner who withdraw money
+	 * @param amount the amount of money that AccountOwner wants to withdraw
 	 * @return a HashMap that maps the Cash and the number of bills
 	 * @throws InsufficientCashException when the cash stored in ATM cannot add up to the amount
 	 */

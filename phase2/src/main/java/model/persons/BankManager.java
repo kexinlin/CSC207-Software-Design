@@ -1,8 +1,9 @@
 package model.persons;
 
 import controller.BankSystem;
+import model.ManagerAction;
 
-public class BankManager implements Loginable {
+public class BankManager implements Loginable, Employee {
 	private String password;
 	private String managerName;
 
@@ -58,4 +59,8 @@ public class BankManager implements Loginable {
 		return true;
 	}
 
+	@Override
+	public boolean can(ManagerAction ignore) {
+		return true;
+	}
 }

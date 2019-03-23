@@ -1,12 +1,12 @@
 package model.transactors;
 
 import model.Money;
-import model.persons.User;
+import model.persons.AccountOwner;
 
 import java.util.Date;
 
 public abstract class AssetAccount extends Account {
-	AssetAccount(Money balance, Date dateOfCreation, String accountId, User owner) {
+	AssetAccount(Money balance, Date dateOfCreation, String accountId, AccountOwner owner) {
 		super(balance, dateOfCreation, accountId, owner);
 	}
 

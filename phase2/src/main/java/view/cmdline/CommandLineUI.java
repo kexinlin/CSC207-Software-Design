@@ -3,10 +3,12 @@ package view.cmdline;
 import controller.ATM;
 import controller.AccountFactory;
 import controller.BankSystem;
+import model.ManagerAction;
+import model.persons.Employee;
 import model.transactors.*;
 import model.persons.BankManager;
 import model.persons.Loginable;
-import model.persons.User;
+import model.persons.AccountOwner;
 import model.exceptions.AccountNotExistException;
 import view.UI;
 
@@ -251,27 +253,31 @@ public class CommandLineUI implements UI {
 	 * Check whether a user has logged in.
 	 * @return the currently logged-in user, or null if no user is logged in.
 	 */
-	User checkUserLogin() {
+	AccountOwner checkUserLogin() {
 		Loginable loggedIn = machine.currentLoggedIn();
-		if (! (loggedIn instanceof User)) {
+		if (! (loggedIn instanceof AccountOwner)) {
 			error.println("The current individual logged in is not a user.");
 			return null;
 		}
-		return (User)loggedIn;
+		return (AccountOwner)loggedIn;
 	}
 
 	/**
 	 * Check whether a bank manager has logged in.
 	 * @return the currently logged-in bank manager, or null if no bank manager
 	 * is logged in.
+	 * @param action
 	 */
-	BankManager checkBankManagerLogin() {
+	Employee checkEmployeeCan(ManagerAction action) {
 		Loginable loggedIn = machine.currentLoggedIn();
-		if (! (loggedIn instanceof BankManager)) {
-			error.println("The current individual logged in is not a bank manager.");
+		if (! (loggedIn instanceof Employee)) {
+			error.println("The current individual logged in is not a bank employee.");
+			return null;
+		} if (! ((Employee) loggedIn).can(action)) {
+			error.println("The current individual is not allowed to do this.");
 			return null;
 		}
-		return (BankManager)loggedIn;
+		return (Employee)loggedIn;
 	}
 
 	/**
@@ -299,8 +305,8 @@ public class CommandLineUI implements UI {
 		// not pure number, probably a username
 		if (! query.matches("^\\d+$")) {
 			Loginable l = getBankSystem().getLoginable(query);
-			if (l instanceof User) {
-				ChequingAccount acc = ((User) l).getPrimaryChequingAccount();
+			if (l instanceof AccountOwner) {
+				ChequingAccount acc = ((AccountOwner) l).getPrimaryChequingAccount();
 				if (acc != null) {
 					return acc;
 				}

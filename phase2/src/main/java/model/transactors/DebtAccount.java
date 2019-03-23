@@ -1,7 +1,7 @@
 package model.transactors;
 
 import model.Money;
-import model.persons.User;
+import model.persons.AccountOwner;
 
 import java.util.Date;
 
@@ -13,7 +13,7 @@ public abstract class DebtAccount extends Account {
 	 * @param accountId account id
 	 * @param owner owner of the account
 	 */
-	DebtAccount(Money balance, Date dateOfCreation, String accountId, User owner) {
+	DebtAccount(Money balance, Date dateOfCreation, String accountId, AccountOwner owner) {
 		super(balance, dateOfCreation, accountId, owner);
 	}
 

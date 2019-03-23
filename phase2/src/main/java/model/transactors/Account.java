@@ -4,17 +4,19 @@ import model.Money;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
 import model.exceptions.NoTransactionException;
+import model.persons.AccountOwner;
 import model.transactions.Transaction;
-import model.persons.User;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 public abstract class Account extends Transactor {
 	Money balance;
 	private Date dateOfCreation;
 	private String accountId;
-	private User owner;
+	private AccountOwner primaryOwner;
+	private Collection<AccountOwner> coOwners;
 	private ArrayList<Transaction> logs;
 
 	/**
@@ -25,14 +27,32 @@ public abstract class Account extends Transactor {
 	 * @param accountId      account id
 	 * @param owner          owner of the account
 	 */
-	Account(Money balance, Date dateOfCreation, String accountId, User owner) {
+	Account(Money balance, Date dateOfCreation, String accountId, AccountOwner owner) {
 		this.balance = balance;
 		this.dateOfCreation = dateOfCreation;
 		this.accountId = accountId;
-		this.owner = owner;
+		this.primaryOwner = owner;
+		this.coOwners = new ArrayList<>();
 		this.logs = new ArrayList<>();
 	}
 
+	/**
+	 * Create an instance of account
+	 *
+	 * @param balance        the balance of the account
+	 * @param dateOfCreation the currentTime of creation
+	 * @param accountId      account id
+	 * @param owner          owner of the account
+	 */
+	Account(Money balance, Date dateOfCreation, String accountId,
+			AccountOwner owner, Collection<AccountOwner> coOwners) {
+		this.balance = balance;
+		this.dateOfCreation = dateOfCreation;
+		this.accountId = accountId;
+		this.primaryOwner = owner;
+		this.coOwners = new ArrayList<>(coOwners);
+		this.logs = new ArrayList<>();
+	}
 
 	/**
 	 * Gets the balance of this account.
@@ -67,10 +87,10 @@ public abstract class Account extends Transactor {
 	/**
 	 * Gets the owner of the account.
 	 *
-	 * @return the User owner of the account
+	 * @return the AccountOwner owner of the account
 	 */
-	public User getOwner() {
-		return owner;
+	public AccountOwner getOwner() {
+		return primaryOwner;
 	}
 
 
@@ -119,7 +139,7 @@ public abstract class Account extends Transactor {
 	/**
 	 * Add a Transaction into `this.logs`.
 	 *
-	 * @param trans a Transaction by this User
+	 * @param trans a Transaction by this AccountOwner
 	 */
 	public void addTrans(Transaction trans) {
 		this.logs.add(trans);

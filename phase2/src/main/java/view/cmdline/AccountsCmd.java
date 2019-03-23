@@ -3,10 +3,10 @@ package view.cmdline;
 import controller.AccountFactory;
 import model.Money;
 import model.Request;
+import model.persons.AccountOwner;
 import model.transactors.*;
 import model.exceptions.NoTransactionException;
 import model.persons.Loginable;
-import model.persons.User;
 import model.transactions.Transaction;
 
 import java.text.SimpleDateFormat;
@@ -39,10 +39,10 @@ class AccountsCmd {
 		ArrayList<Account> accounts;
 		// the user can only view their own transactors,
 		// the bank manager can view all people's transactors.
-		if (l instanceof User) {
+		if (l instanceof AccountOwner) {
 			// we clone the array list since we do not want to surprise users
 			// when another account is added between lines.
-			accounts = new ArrayList<>(((User) l).getAccounts());
+			accounts = new ArrayList<>(((AccountOwner) l).getAccounts());
 		} else {
 			accounts = new ArrayList<>(ui.getBankSystem().getAccounts().values());
 		}
@@ -50,22 +50,22 @@ class AccountsCmd {
 		ui.setCurAccounts(accounts);
 
 		int i = 0;
-		if (!(l instanceof User)) {
+		if (!(l instanceof AccountOwner)) {
 			ui.getOutput().print("Owner\t");
 		}
 		ui.getOutput().println("Type-Order\tID\tBalance");
 		for (Account acc : accounts) {
 			String typeStr = accountFactory.getAccountType(acc);
-			if (! (l instanceof User)) {
+			if (! (l instanceof AccountOwner)) {
 				ui.getOutput().print(acc.getOwner().getUsername() + "\t");
 			}
 			ui.getOutput().println(typeStr + i + "\t\t"
 				+ acc.getId() + "\t" + acc.getBalance());
 			++i;
 		}
-		if (l instanceof User) {
+		if (l instanceof AccountOwner) {
 			ui.getOutput().println("\n" +
-				"Summary -- Net Total: " + ((User) l).getNetTotal());
+				"Summary -- Net Total: " + ((AccountOwner) l).getNetTotal());
 		}
 	}
 
@@ -89,7 +89,7 @@ class AccountsCmd {
 		// the account does not belong to the user
 		// use the same error message to ensure the user
 		// does not intentionally guess other people's account id
-		if (l instanceof User && ! (acc.getOwner().equals(l))) {
+		if (l instanceof AccountOwner && ! (acc.getOwner().equals(l))) {
 			ui.getError().println("No such account found in your control.");
 			return;
 		}
@@ -113,7 +113,7 @@ class AccountsCmd {
 	 * @param query the type of the account
 	 */
 	void requestToCreate(String query) {
-		User user = ui.checkUserLogin();
+		AccountOwner user = ui.checkUserLogin();
 		if (user == null) {
 			return;
 		}
