@@ -17,8 +17,7 @@ import model.persons.User;
 
 import java.util.Observable;
 
-public class UserHomeController extends GUIHomeController {
-
+public class EmployeeHomeController extends GUIHomeController {
 	@FXML
 	Label test;
 
@@ -27,6 +26,8 @@ public class UserHomeController extends GUIHomeController {
 	public void showLabel() {
 		StringProperty valueProperty = new SimpleStringProperty(loginable.getUsername());
 		test.textProperty().bind(valueProperty);
+		System.out.println(loginable);
 	}
+
 
 }

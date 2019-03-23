@@ -7,23 +7,17 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import model.persons.User;
 
 import java.io.IOException;
 
 
-public class LoginController  {
+public class LoginController extends GUIController{
 
 	@FXML
 	TextField usernameInput;
 	@FXML
 	PasswordField passwordInput;
-
-	private GUIManager guiManager;
-
-
-	public void setGUIManager(GUIManager guiManager){
-		this.guiManager = guiManager;
-	}
 
 	@FXML
 	public void LoginButtonOnClick(ActionEvent actionEvent) throws IOException {
@@ -32,26 +26,29 @@ public class LoginController  {
 		System.out.println(username);
 		System.out.println(password);
 
-		if(username.equals("")||password.equals("")){
+		if (username.equals("") || password.equals("")) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setContentText("Please enter your username or password");
 			alert.setHeaderText("Login failed");
 			alert.show();
-		}
+		} else if (guiManager.getAtm().login(username, password)) {
+			String resourceName;
+			if (guiManager.getBankSystem().getLoginable(username) instanceof User) {
+				resourceName = "/UserHomeScene.fxml";
+			} else {
+				resourceName = "/EmployeeHomeScene.fxml";
+			}
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(resourceName));
+			AnchorPane homeScene = loader.load();
 
-		else if (guiManager.getAtm().login(username, password)) {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/UserHomeScene.fxml"));
-			AnchorPane userHomeScene = loader.load();
+			GUIHomeController homeController = loader.getController();
+			homeController.setGUIManager(guiManager);
+			homeController.setCurrentUser(guiManager.bankSystem.getLoginable(username));
 
-			UserHomeController userHomeController = loader.getController();
-			userHomeController.setGUIManager(guiManager);
-			userHomeController.setCurrentUser(guiManager.bankSystem.getLoginable(username));
+			homeController.show();
 
-			userHomeController.show();
-
-			Main.root.getChildren().setAll(userHomeScene);
-		}
-		else {
+			Main.root.getChildren().setAll(homeScene);
+		} else {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setContentText("Incorrect password. Please check your password again.");
 			alert.setHeaderText("Login failed");
