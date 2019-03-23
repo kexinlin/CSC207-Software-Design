@@ -20,7 +20,7 @@ public class LoginController extends GUIController{
 	PasswordField passwordInput;
 
 	@FXML
-	public void LoginButtonOnClick(ActionEvent actionEvent) throws IOException {
+	public void loginButtonOnClick(ActionEvent actionEvent) throws IOException {
 		String username = usernameInput.getText();
 		String password = passwordInput.getText();
 		System.out.println(username);

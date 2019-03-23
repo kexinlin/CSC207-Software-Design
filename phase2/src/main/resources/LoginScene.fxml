@@ -24,7 +24,7 @@
             <Label text="Username" />
             <TextField fx:id="usernameInput" promptText="Enter your username" GridPane.columnIndex="1" />
             <Label text="Password" GridPane.rowIndex="1" />
-            <Button mnemonicParsing="false" onAction="#LoginButtonOnClick" prefHeight="29.0" prefWidth="115.0" text="Login" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button mnemonicParsing="false" onAction="#loginButtonOnClick" prefHeight="29.0" prefWidth="115.0" text="Login" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <PasswordField fx:id="passwordInput" promptText="Enter your password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
       </GridPane>

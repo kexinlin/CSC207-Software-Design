@@ -12,15 +12,20 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.persons.Loginable;
 import model.persons.User;
 import model.transactors.Account;
 import sun.java2d.pipe.SpanShapeRenderer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Observable;
@@ -45,20 +50,15 @@ public class UserHomeController extends GUIHomeController {
 
 	@FXML
 	public void showLabel() {
-		StringProperty valueProperty = new SimpleStringProperty(((User)loginable).getName());
+		StringProperty valueProperty = new SimpleStringProperty(((User) loginable).getName());
 		name.textProperty().bind(valueProperty);
 	}
 
-	@FXML
-	public void LogOutButtonOnClick(ActionEvent actionEvent) {
-
-	}
-
 
 	@FXML
-	public void showTable(){
+	public void showTable() {
 
-		ArrayList<Account> accList = ((User)loginable).getAccounts();
+		ArrayList<Account> accList = ((User) loginable).getAccounts();
 
 		data.addAll(accList);
 
@@ -80,10 +80,34 @@ public class UserHomeController extends GUIHomeController {
 	}
 
 	@Override
-	public void show(){
+	public void show() {
 		showLabel();
 		showTable();
 	}
 
+	@FXML
+	public void createAccountButtonOnClick(ActionEvent actionEvent) {
+		loadWindow("/AccountCreationScene.fxml", "Account Creation Request");
+	}
 
+	@FXML
+	public void logOutButtonOnClick(ActionEvent actionEvent) {
+	}
+
+	@FXML
+	public void loadWindow(String location, String title){
+		try {
+			Parent parent = FXMLLoader.load(getClass().getResource(location));
+			Stage stage = new Stage(StageStyle.DECORATED);
+			stage.setTitle(title);
+			stage.setScene(new Scene(parent));
+
+			stage.show();
+
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
 }
