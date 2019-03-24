@@ -7,8 +7,8 @@ import model.persons.AccountOwner;
 import java.util.Date;
 
 public class ChequingAccount extends AssetAccount {
-	private Money maximumOverdraftLimit = new Money(0);
-	private Money beforeOverdraftLimit = new Money(-100);
+	private Money maximumOverdraftLimit = new Money(-100);
+	private Money beforeOverdraftLimit = new Money(0);
 	/**
 	 * Create an instance of ChequingAccount
 	 *
