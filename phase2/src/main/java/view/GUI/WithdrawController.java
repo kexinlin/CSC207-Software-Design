@@ -50,9 +50,17 @@ public class WithdrawController extends GUIHomeController {
 			alert.setContentText("Please enter a valid amount");
 			alert.setHeaderText("Process failed");
 			alert.show();
+			return;
 		}
+
+		System.out.println(acc.getBalance());
+
 		try {
 			guiManager.getATM().withdrawMoney(acc, amount);
+			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			alert.setContentText("Succeeded. Please take your money.");
+			alert.setHeaderText("Process succeeded");
+			alert.show();
 		} catch (InvalidOperationException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setContentText("An error occurred during withdrawal.");
@@ -69,6 +77,7 @@ public class WithdrawController extends GUIHomeController {
 			alert.setHeaderText("Process failed");
 			alert.show();
 		}
+		System.out.println(acc.getBalance());
 	}
 
 	@FXML
