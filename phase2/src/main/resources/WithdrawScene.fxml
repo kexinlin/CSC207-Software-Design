@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="200.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI.WithdrawController">
+   <children>
+      <Label layoutX="38.0" layoutY="43.0" text="Amount You Want to Withdraw" />
+      <TextField fx:id="withdrawAmount" layoutX="274.0" layoutY="38.0"/>
+      <Button layoutX="193.0" layoutY="142.0" mnemonicParsing="false" onAction="#withdrawConfirmOnClick" text="Confirm" />
+      <Label layoutX="40.0" layoutY="91.0" text="Source Account" />
+      <ChoiceBox fx:id="withdrawSourceChoiceBox" layoutX="275.0" layoutY="87.0" prefWidth="150.0" />
+   </children>
+</AnchorPane>
