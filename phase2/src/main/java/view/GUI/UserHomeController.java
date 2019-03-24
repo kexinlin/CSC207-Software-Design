@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.persons.User;
@@ -81,7 +82,14 @@ public class UserHomeController extends GUIHomeController {
 	}
 
 	@FXML
-	public void logOutButtonOnClick(ActionEvent actionEvent) {
+	public void logOutButtonOnClick(ActionEvent actionEvent) throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/LoginScene.fxml"));
+		AnchorPane homeScene = loader.load();
+
+		GUIController controller = loader.getController();
+		controller.setGUIManager(guiManager);
+
+		Main.root.getChildren().setAll(homeScene);
 	}
 
 	@FXML
@@ -103,5 +111,18 @@ public class UserHomeController extends GUIHomeController {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void withdrawOnClick(ActionEvent actionEvent) {
+//		loadWindow("/AccountCreationScene.fxml", "Account Creation Request");
+	}
+
+	public void depositOnClick(ActionEvent actionEvent) {
+	}
+
+	public void transferOnClick(ActionEvent actionEvent) {
+	}
+
+	public void payBillOnClick(ActionEvent actionEvent) {
 	}
 }

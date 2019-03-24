@@ -6,7 +6,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import model.Request;
 import model.persons.AccountOwner;
-import model.transactors.Account;
 
 public class AccountCreationController extends GUIHomeController {
 
