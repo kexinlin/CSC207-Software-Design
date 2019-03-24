@@ -31,7 +31,7 @@ public class LoginController extends GUIController{
 			alert.setContentText("Please enter your username or password");
 			alert.setHeaderText("Login failed");
 			alert.show();
-		} else if (guiManager.getAtm().login(username, password)) {
+		} else if (guiManager.getATM().login(username, password)) {
 			String resourceName;
 			if (guiManager.getBankSystem().getLoginable(username) instanceof User) {
 				resourceName = "/UserHomeScene.fxml";

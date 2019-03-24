@@ -12,14 +12,6 @@ public class AccountCreationController extends GUIHomeController {
 	@FXML
 	ChoiceBox<String> accTypeChoiceBox;
 
-	@FXML
-	public void initialize() {
-		accTypeChoiceBox.setValue("Saving Account");
-		accTypeChoiceBox.getItems().add("Saving Account");
-		accTypeChoiceBox.getItems().add("Chequing Account");
-		accTypeChoiceBox.getItems().add("Credit Card Account");
-		accTypeChoiceBox.getItems().add("Line Of Credit Account");
-	}
 
 	@FXML
 	public void requestButtonOnClick(ActionEvent actionEvent) {
@@ -35,7 +27,13 @@ public class AccountCreationController extends GUIHomeController {
 		alert.show();
 	}
 
+	@FXML
 	public void show() {
+		accTypeChoiceBox.setValue("Saving Account");
+		accTypeChoiceBox.getItems().add("Saving Account");
+		accTypeChoiceBox.getItems().add("Chequing Account");
+		accTypeChoiceBox.getItems().add("Credit Card Account");
+		accTypeChoiceBox.getItems().add("Line Of Credit Account");
 	}
 
 }

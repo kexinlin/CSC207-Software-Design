@@ -44,10 +44,26 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="115.0" layoutY="51.0" mnemonicParsing="false" onAction="#withdrawOnClick" prefHeight="152.0" prefWidth="237.0" text="Withdraw" />
-                        <Button layoutX="447.0" layoutY="48.0" mnemonicParsing="false" onAction="#depositOnClick" prefHeight="152.0" prefWidth="237.0" text="Deposit" />
-                        <Button layoutX="114.0" layoutY="230.0" mnemonicParsing="false" onAction="#transferOnClick" prefHeight="152.0" prefWidth="237.0" text="Transfer" />
-                        <Button layoutX="448.0" layoutY="225.0" mnemonicParsing="false" onAction="#payBillOnClick" prefHeight="152.0" prefWidth="237.0" text="Pay Bill" />
+                        <Button layoutX="115.0" layoutY="51.0" mnemonicParsing="false" onAction="#withdrawOnClick" prefHeight="152.0" prefWidth="237.0" text="Withdraw">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Button>
+                        <Button layoutX="447.0" layoutY="48.0" mnemonicParsing="false" onAction="#depositOnClick" prefHeight="152.0" prefWidth="237.0" text="Deposit">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Button>
+                        <Button layoutX="114.0" layoutY="230.0" mnemonicParsing="false" onAction="#transferOnClick" prefHeight="152.0" prefWidth="237.0" text="Transfer">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Button>
+                        <Button layoutX="448.0" layoutY="225.0" mnemonicParsing="false" onAction="#payBillOnClick" prefHeight="152.0" prefWidth="237.0" text="Pay Bill">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Button>
                      </children></AnchorPane>
               </content>
             </Tab>

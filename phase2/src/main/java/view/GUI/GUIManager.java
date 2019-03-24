@@ -20,7 +20,7 @@ public class GUIManager {
 		this.bankSystem = bankSystem;
 	}
 
-	public ATM getAtm() {
+	public ATM getATM() {
 		return atm;
 	}
 

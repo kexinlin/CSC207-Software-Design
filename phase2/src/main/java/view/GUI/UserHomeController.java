@@ -82,6 +82,11 @@ public class UserHomeController extends GUIHomeController {
 	}
 
 	@FXML
+	public void withdrawOnClick(ActionEvent actionEvent) {
+		loadWindow("/WithdrawScene.fxml", "Cash Withdrawal");
+	}
+
+	@FXML
 	public void logOutButtonOnClick(ActionEvent actionEvent) throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/LoginScene.fxml"));
 		AnchorPane homeScene = loader.load();
@@ -97,12 +102,15 @@ public class UserHomeController extends GUIHomeController {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(location));
 			Parent parent = loader.load();
-			Stage stage = new Stage(StageStyle.DECORATED);
-			stage.setTitle(title);
 
 			GUIHomeController homeController = loader.getController();
 			homeController.setGUIManager(guiManager);
 			homeController.setCurrentUser(getCurrentUser());
+			homeController.show();
+
+			Stage stage = new Stage(StageStyle.DECORATED);
+			stage.setTitle(title);
+
 
 			stage.setScene(new Scene(parent));
 			stage.show();
@@ -113,10 +121,8 @@ public class UserHomeController extends GUIHomeController {
 
 	}
 
-	public void withdrawOnClick(ActionEvent actionEvent) {
-//		loadWindow("/AccountCreationScene.fxml", "Account Creation Request");
-	}
 
+	@FXML
 	public void depositOnClick(ActionEvent actionEvent) {
 	}
 
