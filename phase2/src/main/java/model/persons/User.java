@@ -14,6 +14,22 @@ public class User extends AccountOwner {
 		this.name = name;
 	}
 
+
+
+	/**
+	 * Constructs a user object with income, age, and email info
+	 * @param username the username of this user
+	 * @param password the password of this user
+	 * @param age	the age of this user
+	 * @param income the income of this user
+	 * @param email the email address of this user
+	 */
+	public User(String name, String username, String password, int age, int income, String email) {
+		super(username, password, age, income, email);
+		this.name = name;
+	}
+
+
 	/**
 	 * Get the name of this AccountOwner.
 	 *

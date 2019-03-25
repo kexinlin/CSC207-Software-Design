@@ -15,7 +15,7 @@ public abstract class AccountOwner implements Loginable {
 	private ArrayList<Message> messages = new ArrayList<>();
 	private int age = 0;
 	private int income = 0;
-
+	private String email;
 	/**
 	 * Constructs a user object.
 	 *
@@ -25,8 +25,26 @@ public abstract class AccountOwner implements Loginable {
 	public AccountOwner(String username, String password) {
 		this.username = username;
 		this.password = password;
+
 	}
 
+
+	/**
+	 * Constructs a user object with income, age, and email info
+	 * @param username the username of this user
+	 * @param password the password of this user
+	 * @param age	the age of this user
+	 * @param income the income of this user
+	 * @param email the email address of this user
+	 */
+	public AccountOwner(String username, String password, int age, int income, String email) {
+		this.username = username;
+		this.password = password;
+		this.age = age;
+		this.income = income;
+		this.email = email;
+
+	}
 
 	/**
 	 * Get the username of this AccountOwner.
@@ -86,7 +104,7 @@ public abstract class AccountOwner implements Loginable {
 	/**
 	 * return all available transactors
 	 *
-	 * @return
+	 * @return all accounts
 	 */
 	public ArrayList<Account> getAccounts() {
 		return accounts;
@@ -96,7 +114,7 @@ public abstract class AccountOwner implements Loginable {
 	/**
 	 * return sum of the balance of all asset accounts
 	 *
-	 * @return
+	 * @return sum of the balance of all asset accounts
 	 */
 	public double getTotalAssets() {
 		double total = 0;
@@ -112,7 +130,7 @@ public abstract class AccountOwner implements Loginable {
 	/**
 	 * return sum of balance of all debt accounts
 	 *
-	 * @return
+	 * @return return sum of balance of all debt accounts
 	 */
 	public double getTotalDebts() {
 		double total = 0;
@@ -192,7 +210,7 @@ public abstract class AccountOwner implements Loginable {
 	/**
 	 * return annual income of this accountowner
 	 *
-	 * @return
+	 * @return annual income of this accountowner
 	 */
 	public int getIncome() {
 		return this.income;
@@ -202,7 +220,7 @@ public abstract class AccountOwner implements Loginable {
 	/**
 	 * return age of this accountowner
 	 *
-	 * @return
+	 * @return age of this accountowner
 	 */
 	public int getAge() {
 		return this.age;
