@@ -34,11 +34,11 @@ public class HighInterestAccount extends Account{
 	 */
 	@Override
 	public void takeMoneyOut(Money amount) throws NoEnoughMoneyException, InvalidOperationException {
-		if (this.balance.compareTo(amount) < 0) {
+		if (this.balance.getValue().compareTo(amount) < 0) {
 			throw new NoEnoughMoneyException("Sorry, operation failed. " +
 				"The amount exceeds existing balance in this account");
 		}
-		this.balance.subtract(amount);		// TODO:a higher fee is required
+		this.balance.getValue().subtract(amount);		// TODO:a higher fee is required
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class HighInterestAccount extends Account{
 	 */
 	@Override
 	public void putMoneyIn(Money amount) {
-		this.balance = this.balance.add(amount);
+		this.balance.setValue(this.balance.getValue().add(amount));
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class HighInterestAccount extends Account{
 	 * Increase the saving account balance bt a factor of 0.1%.
 	 */
 	public void increaseInterest() {
-		Money interest = new Money(this.balance.getValue() * interestRate);
-		this.balance = this.balance.add(interest);
+		Money interest = new Money(this.balance.getValue().getMoneyValue() * interestRate);
+		this.balance.setValue(this.balance.getValue().add(interest));
 	}
 }

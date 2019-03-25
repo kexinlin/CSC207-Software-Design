@@ -20,14 +20,10 @@ public abstract class AccountOwner implements Loginable {
 	 * Constructs a user object.
 	 * @param username the username of this user
 	 * @param password the password of this user
-	 * @param age the age of this user
-	 * @param income the annual income of this user
 	 */
-	public AccountOwner(String username, String password, int age, int income) {
+	public AccountOwner(String username, String password) {
 		this.username = username;
 		this.password = password;
-		this.age = age;
-		this.income = income;
 	}
 
 
@@ -80,7 +76,7 @@ public abstract class AccountOwner implements Loginable {
 	 */
 	public double getNetTotal() {
 		return accounts.stream()
-			.mapToDouble(acc -> acc.getBalance().getValue() * acc.balanceFactor())
+			.mapToDouble(acc -> acc.getBalance().getMoneyValue() * acc.balanceFactor())
 			.sum();
 	}
 
@@ -106,7 +102,7 @@ public abstract class AccountOwner implements Loginable {
 		double total = 0;
 		for (Account acc:accounts) {
 			if (acc instanceof AssetAccount){
-				total += acc.getBalance().getValue();
+				total += acc.getBalance().getMoneyValue();
 			}
 		}
 		return total;
@@ -124,7 +120,7 @@ public abstract class AccountOwner implements Loginable {
 		double total = 0;
 		for (Account acc:accounts) {
 			if (acc instanceof DebtAccount){
-				total += acc.getBalance().getValue();
+				total += acc.getBalance().getMoneyValue();
 			}
 		}
 		return total;

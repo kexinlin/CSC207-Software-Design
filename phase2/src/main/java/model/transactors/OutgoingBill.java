@@ -24,6 +24,6 @@ public class OutgoingBill extends Transactor {
 
 	@Override
 	public void putMoneyIn(Money amount) throws InvalidOperationException {
-		system.getBillController().recordPayment(payee, amount.getValue());
+		system.getBillController().recordPayment(payee, amount.getMoneyValue());
 	}
 }

@@ -19,7 +19,7 @@ public abstract class Account extends Transactor {
 	final private SimpleStringProperty accountId;
 	private AccountOwner primaryOwner;
 	final private SimpleStringProperty accountType;
-	private Collection<AccountOwner> coOwners;
+	private ArrayList<AccountOwner> coOwners;
 	private ArrayList<Transaction> logs;
 
 	/**
@@ -39,7 +39,7 @@ public abstract class Account extends Transactor {
 		this.logs = new ArrayList<>();
 
 		String[] typeClass = String.valueOf(this.getClass()).split("\\.");
-		this.accountType = new SimpleStringProperty(typeClass[typeClass.length-1]);
+		this.accountType = new SimpleStringProperty(typeClass[typeClass.length - 1]);
 	}
 
 	/**
@@ -60,7 +60,7 @@ public abstract class Account extends Transactor {
 		this.logs = new ArrayList<>();
 
 		String[] typeClass = String.valueOf(this.getClass()).split("\\.");
-		this.accountType = new SimpleStringProperty(typeClass[typeClass.length-1]);
+		this.accountType = new SimpleStringProperty(typeClass[typeClass.length - 1]);
 	}
 
 	/**
@@ -70,6 +70,10 @@ public abstract class Account extends Transactor {
 	 */
 	public Money getBalance() {
 		return this.balance.getValue();
+	}
+
+	protected void setBalance(Money newBalance) {
+		this.balance.setValue(newBalance);
 	}
 
 	public String getAccountType() {
@@ -115,6 +119,14 @@ public abstract class Account extends Transactor {
 	 */
 	public AccountOwner getOwner() {
 		return primaryOwner;
+	}
+
+	public ArrayList<AccountOwner> getCoOwners() {
+		return coOwners;
+	}
+
+	public void addCoOwner(AccountOwner owner) {
+		coOwners.add(owner);
 	}
 
 
