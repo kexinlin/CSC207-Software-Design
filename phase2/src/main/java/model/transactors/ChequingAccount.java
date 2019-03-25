@@ -40,4 +40,12 @@ public class ChequingAccount extends AssetAccount {
 		}
 		this.balance.setValue(this.balance.getValue().subtract(amount));
 	}
+
+	/**
+	 * @return the type of the account
+	 */
+	@Override
+	public String getAccountType(){
+		return "ChequingAccount";
+	}
 }

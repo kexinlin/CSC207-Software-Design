@@ -45,4 +45,12 @@ public class SavingAccount extends AssetAccount {
 		Money interest = new Money(this.balance.getValue().getMoneyValue() * interestRate);
 		this.balance.setValue(this.balance.getValue().add(interest));
 	}
+
+	/**
+	 * @return the type of the account
+	 */
+	@Override
+	public String getAccountType(){
+		return "SavingAccount";
+	}
 }

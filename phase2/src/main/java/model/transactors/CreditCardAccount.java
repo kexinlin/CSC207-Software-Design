@@ -18,5 +18,12 @@ public class CreditCardAccount extends DebtAccount {
 		super(balance, dateOfCreation, accountId, owner);
 	}
 
+	/**
+	 * @return the type of the account
+	 */
+	@Override
+	public String getAccountType(){
+		return "CreditCardAccount";
+	}
 
 }

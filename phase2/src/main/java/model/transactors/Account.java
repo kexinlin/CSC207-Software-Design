@@ -191,4 +191,14 @@ public abstract class Account extends Transactor {
 	 * @return the balance factor of this account
 	 */
 	public abstract int balanceFactor();
+
+	/**
+	 *
+	 * @return the AccountID
+	 */
+	public String getAccountId(){
+		return accountId;
+	}
+
+	public abstract String getAccountType();
 }
