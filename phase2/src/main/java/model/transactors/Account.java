@@ -14,11 +14,11 @@ import java.util.Collection;
 import java.util.Date;
 
 public abstract class Account extends Transactor {
-	SimpleObjectProperty<Money> balance;
-	private SimpleObjectProperty<Date> dateOfCreation;
-	private SimpleStringProperty accountId;
+	final SimpleObjectProperty<Money> balance;
+	final private SimpleObjectProperty<Date> dateOfCreation;
+	final private SimpleStringProperty accountId;
 	private AccountOwner primaryOwner;
-	private SimpleStringProperty accountType;
+	final private SimpleStringProperty accountType;
 	private Collection<AccountOwner> coOwners;
 	private ArrayList<Transaction> logs;
 
@@ -58,6 +58,9 @@ public abstract class Account extends Transactor {
 		this.primaryOwner = owner;
 		this.coOwners = new ArrayList<>(coOwners);
 		this.logs = new ArrayList<>();
+
+		String[] typeClass = String.valueOf(this.getClass()).split("\\.");
+		this.accountType = new SimpleStringProperty(typeClass[typeClass.length-1]);
 	}
 
 	/**

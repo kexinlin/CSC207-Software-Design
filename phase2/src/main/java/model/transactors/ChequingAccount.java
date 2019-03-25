@@ -38,6 +38,6 @@ public class ChequingAccount extends AssetAccount {
 			throw new NoEnoughMoneyException("Sorry, operation failed. " +
 				"Your balance cannot decrease below -$100.");
 		}
-		this.balance = new SimpleObjectProperty<>(this.balance.getValue().subtract(amount));
+		this.balance.setValue(this.balance.getValue().subtract(amount));
 	}
 }

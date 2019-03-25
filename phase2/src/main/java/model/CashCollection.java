@@ -9,7 +9,8 @@ public class CashCollection extends Money {
 		this.cashMap = cashMap;
 	}
 
-	public double getValue() {
+	@Override
+	public double getMoneyValue() {
 		return cashMap.entrySet().stream()
 			.mapToDouble(entry -> entry.getKey().getNumVal() * entry.getValue())
 			.sum();

@@ -19,6 +19,7 @@ public class Money implements Comparable<Money> {
 	}
 
 	public Money add(Money that) {
+		System.out.println(getMoneyValue() + that.getMoneyValue());
 		return new Money(getMoneyValue() + that.getMoneyValue());
 	}
 

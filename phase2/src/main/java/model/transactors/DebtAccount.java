@@ -25,7 +25,7 @@ public abstract class DebtAccount extends Account {
 	 */
 	@Override
 	public void takeMoneyOut(Money amount) {
-		this.balance = new SimpleObjectProperty<>(this.balance.getValue().add(amount));
+		this.balance.setValue(this.balance.getValue().add(amount));
 	}
 
 	/**
@@ -35,7 +35,7 @@ public abstract class DebtAccount extends Account {
 	 */
 	@Override
 	public void putMoneyIn(Money amount) {
-		this.balance = new SimpleObjectProperty<>(this.balance.getValue().subtract(amount));
+		this.balance.setValue(this.balance.getValue().subtract(amount));
 
 	}
 

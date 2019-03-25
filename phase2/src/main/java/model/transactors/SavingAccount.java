@@ -35,7 +35,7 @@ public class SavingAccount extends AssetAccount {
 			throw new NoEnoughMoneyException("Sorry, operation failed. " +
 				"The amount exceeds existing balance in this account");
 		}
-		this.balance = new SimpleObjectProperty<>(this.balance.getValue().subtract(amount));
+		this.balance.setValue(this.balance.getValue().subtract(amount));
 	}
 
 	/**
@@ -43,6 +43,6 @@ public class SavingAccount extends AssetAccount {
 	 */
 	public void increaseInterest() {
 		Money interest = new Money(this.balance.getValue().getMoneyValue() * interestRate);
-		this.balance = new SimpleObjectProperty<>(this.balance.getValue().add(interest));
+		this.balance.setValue(this.balance.getValue().add(interest));
 	}
 }
