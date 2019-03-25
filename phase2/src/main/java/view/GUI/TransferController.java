@@ -14,16 +14,18 @@ import model.transactors.Account;
 
 import java.util.ArrayList;
 
-public class WithdrawController extends GUIHomeController {
+public class TransferController extends GUIHomeController {
 
 	@FXML
-	TextField withdrawAmount;
+	TextField transferAmount;
 	@FXML
-	ChoiceBox<String> withdrawSourceChoiceBox;
+	ChoiceBox<String> transferSourceChoiceBox;
+	@FXML
+	TextField transferDesAccount;
 
 
-	public void withdrawConfirmOnClick(ActionEvent actionEvent) {
-		if(withdrawSourceChoiceBox.getValue() == null){
+	public void transferConfirmOnClick(ActionEvent actionEvent) {
+		if (transferSourceChoiceBox.getValue() == null) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setContentText("Please choose an account");
 			alert.setHeaderText("Process failed");
@@ -31,17 +33,40 @@ public class WithdrawController extends GUIHomeController {
 			return;
 		}
 
+		if (transferDesAccount == null) {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setContentText("Please enter an account #");
+			alert.setHeaderText("Process failed");
+			alert.show();
+			return;
+		}
+
 		double amount = 0;
-		String[] choiceBoxStrArray = withdrawSourceChoiceBox.getValue().split("\\s");
-		Account acc = null;
+		Account desAccount = null;
+		Account srcAccount = null;
+		String[] choiceBoxStrArray = transferSourceChoiceBox.getValue().split("\\s");
+
+		// get source account of transaction
 		try {
-			acc = guiManager.getBankSystem().getAccountById(choiceBoxStrArray[choiceBoxStrArray.length - 1]);
+			srcAccount = guiManager.getBankSystem().getAccountById(choiceBoxStrArray[choiceBoxStrArray.length - 1]);
 		} catch (AccountNotExistException e) {
 			e.printStackTrace();
 		}
 
+		// get destination account of transaction
 		try {
-			amount = Double.valueOf(withdrawAmount.getText());
+			desAccount = guiManager.getBankSystem().getAccountById(transferDesAccount.getText());
+		} catch (AccountNotExistException e) {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setContentText("Please enter a valid account number");
+			alert.setHeaderText("Process failed");
+			alert.show();
+			return;
+		}
+
+		// get amount of transaction
+		try {
+			amount = Double.valueOf(transferAmount.getText());
 		} catch (NumberFormatException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setContentText("Please enter a valid amount");
@@ -50,17 +75,18 @@ public class WithdrawController extends GUIHomeController {
 			return;
 		}
 
-		System.out.println(acc.getBalance());
 
 		try {
-			guiManager.getATM().withdrawMoney(acc, amount);
+			guiManager.getBankSystem().proceedTransaction(
+				guiManager.getBankSystem().makeTx(amount, srcAccount, desAccount));
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
-			alert.setContentText("Succeeded. Please take your money.");
+			alert.setContentText("Succeeded. You can now check your new account balance");
 			alert.setHeaderText("Process succeeded");
 			alert.show();
 		} catch (InvalidOperationException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("An error occurred during withdrawal.");
+			alert.setContentText("An error occurred during transaction. Please check " +
+				"if transferring money into the destination account is allowed.");
 			alert.setHeaderText("Process failed");
 			alert.show();
 		} catch (NoEnoughMoneyException e) {
@@ -68,13 +94,7 @@ public class WithdrawController extends GUIHomeController {
 			alert.setContentText("Your account does not have enough money.");
 			alert.setHeaderText("Process failed");
 			alert.show();
-		} catch (InsufficientCashException e) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Sorry, this machine does not have enough cash.");
-			alert.setHeaderText("Process failed");
-			alert.show();
 		}
-		System.out.println(acc.getBalance());
 	}
 
 	@FXML
@@ -82,7 +102,7 @@ public class WithdrawController extends GUIHomeController {
 		System.out.println(currentUser.getUsername());
 		ArrayList<Account> accList = ((User) currentUser).getAccounts();
 		for (Account acc : accList) {
-			withdrawSourceChoiceBox.getItems().add(acc.getAccountType() + ", ID: " + acc.getAccountId());
+			transferSourceChoiceBox.getItems().add(acc.getAccountType() + ", ID: " + acc.getAccountId());
 		}
 	}
 
