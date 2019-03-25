@@ -31,7 +31,7 @@ public abstract class AccountOwner implements Loginable {
 	}
 
 
-	
+
 	/**
 	 * Get the username of this AccountOwner.
 	 *
@@ -189,4 +189,20 @@ public abstract class AccountOwner implements Loginable {
 	public void removeMessage(Message msg) {
 		this.messages.remove(msg);
 	}
+
+
+	/**
+	 * return annual income of this accountowner
+	 * @return
+	 */
+	public int getIncome(){return this.income;}
+
+
+
+
+	/**
+	 * return age of this accountowner
+	 * @return
+	 */
+	public int getAge(){return this.age;}
 }
