@@ -88,6 +88,44 @@ public abstract class AccountOwner implements Loginable {
 	}
 
 
+
+
+	/**
+	 * return sum of the balance of all asset accounts
+	 *
+	 * @return
+	 */
+	public double getTotalAssets() {
+		double total = 0;
+		for (Account acc:accounts) {
+			if (acc instanceof AssetAccount){
+				total += acc.getBalance().getValue();
+			}
+		}
+		return total;
+	}
+
+
+
+
+	/**
+	 * return sum of balance of all debt accounts
+	 *
+ 	 * @return
+	 */
+	public double getTotalDebts() {
+		double total = 0;
+		for (Account acc:accounts) {
+			if (acc instanceof DebtAccount){
+				total += acc.getBalance().getValue();
+			}
+		}
+		return total;
+	}
+
+
+
+
 	/**
 	 * Sets the primary chequing account for this user
 	 * @param acc the chequing account to set as primary
