@@ -70,4 +70,12 @@ public class HighInterestAccount extends Account{
 		Money interest = new Money(this.balance.getValue() * interestRate);
 		this.balance = this.balance.add(interest);
 	}
+
+	/**
+	 * @return the type of the account
+	 */
+	@Override
+	public String getAccountType(){
+		return "HighInterestAccount";
+	}
 }
