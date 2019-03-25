@@ -13,17 +13,24 @@ public abstract class AccountOwner implements Loginable {
 	private ChequingAccount primaryAccount;
 	private ArrayList<Transaction> transactions = new ArrayList<>();
 	private ArrayList<Message> messages = new ArrayList<>();
-
+	private int age = 0;
+	private int income = 0;
 
 	/**
 	 * Constructs a user object.
 	 * @param username the username of this user
 	 * @param password the password of this user
+	 * @param age the age of this user
+	 * @param income the annual income of this user
 	 */
-	public AccountOwner(String username, String password) {
+	public AccountOwner(String username, String password, int age, int income) {
 		this.username = username;
 		this.password = password;
+		this.age = age;
+		this.income = income;
 	}
+
+
 
 	/**
 	 * Get the username of this AccountOwner.
@@ -73,7 +80,7 @@ public abstract class AccountOwner implements Loginable {
 	 */
 	public double getNetTotal() {
 		return accounts.stream()
-			.mapToDouble(acc -> acc.getBalance().getMoneyValue() * acc.balanceFactor())
+			.mapToDouble(acc -> acc.getBalance().getValue() * acc.balanceFactor())
 			.sum();
 	}
 
@@ -86,6 +93,44 @@ public abstract class AccountOwner implements Loginable {
 	public ArrayList<Account> getAccounts() {
 		return accounts;
 	}
+
+
+
+
+	/**
+	 * return sum of the balance of all asset accounts
+	 *
+	 * @return
+	 */
+	public double getTotalAssets() {
+		double total = 0;
+		for (Account acc:accounts) {
+			if (acc instanceof AssetAccount){
+				total += acc.getBalance().getValue();
+			}
+		}
+		return total;
+	}
+
+
+
+
+	/**
+	 * return sum of balance of all debt accounts
+	 *
+ 	 * @return
+	 */
+	public double getTotalDebts() {
+		double total = 0;
+		for (Account acc:accounts) {
+			if (acc instanceof DebtAccount){
+				total += acc.getBalance().getValue();
+			}
+		}
+		return total;
+	}
+
+
 
 
 	/**
@@ -144,4 +189,20 @@ public abstract class AccountOwner implements Loginable {
 	public void removeMessage(Message msg) {
 		this.messages.remove(msg);
 	}
+
+
+	/**
+	 * return annual income of this accountowner
+	 * @return
+	 */
+	public int getIncome(){return this.income;}
+
+
+
+
+	/**
+	 * return age of this accountowner
+	 * @return
+	 */
+	public int getAge(){return this.age;}
 }

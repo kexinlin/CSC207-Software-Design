@@ -7,9 +7,13 @@ import model.persons.*;
 import model.transactors.*;
 import model.exceptions.AccountNotExistException;
 import model.transactions.*;
+import sun.rmi.runtime.Log;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 
 class RecordController {
 	private BankSystem bankSystem;
@@ -135,8 +139,27 @@ class RecordController {
 				return;
 			}
 			user.setPrimaryCheuqingAccount((ChequingAccount) acc);
+		} else if (entries[0].equals("co-owners")) {
+			ArrayList<String> e = new ArrayList<>(Arrays.asList(entries[1].split(",")));
+			Iterator<String> it = e.iterator();
+			if (! it.hasNext()) {
+				return;
+			}
+			String accountId = it.next();
+			try {
+				Account acc = bankSystem.getAccountById(accountId);
+				for (; it.hasNext(); ) {
+					String s = it.next();
+					Loginable l = bankSystem.getLoginable(s);
+					if (l instanceof AccountOwner) {
+						acc.addCoOwner((AccountOwner)l);
+					}
+				}
+			} catch (AccountNotExistException ignore) {
+
+			}
 		}
-		// TODO record co-owners
+
 	}
 
 	/**
@@ -308,7 +331,7 @@ class RecordController {
 					recordManager(writer, (BankManager) l);
 				}
 			}
-			// then, transactors
+			// then, accounts
 			for (Account a : bankSystem.getAccounts().values()) {
 				recordAccount(writer, a);
 			}
@@ -331,7 +354,6 @@ class RecordController {
 					recordPrimaryAcc(writer, acc);
 				}
 			}
-			// TODO record co-owners
 			writer.close();
 		} catch (IOException e) {
 			System.out.println("Cannot save records");
@@ -392,6 +414,13 @@ class RecordController {
 			+ account.getDateOfCreation().getTime() + ","
 			+ account.getId() + ","
 			+ account.getOwner().getUsername() + "\n");
+		ArrayList<AccountOwner> coOwners = account.getCoOwners();
+		if (! coOwners.isEmpty()) {
+			writer.write("set,co-owners,"
+			 + String.join(",",
+				coOwners.stream().map(o -> o.getUsername()).toArray( n -> new String[n] ))
+			 + "\n");
+		}
 	}
 
 	/**
