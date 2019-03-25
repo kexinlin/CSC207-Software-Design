@@ -22,7 +22,7 @@
       </Label>
       <TabPane layoutY="41.0" prefHeight="460.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab text="My Accounts">
+          <Tab fx:id="myAccountsTab" onSelectionChanged="#myAccountsTabOnSelect" text="My Accounts">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -40,7 +40,7 @@
                      </children></AnchorPane>
             </content>
           </Tab>
-            <Tab text="Payments &amp; Transfers">
+            <Tab fx:id="paymentsTransfersTab" text="Payments &amp; Transfers">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -67,12 +67,12 @@
                      </children></AnchorPane>
               </content>
             </Tab>
-          <Tab text="My Profiles">
+          <Tab fx:id="myProfilesTab" onSelectionChanged="#myProfilesTabOnSelect" text="My Profiles">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="238.0" prefWidth="570.0" />
             </content>
           </Tab>
-            <Tab text="My Messages">
+            <Tab fx:id="myMessagesTab" text="My Messages">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
               </content>

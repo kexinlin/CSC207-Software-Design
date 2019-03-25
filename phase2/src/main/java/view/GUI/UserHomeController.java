@@ -5,6 +5,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -98,7 +99,7 @@ public class UserHomeController extends GUIHomeController {
 	}
 
 	@FXML
-	public void loadWindow(String location, String title){
+	public void loadWindow(String location, String title) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(location));
 			Parent parent = loader.load();
@@ -121,14 +122,22 @@ public class UserHomeController extends GUIHomeController {
 
 	}
 
-
 	@FXML
 	public void depositOnClick(ActionEvent actionEvent) {
+
 	}
 
 	public void transferOnClick(ActionEvent actionEvent) {
 	}
 
 	public void payBillOnClick(ActionEvent actionEvent) {
+	}
+
+	@FXML
+	public void myAccountsTabOnSelect(Event event) {
+		accTableView.refresh();
+	}
+
+	public void myProfilesTabOnSelect(Event event) {
 	}
 }

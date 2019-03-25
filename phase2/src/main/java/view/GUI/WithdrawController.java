@@ -1,13 +1,10 @@
 package view.GUI;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import model.exceptions.AccountNotExistException;
 import model.exceptions.InsufficientCashException;
 import model.exceptions.InvalidOperationException;

@@ -77,11 +77,11 @@ public abstract class Account extends Transactor {
 	}
 
 	public String getAccountType() {
-		return accountType.get();
+		return accountType.getValue();
 	}
 
 	public String getAccountId() {
-		return accountId.get();
+		return accountId.getValue();
 	}
 
 	public SimpleStringProperty accountIdProperty() {
@@ -192,13 +192,4 @@ public abstract class Account extends Transactor {
 	 */
 	public abstract int balanceFactor();
 
-	/**
-	 *
-	 * @return the AccountID
-	 */
-	public String getAccountId(){
-		return accountId;
-	}
-
-	public abstract String getAccountType();
 }

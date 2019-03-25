@@ -18,6 +18,7 @@ public abstract class AccountOwner implements Loginable {
 
 	/**
 	 * Constructs a user object.
+	 *
 	 * @param username the username of this user
 	 * @param password the password of this user
 	 */
@@ -25,7 +26,6 @@ public abstract class AccountOwner implements Loginable {
 		this.username = username;
 		this.password = password;
 	}
-
 
 
 	/**
@@ -61,6 +61,7 @@ public abstract class AccountOwner implements Loginable {
 
 	/**
 	 * Change the password of this user to `password`.
+	 *
 	 * @param password the password to change to.
 	 * @return true if succeeds, false otherwise.
 	 */
@@ -72,6 +73,7 @@ public abstract class AccountOwner implements Loginable {
 
 	/**
 	 * Gets the net balance of this user
+	 *
 	 * @return net balance
 	 */
 	public double getNetTotal() {
@@ -91,8 +93,6 @@ public abstract class AccountOwner implements Loginable {
 	}
 
 
-
-
 	/**
 	 * return sum of the balance of all asset accounts
 	 *
@@ -100,26 +100,24 @@ public abstract class AccountOwner implements Loginable {
 	 */
 	public double getTotalAssets() {
 		double total = 0;
-		for (Account acc:accounts) {
-			if (acc instanceof AssetAccount){
+		for (Account acc : accounts) {
+			if (acc instanceof AssetAccount) {
 				total += acc.getBalance().getMoneyValue();
 			}
 		}
 		return total;
 	}
-
-
 
 
 	/**
 	 * return sum of balance of all debt accounts
 	 *
- 	 * @return
+	 * @return
 	 */
 	public double getTotalDebts() {
 		double total = 0;
-		for (Account acc:accounts) {
-			if (acc instanceof DebtAccount){
+		for (Account acc : accounts) {
+			if (acc instanceof DebtAccount) {
 				total += acc.getBalance().getMoneyValue();
 			}
 		}
@@ -127,10 +125,9 @@ public abstract class AccountOwner implements Loginable {
 	}
 
 
-
-
 	/**
 	 * Sets the primary chequing account for this user
+	 *
 	 * @param acc the chequing account to set as primary
 	 */
 	public void setPrimaryCheuqingAccount(ChequingAccount acc) {
@@ -139,6 +136,7 @@ public abstract class AccountOwner implements Loginable {
 
 	/**
 	 * Gets the primary chequing account for this user
+	 *
 	 * @return the primary chequing account, or null if the user does not have one
 	 */
 	public ChequingAccount getPrimaryChequingAccount() {
@@ -147,6 +145,7 @@ public abstract class AccountOwner implements Loginable {
 
 	/**
 	 * add account `acc` to this user
+	 *
 	 * @param acc the account to add
 	 */
 	public void addAccount(Account acc) {
@@ -164,6 +163,7 @@ public abstract class AccountOwner implements Loginable {
 
 	/**
 	 * get a list of all messages
+	 *
 	 * @return an ArrayList of all messages
 	 */
 	public ArrayList<Message> getMessages() {
@@ -172,6 +172,7 @@ public abstract class AccountOwner implements Loginable {
 
 	/**
 	 * Add a message to the message list
+	 *
 	 * @param msg the message to add
 	 */
 	public void addMessage(Message msg) {
@@ -180,6 +181,7 @@ public abstract class AccountOwner implements Loginable {
 
 	/**
 	 * Remove a message from the message list
+	 *
 	 * @param msg the message to remove
 	 */
 	public void removeMessage(Message msg) {
@@ -189,16 +191,20 @@ public abstract class AccountOwner implements Loginable {
 
 	/**
 	 * return annual income of this accountowner
+	 *
 	 * @return
 	 */
-	public int getIncome(){return this.income;}
-
-
+	public int getIncome() {
+		return this.income;
+	}
 
 
 	/**
 	 * return age of this accountowner
+	 *
 	 * @return
 	 */
-	public int getAge(){return this.age;}
+	public int getAge() {
+		return this.age;
+	}
 }
