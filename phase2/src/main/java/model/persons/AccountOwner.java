@@ -13,18 +13,25 @@ public abstract class AccountOwner implements Loginable {
 	private ChequingAccount primaryAccount;
 	private ArrayList<Transaction> transactions = new ArrayList<>();
 	private ArrayList<Message> messages = new ArrayList<>();
-
+	private int age = 0;
+	private int income = 0;
 
 	/**
 	 * Constructs a user object.
 	 * @param username the username of this user
 	 * @param password the password of this user
+	 * @param age the age of this user
+	 * @param income the annual income of this user
 	 */
-	public AccountOwner(String username, String password) {
+	public AccountOwner(String username, String password, int age, int income) {
 		this.username = username;
 		this.password = password;
+		this.age = age;
+		this.income = income;
 	}
 
+
+	
 	/**
 	 * Get the username of this AccountOwner.
 	 *
