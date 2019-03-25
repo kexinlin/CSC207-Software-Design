@@ -195,7 +195,7 @@ public abstract class AccountOwner implements Loginable {
 	 * return annual income of this accountowner
 	 * @return
 	 */
-	public int getIncome(){return this.income}
+	public int getIncome(){return this.income;}
 
 
 
