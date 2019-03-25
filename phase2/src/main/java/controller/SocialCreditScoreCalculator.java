@@ -18,17 +18,18 @@ public class SocialCreditScoreCalculator {
 
 
 	/**
-	 * Calulate User's net asset based on its Accounts.
+	 * Calculate User's net asset based on its Accounts.
 	 * @return score from calculating User's asset
 	 */
-	private int calulateAssetScore(){
-		get
+	private int calculateAssetScore(){
+		//get
+		return 0;
 	}
 
 
 
 
 	public int calculate(){
-
+		return 0;
 	}
 }
