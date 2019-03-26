@@ -31,6 +31,8 @@ public class UserHomeController extends GUIHomeController {
 	Label netTotal;
 
 	@FXML
+	TableView<Account> accTableView;
+	@FXML
 	TableColumn<Account, String> accType;
 	@FXML
 	TableColumn<Account, String> accNum;
@@ -38,8 +40,6 @@ public class UserHomeController extends GUIHomeController {
 	TableColumn<Account, String> accBalance;
 	@FXML
 	TableColumn<Account, Date> accDateOfCreation;
-	@FXML
-	TableView<Account> accTableView;
 
 	// label in My Profiles
 	@FXML
@@ -95,7 +95,6 @@ public class UserHomeController extends GUIHomeController {
 		accDateOfCreation.setCellValueFactory(
 			new PropertyValueFactory<>("dateOfCreation")
 		);
-
 	}
 
 	@FXML
@@ -140,7 +139,7 @@ public class UserHomeController extends GUIHomeController {
 
 	@FXML
 	public void createAccountButtonOnClick(ActionEvent actionEvent) {
-		loadWindow("/AccountCreationScene.fxml", "Account Creation Request");
+		loadWindow("/RequestAccCreationScene.fxml", "Account Creation Request");
 	}
 
 	@FXML
