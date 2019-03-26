@@ -36,7 +36,7 @@ public class LoginController extends GUIController{
 			if (guiManager.getBankSystem().getLoginable(username) instanceof User) {
 				resourceName = "/UserHomeScene.fxml";
 			} else {
-				resourceName = "/EmployeeHomeScene.fxml";
+				resourceName = "/BankManagerHomeScene.fxml";
 			}
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(resourceName));
 			AnchorPane homeScene = loader.load();
