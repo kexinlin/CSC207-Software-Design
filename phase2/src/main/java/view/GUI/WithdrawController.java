@@ -79,7 +79,6 @@ public class WithdrawController extends GUIHomeController {
 
 	@FXML
 	public void show() {
-		System.out.println(currentUser.getUsername());
 		ArrayList<Account> accList = ((User) currentUser).getAccounts();
 		for (Account acc : accList) {
 			withdrawSourceChoiceBox.getItems().add(acc.getAccountType() + ", ID: " + acc.getAccountId());

@@ -27,6 +27,8 @@ public class UserHomeController extends GUIHomeController {
 	@FXML
 	Label name;
 	@FXML
+	Label netTotal;
+	@FXML
 	TableColumn<Account, String> accType;
 	@FXML
 	TableColumn<Account, String> accNum;
@@ -41,9 +43,15 @@ public class UserHomeController extends GUIHomeController {
 
 
 	@FXML
-	public void showLabel() {
+	public void showName() {
 		StringProperty valueProperty = new SimpleStringProperty(((User) currentUser).getName());
 		name.textProperty().bind(valueProperty);
+	}
+
+	@FXML
+	public void showNetTotal() {
+		StringProperty valueProperty = new SimpleStringProperty((String.valueOf(((User) currentUser).getNetTotal())));
+		netTotal.textProperty().bind(valueProperty);
 	}
 
 
@@ -73,7 +81,8 @@ public class UserHomeController extends GUIHomeController {
 
 	@Override
 	public void show() {
-		showLabel();
+		showName();
+		showNetTotal();
 		showTable();
 	}
 

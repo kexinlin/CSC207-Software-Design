@@ -26,7 +26,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView fx:id="accTableView" layoutX="23.0" layoutY="23.0" prefHeight="427.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TableView fx:id="accTableView" layoutX="23.0" layoutY="23.0" prefHeight="398.0" prefWidth="800.0" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <columns>
                             <TableColumn fx:id="accType" prefWidth="75.0" text="Account Type" />
                             <TableColumn fx:id="accNum" prefWidth="75.0" text="Account Number" />
@@ -37,6 +37,8 @@
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                         </TableView>
+                        <Label layoutX="606.0" layoutY="403.0" text="Net Total:" />
+                        <Label fx:id="netTotal" layoutX="690.0" layoutY="403.0" text="Label" />
                      </children></AnchorPane>
             </content>
           </Tab>

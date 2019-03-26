@@ -50,7 +50,6 @@ public class DepositController extends GUIHomeController {
 
 	@FXML
 	public void show() {
-		System.out.println(currentUser.getUsername());
 		ArrayList<Account> accList = ((User) currentUser).getAccounts();
 		for (Account acc : accList) {
 			depositDesChoiceBox.getItems().add(acc.getAccountType() + ", ID: " + acc.getAccountId());
