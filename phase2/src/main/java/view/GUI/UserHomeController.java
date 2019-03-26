@@ -38,7 +38,9 @@ public class UserHomeController extends GUIHomeController {
 	TableColumn<Account, Date> accDateOfCreation;
 	@FXML
 	TableView<Account> accTableView;
-
+	@FXML
+	private final SimpleStringProperty netTotalVal = new SimpleStringProperty();
+	@FXML
 	private final ObservableList<Account> data = FXCollections.observableArrayList();
 
 
@@ -49,9 +51,9 @@ public class UserHomeController extends GUIHomeController {
 	}
 
 	@FXML
-	public void showNetTotal() {
-		StringProperty valueProperty = new SimpleStringProperty((String.valueOf(((User) currentUser).getNetTotal())));
-		netTotal.textProperty().bind(valueProperty);
+	public void showAndRefreshNetTotal() {
+		netTotalVal.setValue(String.valueOf(((User) currentUser).getNetTotal()));
+		netTotal.textProperty().bind(netTotalVal);
 	}
 
 
@@ -82,8 +84,8 @@ public class UserHomeController extends GUIHomeController {
 	@Override
 	public void show() {
 		showName();
-		showNetTotal();
 		showTable();
+		showAndRefreshNetTotal();
 	}
 
 	@FXML
@@ -150,6 +152,10 @@ public class UserHomeController extends GUIHomeController {
 	@FXML
 	public void myAccountsTabOnSelect(Event event) {
 		accTableView.refresh();
+		if (currentUser != null) {
+			showAndRefreshNetTotal();
+		}
+
 	}
 
 	public void myProfilesTabOnSelect(Event event) {
