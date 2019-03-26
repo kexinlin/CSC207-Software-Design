@@ -106,7 +106,7 @@ public class UserHomeController extends GUIHomeController {
 		if (((User) currentUser).getPrimaryChequingAccount() == null) {
 			priChqAccNumVal.setValue("You don't have a primary chequing account");
 		} else {
-			priChqAccNumVal.setValue(String.valueOf(((User) currentUser).getPrimaryChequingAccount()));
+			priChqAccNumVal.setValue(String.valueOf(((User) currentUser).getPrimaryChequingAccount().getAccountId()));
 		}
 		priChqAccNum.textProperty().bind(priChqAccNumVal);
 	}
