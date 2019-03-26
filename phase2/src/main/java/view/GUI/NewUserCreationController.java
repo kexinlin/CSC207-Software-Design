@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import model.exceptions.AccountNotExistException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
+import model.persons.AccountOwner;
 import model.persons.User;
 import model.transactors.Account;
 
@@ -16,92 +17,50 @@ import java.util.ArrayList;
 public class NewUserCreationController extends GUIHomeController {
 
 	@FXML
-	TextField transferAmount;
+	TextField name;
 	@FXML
-	ChoiceBox<String> transferSourceChoiceBox;
+	TextField username;
 	@FXML
-	TextField transferDesAccount;
+	TextField initPassword;
 
 
-	public void transferConfirmOnClick(ActionEvent actionEvent) {
-		if (transferSourceChoiceBox.getValue() == null) {
+	public void newUserConfirmOnClick(ActionEvent actionEvent) {
+		if (name.getText().equals("") || username.getText().equals("") || initPassword.getText().equals("")) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Please choose an account");
+			alert.setContentText("Please fill in all required entry fields.");
 			alert.setHeaderText("Process failed");
 			alert.show();
 			return;
 		}
 
-		if (transferDesAccount == null) {
+		// reserved names for account `type-order` strings. not allowed.
+		if (username.getText().matches("^(loc|chq|sav|cre)\\d+$")) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Please enter an account #");
+			alert.setContentText("The username is reserved and cannot be registered.");
 			alert.setHeaderText("Process failed");
 			alert.show();
 			return;
 		}
 
-		double amount = 0;
-		Account desAccount = null;
-		Account srcAccount = null;
-		String[] choiceBoxStrArray = transferSourceChoiceBox.getValue().split("\\s");
-
-		// get source account of transaction
-		try {
-			srcAccount = guiManager.getBankSystem().getAccountById(choiceBoxStrArray[choiceBoxStrArray.length - 1]);
-		} catch (AccountNotExistException e) {
-			e.printStackTrace();
-		}
-
-		// get destination account of transaction
-		try {
-			desAccount = guiManager.getBankSystem().getAccountById(transferDesAccount.getText());
-		} catch (AccountNotExistException e) {
+		if (guiManager.getBankSystem().getLoginable(username.getText()) != null) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Please enter a valid account number");
+			alert.setContentText("The username is occupied by another individual.");
 			alert.setHeaderText("Process failed");
 			alert.show();
 			return;
 		}
 
-		// get amount of transaction
-		try {
-			amount = Double.valueOf(transferAmount.getText());
-		} catch (NumberFormatException e) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Please enter a valid amount");
-			alert.setHeaderText("Process failed");
-			alert.show();
-			return;
-		}
+		AccountOwner user = new User(name.getText(), username.getText(), initPassword.getText());
+		guiManager.getBankSystem().addLoginable(user);
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setContentText("This new user has been added to bank system.");
+		alert.setHeaderText("Process succeeded");
+		alert.show();
 
-
-		try {
-			guiManager.getBankSystem().proceedTransaction(
-				guiManager.getBankSystem().makeTx(amount, srcAccount, desAccount));
-			Alert alert = new Alert(Alert.AlertType.INFORMATION);
-			alert.setContentText("Succeeded. You can now check your new account balance");
-			alert.setHeaderText("Process succeeded");
-			alert.show();
-		} catch (InvalidOperationException e) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("An error occurred during transaction. Please check " +
-				"if transferring money into the destination account is allowed.");
-			alert.setHeaderText("Process failed");
-			alert.show();
-		} catch (NoEnoughMoneyException e) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Your account does not have enough money.");
-			alert.setHeaderText("Process failed");
-			alert.show();
-		}
 	}
 
 	@FXML
 	public void show() {
-		ArrayList<Account> accList = ((User) currentUser).getAccounts();
-		for (Account acc : accList) {
-			transferSourceChoiceBox.getItems().add(acc.getAccountType() + ", ID: " + acc.getAccountId());
-		}
 	}
 
 

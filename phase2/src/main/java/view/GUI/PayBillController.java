@@ -32,7 +32,7 @@ public class PayBillController extends GUIHomeController {
 			return;
 		}
 
-		if (payeeName == null) {
+		if (payeeName.getText().equals("")) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setContentText("Please enter a payee name");
 			alert.setHeaderText("Process failed");

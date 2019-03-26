@@ -9,11 +9,11 @@
 <AnchorPane prefHeight="250.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI.NewUserCreationController">
    <children>
       <Label layoutX="38.0" layoutY="36.0" text="Name:" />
-      <TextField fx:id="transferAmount" layoutX="273.0" layoutY="32.0" />
-      <Button layoutX="217.0" layoutY="190.0" mnemonicParsing="false" onAction="#transferConfirmOnClick" text="Confirm" />
+      <TextField fx:id="name" layoutX="273.0" layoutY="32.0" />
+      <Button layoutX="217.0" layoutY="201.0" mnemonicParsing="false" onAction="#newUserConfirmOnClick" text="Confirm" />
       <Label layoutX="38.0" layoutY="88.0" text="Username:" />
-      <ChoiceBox fx:id="transferSourceChoiceBox" layoutX="274.0" layoutY="133.0" prefWidth="150.0" />
-      <Label layoutX="38.0" layoutY="138.0" text="Account Type:" />
-      <TextField fx:id="transferDesAccount" layoutX="273.0" layoutY="83.0" />
+      <Label layoutX="38.0" layoutY="138.0" text="Initial Password:" />
+      <TextField fx:id="username" layoutX="273.0" layoutY="83.0" />
+      <TextField fx:id="initPassword" layoutX="273.0" layoutY="133.0" />
    </children>
 </AnchorPane>

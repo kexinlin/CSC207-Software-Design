@@ -33,7 +33,7 @@ public class TransferController extends GUIHomeController {
 			return;
 		}
 
-		if (transferDesAccount == null) {
+		if (transferDesAccount.getText().equals("")) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setContentText("Please enter an account #");
 			alert.setHeaderText("Process failed");

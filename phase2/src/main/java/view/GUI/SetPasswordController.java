@@ -16,7 +16,7 @@ public class SetPasswordController extends GUIHomeController {
 
 	public void changePasswordOnClick(ActionEvent actionEvent) {
 
-		if (newPassword == null) {
+		if (newPassword.getText().equals("")) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setContentText("Please enter a new password");
 			alert.setHeaderText("Process failed");
@@ -24,7 +24,7 @@ public class SetPasswordController extends GUIHomeController {
 			return;
 		}
 
-		if (confirmNewPassword == null) {
+		if (confirmNewPassword.getText().equals("")) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setContentText("Please confirm your new password");
 			alert.setHeaderText("Process failed");
