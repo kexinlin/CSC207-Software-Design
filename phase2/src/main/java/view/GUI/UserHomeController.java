@@ -40,15 +40,20 @@ public class UserHomeController extends GUIHomeController {
 	@FXML
 	TableView<Account> accTableView;
 
+	// label in My Profiles
 	@FXML
 	Label nameInProfile;
 	@FXML
 	Label usernameInProfile;
+	@FXML
+	Label priChqAccNum;
 
 	@FXML
 	private final SimpleStringProperty netTotalVal = new SimpleStringProperty();
 	@FXML
 	private final ObservableList<Account> data = FXCollections.observableArrayList();
+	@FXML
+	private final SimpleStringProperty priChqAccNumVal = new SimpleStringProperty();
 
 
 	@FXML
@@ -88,12 +93,22 @@ public class UserHomeController extends GUIHomeController {
 	}
 
 	@FXML
-	public void showNameInProfile(){
+	public void showNameInProfile() {
 		StringProperty nameProperty = new SimpleStringProperty(((User) currentUser).getName());
 		nameInProfile.textProperty().bind(nameProperty);
 
 		StringProperty usernameProperty = new SimpleStringProperty((currentUser).getUsername());
 		usernameInProfile.textProperty().bind(usernameProperty);
+	}
+
+	@FXML
+	public void showAndRefreshPriChqAcc() {
+		if (((User) currentUser).getPrimaryChequingAccount() == null) {
+			priChqAccNumVal.setValue("You don't have a primary chequing account");
+		} else {
+			priChqAccNumVal.setValue(String.valueOf(((User) currentUser).getPrimaryChequingAccount()));
+		}
+		priChqAccNum.textProperty().bind(priChqAccNumVal);
 	}
 
 	@Override
@@ -102,6 +117,7 @@ public class UserHomeController extends GUIHomeController {
 		showTable();
 		showAndRefreshNetTotal();
 		showNameInProfile();
+		showAndRefreshPriChqAcc();
 	}
 
 	@FXML
@@ -132,6 +148,11 @@ public class UserHomeController extends GUIHomeController {
 	@FXML
 	public void setPasswordOnClick(ActionEvent actionEvent) {
 		loadWindow("/SetPasswordScene.fxml", "Change Password");
+	}
+
+	@FXML
+	public void setPriChqAccOnClick(ActionEvent actionEvent) {
+		loadWindow("/SetPriChqAccScene.fxml", "Primary Chequing Account");
 	}
 
 	@FXML
@@ -169,7 +190,6 @@ public class UserHomeController extends GUIHomeController {
 
 	}
 
-
 	@FXML
 	public void myAccountsTabOnSelect(Event event) {
 		accTableView.refresh();
@@ -179,10 +199,10 @@ public class UserHomeController extends GUIHomeController {
 
 	}
 
+	@FXML
 	public void myProfilesTabOnSelect(Event event) {
+		showAndRefreshPriChqAcc();
 	}
 
-	public void setPriChqAccOnClick(ActionEvent actionEvent) {
-	}
 
 }

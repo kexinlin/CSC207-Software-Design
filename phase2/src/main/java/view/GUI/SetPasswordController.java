@@ -45,7 +45,6 @@ public class SetPasswordController extends GUIHomeController {
 		alert.setContentText("Your password has been changed.");
 		alert.setHeaderText("Process succeeded");
 		alert.show();
-
 	}
 
 	@FXML
