@@ -98,6 +98,11 @@ public class UserHomeController extends GUIHomeController {
 	}
 
 	@FXML
+	public void payBillOnClick(ActionEvent actionEvent) {
+		loadWindow("/PayBillScene.fxml", "Money Transaction");
+	}
+
+	@FXML
 	public void logOutButtonOnClick(ActionEvent actionEvent) throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/LoginScene.fxml"));
 		AnchorPane homeScene = loader.load();
@@ -132,9 +137,6 @@ public class UserHomeController extends GUIHomeController {
 
 	}
 
-
-	public void payBillOnClick(ActionEvent actionEvent) {
-	}
 
 	@FXML
 	public void myAccountsTabOnSelect(Event event) {
