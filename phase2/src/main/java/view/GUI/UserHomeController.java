@@ -15,10 +15,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.Message;
 import model.persons.User;
 import model.transactors.Account;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -49,11 +51,16 @@ public class UserHomeController extends GUIHomeController {
 	Label priChqAccNum;
 
 	@FXML
+	ListView msgListView;
+
+	@FXML
 	private final SimpleStringProperty netTotalVal = new SimpleStringProperty();
 	@FXML
 	private final ObservableList<Account> data = FXCollections.observableArrayList();
 	@FXML
 	private final SimpleStringProperty priChqAccNumVal = new SimpleStringProperty();
+	@FXML
+	private final ObservableList<String> msgData = FXCollections.observableArrayList();
 
 
 	@FXML
@@ -93,6 +100,17 @@ public class UserHomeController extends GUIHomeController {
 	}
 
 	@FXML
+	public void showMessageList(){
+		ArrayList<Message> msgList = ((User) currentUser).getMessages();
+		ArrayList<String> msgContentList = new ArrayList<>();
+		for(Message msg:msgList){
+			msgContentList.add(msg.getText());
+		}
+		msgData.addAll(msgContentList);
+		msgListView.setItems(msgData);
+	}
+
+	@FXML
 	public void showNameInProfile() {
 		StringProperty nameProperty = new SimpleStringProperty(((User) currentUser).getName());
 		nameInProfile.textProperty().bind(nameProperty);
@@ -118,6 +136,7 @@ public class UserHomeController extends GUIHomeController {
 		showAndRefreshNetTotal();
 		showNameInProfile();
 		showAndRefreshPriChqAcc();
+		showMessageList();
 	}
 
 	@FXML

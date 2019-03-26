@@ -192,10 +192,14 @@ public class BankSystem {
 	public void processRequest(Request request, boolean accepted) {
 		if (accepted) {
 			createAccount(request);
+			Message msg = new Message(request.getUser(),
+				"Your request to create a account of type " + request.getAccountType()
+					+ " was accepted at " + getCurrentTimeStr());
+			addMessage(msg);
 		} else {
 			Message msg = new Message(request.getUser(),
 				"Your request to create a account of type " + request.getAccountType()
-					+ " was declined.");
+					+ " was declined at " + getCurrentTimeStr());
 			addMessage(msg);
 		}
 		requests.remove(request);

@@ -104,7 +104,10 @@
           </Tab>
             <Tab fx:id="myMessagesTab" text="My Messages">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ListView fx:id="msgListView" layoutX="20.0" layoutY="20.0" prefHeight="427.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children></AnchorPane>
               </content>
             </Tab>
         </tabs>
