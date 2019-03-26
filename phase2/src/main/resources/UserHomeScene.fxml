@@ -77,23 +77,28 @@
                         <Label layoutX="21.0" layoutY="65.0" text="User name:" />
                         <Label fx:id="nameInProfile" layoutX="117.0" layoutY="29.0" text="Label" />
                         <Label fx:id="usernameInProfile" layoutX="117.0" layoutY="64.0" text="Label" />
-                        <Label layoutX="20.0" layoutY="102.0" text="Primary Chequing Account #:" />
-                        <Label fx:id="priChqAccNum" layoutX="235.0" layoutY="102.0" text="Label" />
-                        <Label layoutX="20.0" layoutY="221.0" text="Credit Limit:" />
-                        <Label layoutX="21.0" layoutY="259.0" text="Credit Line:" />
-                        <Label fx:id="creditLimit" layoutX="178.0" layoutY="221.0" text="Label" />
-                        <Label fx:id="creditLine" layoutX="178.0" layoutY="259.0" text="Label" />
-                        <Button layoutX="17.0" layoutY="132.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="187.0" text="set primary chequing account">
+                        <Label layoutX="20.0" layoutY="135.0" text="Primary Chequing Account #:" />
+                        <Label fx:id="priChqAccNum" layoutX="235.0" layoutY="135.0" text="Label" />
+                        <Label layoutX="20.0" layoutY="246.0" text="Credit Limit:" />
+                        <Label layoutX="21.0" layoutY="284.0" text="Credit Line:" />
+                        <Label fx:id="creditLimit" layoutX="178.0" layoutY="246.0" text="Label" />
+                        <Label fx:id="creditLine" layoutX="178.0" layoutY="284.0" text="Label" />
+                        <Button layoutX="17.0" layoutY="165.0" mnemonicParsing="false" onAction="#setPriChqAccOnClick" prefHeight="18.0" prefWidth="187.0" text="set primary chequing account">
                            <font>
                               <Font size="12.0" />
                            </font>
                         </Button>
-                        <Label layoutX="21.0" layoutY="299.0" text="Social Credit Score:" />
-                        <Label fx:id="socialCreditScore" layoutX="178.0" layoutY="299.0" text="Label" />
-                        <Label fx:id="defaultCurrency" layoutX="236.0" layoutY="184.0" text="Label" />
-                        <Label layoutX="21.0" layoutY="184.0" text="Default Transaction Currency:" />
-                        <Label layoutX="22.0" layoutY="336.0" text="credit utilization ratio:" />
-                        <Label fx:id="creditUtilizRatio" layoutX="180.0" layoutY="336.0" text="Label" />
+                        <Label layoutX="21.0" layoutY="324.0" text="Social Credit Score:" />
+                        <Label fx:id="socialCreditScore" layoutX="178.0" layoutY="324.0" text="Label" />
+                        <Label fx:id="defaultCurrency" layoutX="236.0" layoutY="209.0" text="Label" />
+                        <Label layoutX="21.0" layoutY="209.0" text="Default Transaction Currency:" />
+                        <Label layoutX="22.0" layoutY="364.0" text="Credit utilization ratio:" />
+                        <Label fx:id="creditUtilizRatio" layoutX="180.0" layoutY="364.0" text="Label" />
+                        <Button layoutX="18.0" layoutY="94.0" mnemonicParsing="false" onAction="#setPasswordOnClick" prefHeight="18.0" prefWidth="93.0" text="set password">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </Button>
                      </children></AnchorPane>
             </content>
           </Tab>

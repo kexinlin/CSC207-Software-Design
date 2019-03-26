@@ -29,6 +29,7 @@ public class UserHomeController extends GUIHomeController {
 	@FXML
 	Label netTotal;
 	@FXML
+
 	TableColumn<Account, String> accType;
 	@FXML
 	TableColumn<Account, String> accNum;
@@ -38,6 +39,12 @@ public class UserHomeController extends GUIHomeController {
 	TableColumn<Account, Date> accDateOfCreation;
 	@FXML
 	TableView<Account> accTableView;
+
+	@FXML
+	Label nameInProfile;
+	@FXML
+	Label usernameInProfile;
+
 	@FXML
 	private final SimpleStringProperty netTotalVal = new SimpleStringProperty();
 	@FXML
@@ -55,7 +62,6 @@ public class UserHomeController extends GUIHomeController {
 		netTotalVal.setValue(String.valueOf(((User) currentUser).getNetTotal()));
 		netTotal.textProperty().bind(netTotalVal);
 	}
-
 
 	@FXML
 	public void showTable() {
@@ -81,11 +87,21 @@ public class UserHomeController extends GUIHomeController {
 
 	}
 
+	@FXML
+	public void showNameInProfile(){
+		StringProperty nameProperty = new SimpleStringProperty(((User) currentUser).getName());
+		nameInProfile.textProperty().bind(nameProperty);
+
+		StringProperty usernameProperty = new SimpleStringProperty((currentUser).getUsername());
+		usernameInProfile.textProperty().bind(usernameProperty);
+	}
+
 	@Override
 	public void show() {
 		showName();
 		showTable();
 		showAndRefreshNetTotal();
+		showNameInProfile();
 	}
 
 	@FXML
@@ -111,6 +127,11 @@ public class UserHomeController extends GUIHomeController {
 	@FXML
 	public void payBillOnClick(ActionEvent actionEvent) {
 		loadWindow("/PayBillScene.fxml", "Money Transaction");
+	}
+
+	@FXML
+	public void setPasswordOnClick(ActionEvent actionEvent) {
+		loadWindow("/SetPasswordScene.fxml", "Change Password");
 	}
 
 	@FXML
@@ -160,4 +181,8 @@ public class UserHomeController extends GUIHomeController {
 
 	public void myProfilesTabOnSelect(Event event) {
 	}
+
+	public void setPriChqAccOnClick(ActionEvent actionEvent) {
+	}
+
 }
