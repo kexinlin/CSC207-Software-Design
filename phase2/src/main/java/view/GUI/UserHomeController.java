@@ -20,7 +20,6 @@ import model.persons.User;
 import model.transactors.Account;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -30,8 +29,8 @@ public class UserHomeController extends GUIHomeController {
 	Label name;
 	@FXML
 	Label netTotal;
-	@FXML
 
+	@FXML
 	TableColumn<Account, String> accType;
 	@FXML
 	TableColumn<Account, String> accNum;
@@ -172,41 +171,6 @@ public class UserHomeController extends GUIHomeController {
 	@FXML
 	public void setPriChqAccOnClick(ActionEvent actionEvent) {
 		loadWindow("/SetPriChqAccScene.fxml", "Primary Chequing Account");
-	}
-
-	@FXML
-	public void logOutButtonOnClick(ActionEvent actionEvent) throws IOException {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/LoginScene.fxml"));
-		AnchorPane homeScene = loader.load();
-
-		GUIController controller = loader.getController();
-		controller.setGUIManager(guiManager);
-
-		Main.root.getChildren().setAll(homeScene);
-	}
-
-	@FXML
-	public void loadWindow(String location, String title) {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(location));
-			Parent parent = loader.load();
-
-			GUIHomeController homeController = loader.getController();
-			homeController.setGUIManager(guiManager);
-			homeController.setCurrentUser(getCurrentUser());
-			homeController.show();
-
-			Stage stage = new Stage(StageStyle.DECORATED);
-			stage.setTitle(title);
-
-
-			stage.setScene(new Scene(parent));
-			stage.show();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
 	}
 
 	@FXML
