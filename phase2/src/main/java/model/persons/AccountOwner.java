@@ -225,4 +225,8 @@ public abstract class AccountOwner implements Loginable {
 	public int getAge() {
 		return this.age;
 	}
+
+
+
+	public String getEmail(){return this.email;}
 }
