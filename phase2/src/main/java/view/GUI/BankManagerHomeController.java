@@ -180,7 +180,7 @@ public class BankManagerHomeController extends GUIHomeController {
 
 	@FXML
 	public void depositOnClick(ActionEvent actionEvent) {
-		loadWindow("/DepositScene.fxml", "Money Deposit");
+		loadWindow("/BMDepositScene.fxml", "Money Deposit");
 	}
 
 	@FXML
