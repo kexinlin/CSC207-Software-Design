@@ -12,6 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import model.Request;
+import model.exceptions.InvalidOperationException;
+import model.exceptions.NoEnoughMoneyException;
 import model.persons.Loginable;
 import model.persons.User;
 import model.transactions.Transaction;
@@ -60,6 +62,8 @@ public class BankManagerHomeController extends GUIHomeController {
 	TableColumn<Transaction, String> transAmount;
 	@FXML
 	TableColumn<Transaction, Date> transDate;
+	@FXML
+	TableColumn<Transaction, Void> transOperation;
 
 	@FXML
 	TableView<Request> requestTableView;
@@ -156,6 +160,42 @@ public class BankManagerHomeController extends GUIHomeController {
 			transData.getValue().getAmount().getMoneyValue())));
 
 		transDate.setCellValueFactory(transData -> new SimpleObjectProperty<>(transData.getValue().getDate()));
+
+		transOperation.setCellFactory(param -> new TableCell<Transaction, Void>() {
+			private final Button undoButton = new Button("undo");
+			private final HBox pane = new HBox(undoButton);
+
+			{
+				undoButton.setOnAction(event -> {
+					Transaction trans = getTableView().getItems().get(getIndex());
+					try {
+						guiManager.getBankSystem().undoTransaction(trans);
+						Alert alert = new Alert(Alert.AlertType.INFORMATION);
+						alert.setContentText("This transaction has been undone.");
+						alert.setHeaderText("Process succeeded");
+						alert.show();
+					} catch (InvalidOperationException e) {
+						Alert alert = new Alert(Alert.AlertType.ERROR);
+						alert.setContentText("Cannot undo transactions involving non-accounts.");
+						alert.setHeaderText("Process failed");
+						alert.show();
+					} catch (NoEnoughMoneyException e) {
+						Alert alert = new Alert(Alert.AlertType.ERROR);
+						alert.setContentText("Cannot undo the transaction because the " +
+							"account that received the money does not have enough money.");
+						alert.setHeaderText("Process failed");
+						alert.show();
+					}
+				});
+			}
+
+			@Override
+			protected void updateItem(Void item, boolean empty) {
+				super.updateItem(item, empty);
+
+				setGraphic(empty ? null : pane);
+			}
+		});
 	}
 
 	@FXML
@@ -276,4 +316,5 @@ public class BankManagerHomeController extends GUIHomeController {
 
 	public void aboutATMTabOnSelect(Event event) {
 	}
+
 }

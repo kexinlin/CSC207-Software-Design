@@ -77,7 +77,8 @@
                               <TableColumn fx:id="transSrcAcc" prefWidth="93.11983925104141" text="Source Account #" />
                               <TableColumn fx:id="transDesAcc" prefWidth="226.8801727294922" text="Destination Account #" />
                               <TableColumn fx:id="transAmount" prefWidth="75.0" text="Amount" />
-                              <TableColumn fx:id="transDate" prefWidth="75.0" text="Date of Transaction" />
+                              <TableColumn fx:id="transDate" prefWidth="234.17623901367188" text="Date of Transaction" />
+                              <TableColumn fx:id="transOperation" prefWidth="84.82379150390625" text="Operation" />
                            </columns>
                         </TableView>
                      </children>

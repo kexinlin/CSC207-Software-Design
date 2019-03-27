@@ -239,7 +239,7 @@ public class BankSystem {
 		InvalidOperationException, NoEnoughMoneyException {
 		if (tx.getSource() instanceof Account
 			&& tx.getDest() instanceof Account) {
-			Transaction reverseTx = new Transaction(tx.getAmount(), tx.getDate(),
+			Transaction reverseTx = new Transaction(tx.getAmount(), getCurrentTime(),
 				tx.getDest(), tx.getSource(),
 				"Reverted the following: " + tx.toString());
 			proceedTransaction(reverseTx);
