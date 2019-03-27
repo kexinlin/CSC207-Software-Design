@@ -50,8 +50,6 @@ public class WithdrawController extends GUIHomeController {
 			return;
 		}
 
-		System.out.println(acc.getBalance());
-
 		try {
 			guiManager.getATM().withdrawMoney(acc, amount);
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);

@@ -1,5 +1,6 @@
 package view.GUI;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -7,25 +8,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import model.Message;
-import model.persons.AccountOwner;
+import javafx.scene.layout.HBox;
 import model.persons.Loginable;
 import model.persons.User;
 import model.transactions.Transaction;
 import model.transactors.Account;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -69,14 +59,14 @@ public class BankManagerHomeController extends GUIHomeController {
 	TableColumn<Transaction, String> transAmount;
 	@FXML
 	TableColumn<Transaction, Date> transDate;
-	@FXML
-	TableColumn<Transaction, Void> transOperations;
 
 
 	@FXML
 	private final ObservableList<Account> accData = FXCollections.observableArrayList();
 	@FXML
 	private final ObservableList<User> userData = FXCollections.observableArrayList();
+	@FXML
+	private final ObservableList<Transaction> transData = FXCollections.observableArrayList();
 
 
 	@FXML
@@ -120,9 +110,9 @@ public class BankManagerHomeController extends GUIHomeController {
 
 		ArrayList<User> userList = new ArrayList<>();
 
-		for(Loginable l:loginableCollection){
-			if(l instanceof User){
-				userList.add((User)l);
+		for (Loginable l : loginableCollection) {
+			if (l instanceof User) {
+				userList.add((User) l);
 			}
 		}
 
@@ -140,12 +130,32 @@ public class BankManagerHomeController extends GUIHomeController {
 			userData.getValue().getNetTotal())));
 	}
 
+	@FXML
+	public void showTransTable() {
+
+		ArrayList<Transaction> transList = guiManager.getBankSystem().getTransactions();
+
+
+		transData.addAll(transList);
+		transTableView.setItems(transData);
+
+		transSrcAcc.setCellValueFactory(transData -> new SimpleStringProperty(transData.getValue().getSource().getId()));
+
+		transDesAcc.setCellValueFactory(transData -> new SimpleStringProperty(transData.getValue().getDest().getId()));
+
+		transAmount.setCellValueFactory(transData -> new SimpleStringProperty(String.valueOf(
+			transData.getValue().getAmount().getMoneyValue())));
+
+		transDate.setCellValueFactory(transData -> new SimpleObjectProperty<>(transData.getValue().getDate()));
+	}
+
 
 	@Override
 	public void show() {
 		showUserName();
 		showUserTable();
 		showAccTable();
+		showTransTable();
 	}
 
 	@FXML
@@ -193,6 +203,7 @@ public class BankManagerHomeController extends GUIHomeController {
 	}
 
 	public void transactionTabOnSelect(Event event) {
+		transTableView.refresh();
 	}
 
 	public void requestsTabOnSelect(Event event) {
