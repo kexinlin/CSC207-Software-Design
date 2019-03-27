@@ -9,6 +9,6 @@
    <children>
       <ChoiceBox fx:id="accTypeChoiceBox" layoutX="196.0" layoutY="66.0" prefHeight="17.0" prefWidth="136.0" />
       <Label layoutX="52.0" layoutY="71.0" text="Type of Account" />
-      <Button fx:id="requestButton" layoutX="140.0" layoutY="134.0" mnemonicParsing="false" onAction="#requestButtonOnClick" text="Request Now!" />
+      <Button fx:id="requestButton" layoutX="150.0" layoutY="134.0" mnemonicParsing="false" onAction="#requestButtonOnClick" text="Request Now" />
    </children>
 </AnchorPane>

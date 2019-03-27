@@ -120,7 +120,7 @@ public class BankManagerHomeController extends GUIHomeController {
 		userUsername.setCellValueFactory(userData -> new SimpleStringProperty(userData.getValue().getUsername()));
 
 		userPriChqAcc.setCellValueFactory(userData -> new SimpleStringProperty(String.valueOf(
-			userData.getValue().getPrimaryChequingAccount())));
+			userData.getValue().getPrimaryChequingAccount().getAccountId())));
 
 		userNetTotal.setCellValueFactory(userData -> new SimpleStringProperty(String.valueOf(
 			userData.getValue().getNetTotal())));
@@ -142,6 +142,11 @@ public class BankManagerHomeController extends GUIHomeController {
 	@FXML
 	public void createUserButtonOnClick(ActionEvent actionEvent) {
 		loadWindow("/NewUserCreationScene.fxml", "New User Creation");
+	}
+
+	@FXML
+	public void setPriChqAccOnClick(ActionEvent actionEvent) {
+		loadWindow("/BMSetPrimaryScene.fxml", "New User Creation");
 	}
 
 	@FXML
@@ -170,5 +175,7 @@ public class BankManagerHomeController extends GUIHomeController {
 	}
 
 	public void usersTabOnSelect(Event event) {
+		userTableView.refresh();
 	}
+
 }
