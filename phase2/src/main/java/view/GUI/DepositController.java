@@ -37,7 +37,7 @@ public class DepositController extends GUIHomeController {
 		try {
 			guiManager.getATM().depositMoney(acc);
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
-			alert.setContentText("Succeeded. You can now check your new balance.");
+			alert.setContentText("Succeeded. You can now check the new balance.");
 			alert.setHeaderText("Process succeeded");
 			alert.show();
 		} catch (InvalidOperationException e) {

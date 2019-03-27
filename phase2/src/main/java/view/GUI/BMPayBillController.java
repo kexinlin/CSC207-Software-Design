@@ -11,20 +11,21 @@ import model.exceptions.NoEnoughMoneyException;
 import model.persons.User;
 import model.transactors.Account;
 
+import javax.xml.soap.Text;
 import java.util.ArrayList;
 
-public class BMTransferController extends GUIHomeController {
+public class BMPayBillController extends GUIHomeController {
 
 	@FXML
-	TextField transferAmount;
+	TextField payAmount;
 	@FXML
-	TextField transSrcAccount;
+	TextField paySrcAcc;
 	@FXML
-	TextField transDesAccount;
+	TextField payeeName;
 
 
-	public void transferConfirmOnClick(ActionEvent actionEvent) {
-		if (transferAmount.getText().equals("") || transSrcAccount.getText().equals("") || transDesAccount.getText().equals("")) {
+	public void payConfirmOnClick(ActionEvent actionEvent) {
+		if (payAmount.getText().equals("") || paySrcAcc.getText().equals("") || payeeName.getText().equals("")) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setContentText("Please fill in all required entry fields.");
 			alert.setHeaderText("Process failed");
@@ -33,9 +34,9 @@ public class BMTransferController extends GUIHomeController {
 		}
 
 		double amount;
-		// get amount of transaction
+		// get amount of payment
 		try {
-			amount = Double.valueOf(transferAmount.getText());
+			amount = Double.valueOf(payAmount.getText());
 		} catch (NumberFormatException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setContentText("Please enter a valid amount");
@@ -44,41 +45,28 @@ public class BMTransferController extends GUIHomeController {
 			return;
 		}
 
-		Account srcAccount;
-		Account desAccount;
+		Account srcAccount = null;
 
-		// get source account of transaction
+		// get source account of payment
 		try {
-			srcAccount = guiManager.getBankSystem().getAccountById(transSrcAccount.getText());
+			srcAccount = guiManager.getBankSystem().getAccountById(paySrcAcc.getText());
 		} catch (AccountNotExistException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Source account does not exist.");
+			alert.setContentText("Account does not exist.");
 			alert.setHeaderText("Process failed");
 			alert.show();
-			return;
 		}
 
-		// get destination account of transaction
-		try {
-			desAccount = guiManager.getBankSystem().getAccountById(transDesAccount.getText());
-		} catch (AccountNotExistException e) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Destination account does not exist.");
-			alert.setHeaderText("Process failed");
-			alert.show();
-			return;
-		}
 
 		try {
-			guiManager.getBankSystem().transferMoney(srcAccount, desAccount, amount);
+			guiManager.getBankSystem().payBill(srcAccount, payeeName.getText(), amount);
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
 			alert.setContentText("Succeeded. You can now check the new account balance");
 			alert.setHeaderText("Process succeeded");
 			alert.show();
 		} catch (InvalidOperationException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("An error occurred during transaction. Please note " +
-				"that transferring out from a credit card account is not allowed.");
+			alert.setContentText("An error occurred during transaction.");
 			alert.setHeaderText("Process failed");
 			alert.show();
 		} catch (NoEnoughMoneyException e) {
@@ -93,6 +81,5 @@ public class BMTransferController extends GUIHomeController {
 	public void show() {
 
 	}
-
 
 }

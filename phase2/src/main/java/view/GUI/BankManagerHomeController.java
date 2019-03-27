@@ -190,7 +190,7 @@ public class BankManagerHomeController extends GUIHomeController {
 
 	@FXML
 	public void payBillOnClick(ActionEvent actionEvent) {
-		loadWindow("/PayBillScene.fxml", "Money Transaction");
+		loadWindow("/BMPayBillScene.fxml", "Money Transaction");
 	}
 
 

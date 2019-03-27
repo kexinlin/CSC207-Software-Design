@@ -56,7 +56,7 @@ public class BMWithdrawController extends GUIHomeController {
 		try {
 			guiManager.getATM().withdrawMoney(acc, amount);
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
-			alert.setContentText("Succeeded. Please take your money.");
+			alert.setContentText("Succeeded. Please take the money.");
 			alert.setHeaderText("Process succeeded");
 			alert.show();
 		} catch (InvalidOperationException e) {
@@ -66,7 +66,7 @@ public class BMWithdrawController extends GUIHomeController {
 			alert.show();
 		} catch (NoEnoughMoneyException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Your account does not have enough money.");
+			alert.setContentText("Source account does not have enough money.");
 			alert.setHeaderText("Process failed");
 			alert.show();
 		} catch (InsufficientCashException e) {

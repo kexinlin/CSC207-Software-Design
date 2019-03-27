@@ -44,7 +44,7 @@ public class PayBillController extends GUIHomeController {
 		Account srcAccount = null;
 		String[] choiceBoxStrArray = srcAccChoiceBox.getValue().split("\\s");
 
-		// get source account of transaction
+		// get source account of payment
 		try {
 			srcAccount = guiManager.getBankSystem().getAccountById(choiceBoxStrArray[choiceBoxStrArray.length - 1]);
 		} catch (AccountNotExistException e) {
