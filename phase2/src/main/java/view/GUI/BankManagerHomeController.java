@@ -185,7 +185,7 @@ public class BankManagerHomeController extends GUIHomeController {
 
 	@FXML
 	public void transferOnClick(ActionEvent actionEvent) {
-		loadWindow("/TransferScene.fxml", "Money Transaction");
+		loadWindow("/BMTransferScene.fxml", "Money Transaction");
 	}
 
 	@FXML

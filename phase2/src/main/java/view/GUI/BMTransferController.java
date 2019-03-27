@@ -6,7 +6,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import model.exceptions.AccountNotExistException;
-import model.exceptions.InsufficientCashException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
 import model.persons.User;
@@ -14,56 +13,26 @@ import model.transactors.Account;
 
 import java.util.ArrayList;
 
-public class TransferController extends GUIHomeController {
+public class BMTransferController extends GUIHomeController {
 
 	@FXML
 	TextField transferAmount;
 	@FXML
-	ChoiceBox<String> transferSourceChoiceBox;
+	TextField transSrcAccount;
 	@FXML
-	TextField transferDesAccount;
+	TextField transDesAccount;
 
 
 	public void transferConfirmOnClick(ActionEvent actionEvent) {
-		if (transferSourceChoiceBox.getValue() == null) {
+		if (transferAmount.getText().equals("") || transSrcAccount.getText().equals("") || transDesAccount.getText().equals("")) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Please choose an account");
+			alert.setContentText("Please enter an account number.");
 			alert.setHeaderText("Process failed");
 			alert.show();
 			return;
 		}
 
-		if (transferDesAccount.getText().equals("")) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Please enter an account #");
-			alert.setHeaderText("Process failed");
-			alert.show();
-			return;
-		}
-
-		double amount = 0;
-		Account desAccount = null;
-		Account srcAccount = null;
-		String[] choiceBoxStrArray = transferSourceChoiceBox.getValue().split("\\s");
-
-		// get source account of transaction
-		try {
-			srcAccount = guiManager.getBankSystem().getAccountById(choiceBoxStrArray[choiceBoxStrArray.length - 1]);
-		} catch (AccountNotExistException e) {
-			e.printStackTrace();
-		}
-
-		// get destination account of transaction
-		try {
-			desAccount = guiManager.getBankSystem().getAccountById(transferDesAccount.getText());
-		} catch (AccountNotExistException e) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Please enter a valid account number");
-			alert.setHeaderText("Process failed");
-			alert.show();
-			return;
-		}
-
+		double amount;
 		// get amount of transaction
 		try {
 			amount = Double.valueOf(transferAmount.getText());
@@ -75,9 +44,33 @@ public class TransferController extends GUIHomeController {
 			return;
 		}
 
+		Account srcAccount;
+		Account desAccount;
+
+		// get source account of transaction
+		try {
+			srcAccount = guiManager.getBankSystem().getAccountById(transSrcAccount.getText());
+		} catch (AccountNotExistException e) {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setContentText("Source account does not exist.");
+			alert.setHeaderText("Process failed");
+			alert.show();
+			return;
+		}
+
+		// get destination account of transaction
+		try {
+			desAccount = guiManager.getBankSystem().getAccountById(transDesAccount.getText());
+		} catch (AccountNotExistException e) {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setContentText("Destination account does not exist.");
+			alert.setHeaderText("Process failed");
+			alert.show();
+			return;
+		}
 
 		try {
-			guiManager.getBankSystem().transferMoney(srcAccount,desAccount,amount);
+			guiManager.getBankSystem().transferMoney(srcAccount, desAccount, amount);
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
 			alert.setContentText("Succeeded. You can now check your new account balance");
 			alert.setHeaderText("Process succeeded");
@@ -98,10 +91,7 @@ public class TransferController extends GUIHomeController {
 
 	@FXML
 	public void show() {
-		ArrayList<Account> accList = ((User) currentUser).getAccounts();
-		for (Account acc : accList) {
-			transferSourceChoiceBox.getItems().add(acc.getAccountType() + ", ID: " + acc.getAccountId());
-		}
+
 	}
 
 
