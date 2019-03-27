@@ -77,16 +77,15 @@ public class TransferController extends GUIHomeController {
 
 
 		try {
-			guiManager.getBankSystem().proceedTransaction(
-				guiManager.getBankSystem().makeTx(amount, srcAccount, desAccount));
+			guiManager.getBankSystem().transferMoney(srcAccount,desAccount,amount);
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
 			alert.setContentText("Succeeded. You can now check your new account balance");
 			alert.setHeaderText("Process succeeded");
 			alert.show();
 		} catch (InvalidOperationException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("An error occurred during transaction. Please check " +
-				"if transferring money into the destination account is allowed.");
+			alert.setContentText("An error occurred during transaction. Please note " +
+				"that you cannot allowed .");
 			alert.setHeaderText("Process failed");
 			alert.show();
 		} catch (NoEnoughMoneyException e) {

@@ -12,7 +12,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import model.Message;
 import model.persons.User;
 import model.transactors.Account;
-
 import java.util.ArrayList;
 import java.util.Date;
 

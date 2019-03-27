@@ -21,15 +21,19 @@ public class AccountFactory {
 							  Date time, String accountId, AccountOwner owner) {
 		switch (type) {
 			case "chq":
+			case "ChequingAccount":
 				return new ChequingAccount(balance, time, accountId, owner);
 				
 			case "sav":
+			case "SavingAccount":
 				return new SavingAccount(balance, time, accountId, owner);
 
 			case "cre":
+			case "CreditCardAccount":
 				return new CreditCardAccount(balance, time, accountId, owner);
 
 			case "loc":
+			case "LineOfCreditAccount":
 				return new LineOfCreditAccount(balance, time, accountId, owner);
 
 			default:

@@ -211,7 +211,7 @@ public class BankSystem {
 	 * @param request a request from a AccountOwner containing the information for creating an account,
 	 *                which has been verified by a BankManager.
 	 */
-	private void createAccount(Request request) {
+	public void createAccount(Request request) {
 		AccountOwner owner = request.getUser();
 		String accountId = randomString();
 		Account newAccount = accountFactory.getAccount(request.getAccountType()
@@ -448,5 +448,14 @@ public class BankSystem {
 		Transactor payee = getTransactor("<bill-" + payeeName + ">");
 		proceedTransaction(
 			new Transaction(new Money(amount), getCurrentTime(), source, payee));
+	}
+
+	public ArrayList<String> getAllAccountType(){
+		ArrayList<String> accType = new ArrayList<>();
+		accType.add("ChequingAccount");
+		accType.add("SavingAccount");
+		accType.add("LineOfCreditAccount");
+		accType.add("CreditCardAccount");
+		return accType;
 	}
 }

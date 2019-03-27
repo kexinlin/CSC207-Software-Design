@@ -33,15 +33,6 @@ public class NewUserCreationController extends GUIHomeController {
 			return;
 		}
 
-		// reserved names for account `type-order` strings. not allowed.
-		if (username.getText().matches("^(loc|chq|sav|cre)\\d+$")) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("The username is reserved and cannot be registered.");
-			alert.setHeaderText("Process failed");
-			alert.show();
-			return;
-		}
-
 		if (guiManager.getBankSystem().getLoginable(username.getText()) != null) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setContentText("The username is occupied by another individual.");

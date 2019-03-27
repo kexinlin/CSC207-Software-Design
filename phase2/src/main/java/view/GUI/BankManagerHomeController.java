@@ -104,7 +104,6 @@ public class BankManagerHomeController extends GUIHomeController {
 	}
 
 
-
 	@Override
 	public void show() {
 		showUserName();
@@ -113,7 +112,7 @@ public class BankManagerHomeController extends GUIHomeController {
 
 	@FXML
 	public void createAccountButtonOnClick(ActionEvent actionEvent) {
-		loadWindow("/RequestAccCreationScene.fxml", "Account Creation Request");
+		loadWindow("/NewAccountCreationScene.fxml", "Account Creation Request");
 	}
 
 	@FXML

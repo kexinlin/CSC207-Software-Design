@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="200.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI.NewAccountCreationController">
+   <children>
+      <Label layoutX="38.0" layoutY="36.0" text="Username of Account Owner" />
+      <TextField fx:id="accountOwnerUsername" layoutX="274.0" layoutY="32.0" />
+      <Button layoutX="217.0" layoutY="148.0" mnemonicParsing="false" onAction="#AccCreationOnClick" text="Confirm" />
+      <Label layoutX="38.0" layoutY="88.0" text="Account Type" />
+      <ChoiceBox fx:id="accTypeChoiceBox" layoutX="275.0" layoutY="84.0" prefWidth="150.0" />
+   </children>
+</AnchorPane>
