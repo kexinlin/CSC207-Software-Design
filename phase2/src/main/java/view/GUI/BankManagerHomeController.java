@@ -175,7 +175,7 @@ public class BankManagerHomeController extends GUIHomeController {
 
 	@FXML
 	public void withdrawOnClick(ActionEvent actionEvent) {
-		loadWindow("/WithdrawScene.fxml", "Cash Withdrawal");
+		loadWindow("/BMWithdrawScene.fxml", "Cash Withdrawal");
 	}
 
 	@FXML
@@ -203,7 +203,8 @@ public class BankManagerHomeController extends GUIHomeController {
 	}
 
 	public void transactionTabOnSelect(Event event) {
-		transTableView.refresh();
+		transTableView.getItems().clear();
+		showTransTable();
 	}
 
 	public void requestsTabOnSelect(Event event) {
