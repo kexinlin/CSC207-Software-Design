@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import model.Request;
 import model.persons.Loginable;
 import model.persons.User;
 import model.transactions.Transaction;
@@ -60,6 +61,13 @@ public class BankManagerHomeController extends GUIHomeController {
 	@FXML
 	TableColumn<Transaction, Date> transDate;
 
+	@FXML
+	TableView<Request> requestTableView;
+	@FXML
+	TableColumn<Request, String> requestContent;
+	@FXML
+	TableColumn<Request, Void> requestOperations;
+
 
 	@FXML
 	private final ObservableList<Account> accData = FXCollections.observableArrayList();
@@ -67,6 +75,8 @@ public class BankManagerHomeController extends GUIHomeController {
 	private final ObservableList<User> userData = FXCollections.observableArrayList();
 	@FXML
 	private final ObservableList<Transaction> transData = FXCollections.observableArrayList();
+	@FXML
+	private final ObservableList<Request> requestData = FXCollections.observableArrayList();
 
 
 	@FXML
@@ -135,7 +145,6 @@ public class BankManagerHomeController extends GUIHomeController {
 
 		ArrayList<Transaction> transList = guiManager.getBankSystem().getTransactions();
 
-
 		transData.addAll(transList);
 		transTableView.setItems(transData);
 
@@ -149,6 +158,59 @@ public class BankManagerHomeController extends GUIHomeController {
 		transDate.setCellValueFactory(transData -> new SimpleObjectProperty<>(transData.getValue().getDate()));
 	}
 
+	@FXML
+	public void showRequestTable() {
+		ArrayList<Request> requestList = guiManager.getBankSystem().getRequests();
+
+		requestData.addAll(requestList);
+		requestTableView.setItems(requestData);
+
+		requestContent.setCellValueFactory(requestData -> new SimpleStringProperty(
+			requestData.getValue().getUser().getUsername()
+				+ " asked to create an account of type "
+				+ requestData.getValue().getAccountType()
+				+ ". Msg: "
+				+ requestData.getValue().getMsg()
+		));
+
+		requestOperations.setCellFactory(param -> new TableCell<Request, Void>() {
+			private final Button acceptButton = new Button("accept");
+			private final Button declineButton = new Button("decline");
+			private final HBox pane = new HBox(acceptButton, declineButton);
+
+			{
+				acceptButton.setOnAction(event -> {
+					Request request = getTableView().getItems().get(getIndex());
+					guiManager.getBankSystem().processRequest(request, true);
+					Alert alert = new Alert(Alert.AlertType.INFORMATION);
+					alert.setContentText("This request has been accepted. " +
+						"Account will be created automatically for user.");
+					alert.setHeaderText("Process succeeded");
+					alert.show();
+					getTableView().getItems().remove(request);
+				});
+
+				declineButton.setOnAction(event -> {
+					Request request = getTableView().getItems().get(getIndex());
+					guiManager.getBankSystem().processRequest(request, false);
+					Alert alert = new Alert(Alert.AlertType.INFORMATION);
+					alert.setContentText("This request has been declined. " +
+						"User will be informed with a message.");
+					alert.setHeaderText("Process succeeded");
+					alert.show();
+					getTableView().getItems().remove(request);
+				});
+			}
+
+			@Override
+			protected void updateItem(Void item, boolean empty) {
+				super.updateItem(item, empty);
+
+				setGraphic(empty ? null : pane);
+			}
+		});
+	}
+
 
 	@Override
 	public void show() {
@@ -156,6 +218,7 @@ public class BankManagerHomeController extends GUIHomeController {
 		showUserTable();
 		showAccTable();
 		showTransTable();
+		showRequestTable();
 	}
 
 	@FXML
@@ -208,6 +271,7 @@ public class BankManagerHomeController extends GUIHomeController {
 	}
 
 	public void requestsTabOnSelect(Event event) {
+		requestTableView.refresh();
 	}
 
 	public void aboutATMTabOnSelect(Event event) {

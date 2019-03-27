@@ -115,10 +115,10 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView layoutX="56.0" layoutY="55.0" prefHeight="427.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TableView fx:id="requestTableView" layoutX="56.0" layoutY="55.0" prefHeight="427.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <columns>
-                            <TableColumn prefWidth="617.8805051445961" text="Content of Request" />
-                            <TableColumn prefWidth="180.1195068359375" text="Operation" />
+                            <TableColumn fx:id="requestContent" prefWidth="658.0086179375648" text="Content of Request" />
+                            <TableColumn fx:id="requestOperations" prefWidth="139.99139404296875" text="Operation" />
                           </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
