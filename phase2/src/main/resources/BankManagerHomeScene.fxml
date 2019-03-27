@@ -65,20 +65,20 @@
                      </children></AnchorPane>
             </content>
           </Tab>
-            <Tab onSelectionChanged="#accountsTabOnSelect" text="Transaction Records">
+            <Tab onSelectionChanged="#transactionTabOnSelect" text="Transaction Records">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView fx:id="accTableView1" layoutX="23.0" layoutY="23.0" prefHeight="427.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TableView fx:id="transTableView" layoutX="23.0" layoutY="23.0" prefHeight="427.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                            <columns>
-                              <TableColumn fx:id="accOwner1" prefWidth="93.11983925104141" text="Source Account #" />
-                              <TableColumn fx:id="accType1" prefWidth="226.8801727294922" text="Destination Account #" />
-                              <TableColumn fx:id="accNum1" prefWidth="75.0" text="Amount" />
-                              <TableColumn fx:id="accBalance1" prefWidth="75.0" text="Date of Transaction" />
-                              <TableColumn fx:id="accDateOfCreation2" prefWidth="75.0" text="Comment" />
+                              <TableColumn fx:id="transSrcAcc" prefWidth="93.11983925104141" text="Source Account #" />
+                              <TableColumn fx:id="transDesAcc" prefWidth="226.8801727294922" text="Destination Account #" />
+                              <TableColumn fx:id="transAmount" prefWidth="75.0" text="Amount" />
+                              <TableColumn fx:id="transDate" prefWidth="75.0" text="Date of Transaction" />
+                              <TableColumn fx:id="transOperations" prefWidth="75.0" text="Operations" />
                            </columns>
                         </TableView>
                      </children>
@@ -112,7 +112,7 @@
                      </children></AnchorPane>
               </content>
             </Tab>
-            <Tab text="Pending Requests">
+            <Tab onSelectionChanged="#requestsTabOnSelect" text="Pending Requests">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -128,7 +128,7 @@
                      </children></AnchorPane>
               </content>
             </Tab>
-            <Tab text="About this ATM">
+            <Tab onSelectionChanged="#aboutATMTabOnSelect" text="About this ATM">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                </content>

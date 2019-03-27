@@ -22,6 +22,7 @@ import model.Message;
 import model.persons.AccountOwner;
 import model.persons.Loginable;
 import model.persons.User;
+import model.transactions.Transaction;
 import model.transactors.Account;
 
 import java.io.IOException;
@@ -57,6 +58,19 @@ public class BankManagerHomeController extends GUIHomeController {
 	TableColumn<User, String> userPriChqAcc;
 	@FXML
 	TableColumn<User, String> userNetTotal;
+
+	@FXML
+	TableView<Transaction> transTableView;
+	@FXML
+	TableColumn<Transaction, String> transSrcAcc;
+	@FXML
+	TableColumn<Transaction, String> transDesAcc;
+	@FXML
+	TableColumn<Transaction, String> transAmount;
+	@FXML
+	TableColumn<Transaction, Date> transDate;
+	@FXML
+	TableColumn<Transaction, Void> transOperations;
 
 
 	@FXML
@@ -178,4 +192,12 @@ public class BankManagerHomeController extends GUIHomeController {
 		userTableView.refresh();
 	}
 
+	public void transactionTabOnSelect(Event event) {
+	}
+
+	public void requestsTabOnSelect(Event event) {
+	}
+
+	public void aboutATMTabOnSelect(Event event) {
+	}
 }
