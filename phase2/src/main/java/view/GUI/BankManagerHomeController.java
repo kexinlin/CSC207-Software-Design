@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Message;
 import model.persons.AccountOwner;
+import model.persons.Loginable;
 import model.persons.User;
 import model.transactors.Account;
 
@@ -46,23 +47,22 @@ public class BankManagerHomeController extends GUIHomeController {
 	@FXML
 	TableColumn<Account, Date> accDateOfCreation;
 
-
-//	@FXML
-//	TableView<User> userTableView;
-//	@FXML
-//	TableColumn<User, String> userName;
-//	@FXML
-//	TableColumn<User, String> accType;
-//	@FXML
-//	TableColumn<User, String> accNum;
-//	@FXML
-//	TableColumn<User, String> accBalance;
-//	@FXML
-//	TableColumn<User, Date> accDateOfCreation;
+	@FXML
+	TableView<User> userTableView;
+	@FXML
+	TableColumn<User, String> userName;
+	@FXML
+	TableColumn<User, String> userUsername;
+	@FXML
+	TableColumn<User, String> userPriChqAcc;
+	@FXML
+	TableColumn<User, String> userNetTotal;
 
 
 	@FXML
 	private final ObservableList<Account> accData = FXCollections.observableArrayList();
+	@FXML
+	private final ObservableList<User> userData = FXCollections.observableArrayList();
 
 
 	@FXML
@@ -83,10 +83,6 @@ public class BankManagerHomeController extends GUIHomeController {
 		accTableView.setItems(accData);
 
 
-		accOwner.setCellValueFactory(
-			new PropertyValueFactory<>("primaryOwner")
-		);
-
 		accOwner.setCellValueFactory(accData -> new SimpleStringProperty(accData.getValue().getOwner().getUsername()));
 
 		accType.setCellValueFactory(
@@ -103,10 +99,38 @@ public class BankManagerHomeController extends GUIHomeController {
 		);
 	}
 
+	@FXML
+	public void showUserTable() {
+
+		Collection<Loginable> loginableCollection = guiManager.getBankSystem().getLoginables().values();
+
+		ArrayList<User> userList = new ArrayList<>();
+
+		for(Loginable l:loginableCollection){
+			if(l instanceof User){
+				userList.add((User)l);
+			}
+		}
+
+		userData.addAll(userList);
+		userTableView.setItems(userData);
+
+		userName.setCellValueFactory(userData -> new SimpleStringProperty(userData.getValue().getName()));
+
+		userUsername.setCellValueFactory(userData -> new SimpleStringProperty(userData.getValue().getUsername()));
+
+		userPriChqAcc.setCellValueFactory(userData -> new SimpleStringProperty(String.valueOf(
+			userData.getValue().getPrimaryChequingAccount())));
+
+		userNetTotal.setCellValueFactory(userData -> new SimpleStringProperty(String.valueOf(
+			userData.getValue().getNetTotal())));
+	}
+
 
 	@Override
 	public void show() {
 		showUserName();
+		showUserTable();
 		showAccTable();
 	}
 

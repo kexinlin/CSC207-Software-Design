@@ -33,11 +33,11 @@
                            <columns>
                               <TableColumn fx:id="userName" prefWidth="75.0" text="Name" />
                               <TableColumn fx:id="userUsername" prefWidth="75.0" text="Username" />
-                              <TableColumn fx:id="userAccounts" prefWidth="75.0" text="Primary Chequing Account #" />
-                              <TableColumn fx:id="accDateOfCreation1" prefWidth="75.0" text="Net Total" />
+                              <TableColumn fx:id="userPriChqAcc" prefWidth="75.0" text="Primary Chequing Account #" />
+                              <TableColumn fx:id="userNetTotal" prefWidth="75.0" text="Net Total" />
                            </columns>
                         </TableView>
-                        <Button layoutX="636.0" layoutY="400.0" mnemonicParsing="false" onAction="#createUserButtonOnClick" text="Set primary chequing account">
+                        <Button layoutX="636.0" layoutY="400.0" mnemonicParsing="false" onAction="#setPriChqAccOnClick" text="Set primary chequing account">
                            <font>
                               <Font size="10.0" />
                            </font>
