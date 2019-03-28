@@ -125,7 +125,7 @@ class AccountsCmd {
 			ui.getError().println(query + " is not a valid type of account.");
 			return;
 		}
-		Request request = new Request(user, query, "Requested"
+		Request request = new Request(user, query, "Requested "
 			+ ui.getBankSystem().getCurrentTime().toString());
 		ui.getBankSystem().getRequests().add(request);
 		ui.getOutput().println("The creation of transactors has been sent. " +

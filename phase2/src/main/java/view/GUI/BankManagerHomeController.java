@@ -360,10 +360,28 @@ public class BankManagerHomeController extends GUIHomeController {
 	}
 
 	public void aboutATMTabOnSelect(Event event) {
-
+		showDollarAmount();
 	}
 
+	@FXML
 	public void restockATMOnClick(ActionEvent actionEvent) {
 
+		try {
+			Money m = guiManager.getATM().getDepositController().getDepositMoney();
+			if (m instanceof CashCollection) {
+				guiManager.getATM().stockCash(((CashCollection) m).getCashMap());
+				Alert alert = new Alert(Alert.AlertType.INFORMATION);
+				alert.setContentText("ATM replenishment finished.");
+				alert.setHeaderText("Process succeeded");
+				alert.show();
+			} else {
+				throw new InvalidOperationException("The envelope does not contain cash.");
+			}
+		} catch (InvalidOperationException e) {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setContentText("The thing you put in the machine is not cash.");
+			alert.setHeaderText("Process failed");
+			alert.show();
+		}
 	}
 }
