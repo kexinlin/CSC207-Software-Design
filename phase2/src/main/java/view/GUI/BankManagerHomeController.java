@@ -11,6 +11,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import model.Cash;
+import model.CashCollection;
+import model.Money;
 import model.Request;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
@@ -27,6 +30,15 @@ public class BankManagerHomeController extends GUIHomeController {
 
 	@FXML
 	Label username;
+	@FXML
+	Label fiveDollar;
+	@FXML
+	Label tenDollar;
+	@FXML
+	Label twentyDollar;
+	@FXML
+	Label fiftyDollar;
+
 
 	@FXML
 	TableView<Account> accTableView;
@@ -82,11 +94,36 @@ public class BankManagerHomeController extends GUIHomeController {
 	@FXML
 	private final ObservableList<Request> requestData = FXCollections.observableArrayList();
 
+	@FXML
+	private final SimpleStringProperty fiveDollarAmount = new SimpleStringProperty();
+	@FXML
+	private final SimpleStringProperty tenDollarAmount = new SimpleStringProperty();
+	@FXML
+	private final SimpleStringProperty twentyDollarAmount = new SimpleStringProperty();
+	@FXML
+	private final SimpleStringProperty fiftyDollarAmount = new SimpleStringProperty();
+
 
 	@FXML
 	public void showUserName() {
 		StringProperty valueProperty = new SimpleStringProperty((currentUser).getUsername());
 		username.textProperty().bind(valueProperty);
+	}
+
+	@FXML
+	public void showDollarAmount(){
+		fiveDollarAmount.setValue(String.valueOf((guiManager.getATM().getBillAmount().get(Cash.FIVE))));
+		fiveDollar.textProperty().bind(fiveDollarAmount);
+
+		tenDollarAmount.setValue(String.valueOf((guiManager.getATM().getBillAmount().get(Cash.TEN))));
+		tenDollar.textProperty().bind(tenDollarAmount);
+
+		twentyDollarAmount.setValue(String.valueOf((guiManager.getATM().getBillAmount().get(Cash.TWENTY))));
+		twentyDollar.textProperty().bind(twentyDollarAmount);
+
+		fiftyDollarAmount.setValue(String.valueOf((guiManager.getATM().getBillAmount().get(Cash.FIFTY))));
+		fiftyDollar.textProperty().bind(fiftyDollarAmount);
+
 	}
 
 	@FXML
@@ -259,6 +296,7 @@ public class BankManagerHomeController extends GUIHomeController {
 		showAccTable();
 		showTransTable();
 		showRequestTable();
+		showDollarAmount();
 	}
 
 	@FXML
@@ -315,6 +353,10 @@ public class BankManagerHomeController extends GUIHomeController {
 	}
 
 	public void aboutATMTabOnSelect(Event event) {
+
 	}
 
+	public void restockATMOnClick(ActionEvent actionEvent) {
+
+	}
 }

@@ -42,7 +42,7 @@ public class UserHomeController extends GUIHomeController {
 	Label priChqAccNum;
 
 	@FXML
-	ListView msgListView;
+	ListView<String> msgListView;
 
 	@FXML
 	private final SimpleStringProperty netTotalVal = new SimpleStringProperty();
