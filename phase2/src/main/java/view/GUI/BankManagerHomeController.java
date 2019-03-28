@@ -22,6 +22,7 @@ import model.persons.User;
 import model.transactions.Transaction;
 import model.transactors.Account;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -51,7 +52,7 @@ public class BankManagerHomeController extends GUIHomeController {
 	@FXML
 	TableColumn<Account, String> accBalance;
 	@FXML
-	TableColumn<Account, Date> accDateOfCreation;
+	TableColumn<Account, String> accDateOfCreation;
 
 	@FXML
 	TableView<User> userTableView;
@@ -73,7 +74,7 @@ public class BankManagerHomeController extends GUIHomeController {
 	@FXML
 	TableColumn<Transaction, String> transAmount;
 	@FXML
-	TableColumn<Transaction, Date> transDate;
+	TableColumn<Transaction, String> transDate;
 	@FXML
 	TableColumn<Transaction, Void> transOperation;
 
@@ -111,7 +112,7 @@ public class BankManagerHomeController extends GUIHomeController {
 	}
 
 	@FXML
-	public void showDollarAmount(){
+	public void showDollarAmount() {
 		fiveDollarAmount.setValue(String.valueOf((guiManager.getATM().getBillAmount().get(Cash.FIVE))));
 		fiveDollar.textProperty().bind(fiveDollarAmount);
 
@@ -152,6 +153,10 @@ public class BankManagerHomeController extends GUIHomeController {
 		accDateOfCreation.setCellValueFactory(
 			new PropertyValueFactory<>("dateOfCreation")
 		);
+
+		SimpleDateFormat formatter = guiManager.getBankSystem().getDateFormmater();
+		accDateOfCreation.setCellValueFactory(accData ->
+			new SimpleStringProperty(formatter.format(accData.getValue().getDateOfCreation())));
 	}
 
 	@FXML
@@ -196,7 +201,9 @@ public class BankManagerHomeController extends GUIHomeController {
 		transAmount.setCellValueFactory(transData -> new SimpleStringProperty(String.valueOf(
 			transData.getValue().getAmount().getMoneyValue())));
 
-		transDate.setCellValueFactory(transData -> new SimpleObjectProperty<>(transData.getValue().getDate()));
+		SimpleDateFormat formatter = guiManager.getBankSystem().getDateFormmater();
+		transDate.setCellValueFactory(transData -> new SimpleStringProperty(formatter.format(
+			transData.getValue().getDate())));
 
 		transOperation.setCellFactory(param -> new TableCell<Transaction, Void>() {
 			private final Button undoButton = new Button("undo");

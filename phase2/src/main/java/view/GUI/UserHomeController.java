@@ -12,8 +12,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import model.Message;
 import model.persons.User;
 import model.transactors.Account;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class UserHomeController extends GUIHomeController {
 
@@ -31,7 +32,7 @@ public class UserHomeController extends GUIHomeController {
 	@FXML
 	TableColumn<Account, String> accBalance;
 	@FXML
-	TableColumn<Account, Date> accDateOfCreation;
+	TableColumn<Account, String> accDateOfCreation;
 
 	// label in My Profiles
 	@FXML
@@ -87,6 +88,10 @@ public class UserHomeController extends GUIHomeController {
 		accDateOfCreation.setCellValueFactory(
 			new PropertyValueFactory<>("dateOfCreation")
 		);
+
+		SimpleDateFormat formatter = guiManager.getBankSystem().getDateFormmater();
+		accDateOfCreation.setCellValueFactory(accData ->
+			new SimpleStringProperty(formatter.format(accData.getValue().getDateOfCreation())));
 	}
 
 	@FXML

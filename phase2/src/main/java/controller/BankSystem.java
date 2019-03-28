@@ -106,7 +106,12 @@ public class BankSystem {
 	 */
 	public String getCurrentTimeStr() {
 		Date date = getCurrentTime();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		return dateFormat.format(date);
+	}
+
+	public String timeFormmater(Date date){
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		return dateFormat.format(date);
 	}
 
@@ -457,5 +462,9 @@ public class BankSystem {
 		accType.add("LineOfCreditAccount");
 		accType.add("CreditCardAccount");
 		return accType;
+	}
+
+	public SimpleDateFormat getDateFormmater(){
+		return new SimpleDateFormat("yyyy/MM/dd");
 	}
 }

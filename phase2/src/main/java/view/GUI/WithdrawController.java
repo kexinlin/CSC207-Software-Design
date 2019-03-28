@@ -68,11 +68,10 @@ public class WithdrawController extends GUIHomeController {
 			alert.show();
 		} catch (InsufficientCashException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Sorry, this machine does not have enough cash.");
+			alert.setContentText("This ATM does machine not have this amount of cash.");
 			alert.setHeaderText("Process failed");
 			alert.show();
 		}
-		System.out.println(acc.getBalance());
 	}
 
 	@FXML
