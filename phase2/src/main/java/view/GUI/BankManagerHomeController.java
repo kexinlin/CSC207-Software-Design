@@ -1,6 +1,5 @@
 package view.GUI;
 
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -25,7 +24,6 @@ import model.transactors.Account;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 
 public class BankManagerHomeController extends GUIHomeController {
 
@@ -179,8 +177,14 @@ public class BankManagerHomeController extends GUIHomeController {
 
 		userUsername.setCellValueFactory(userData -> new SimpleStringProperty(userData.getValue().getUsername()));
 
-		userPriChqAcc.setCellValueFactory(userData -> new SimpleStringProperty(String.valueOf(
-			userData.getValue().getPrimaryChequingAccount().getAccountId())));
+		userPriChqAcc.setCellValueFactory(userData -> {
+			try {
+				return new SimpleStringProperty(String.valueOf(
+					userData.getValue().getPrimaryChequingAccount().getAccountId()));
+			} catch (NullPointerException e) {
+				return new SimpleStringProperty("");
+			}
+		});
 
 		userNetTotal.setCellValueFactory(userData -> new SimpleStringProperty(String.valueOf(
 			userData.getValue().getNetTotal())));
@@ -341,13 +345,16 @@ public class BankManagerHomeController extends GUIHomeController {
 		loadWindow("/BMPayBillScene.fxml", "Money Transaction");
 	}
 
-
-	public void accountsTabOnSelect(Event event) {
-		accTableView.refresh();
+	public void usersTabOnSelect(Event event) {
+		if (guiManager != null) {
+			userTableView.getItems().clear();
+			showUserTable();
+		}
 	}
 
-	public void usersTabOnSelect(Event event) {
-		userTableView.refresh();
+	public void accountsTabOnSelect(Event event) {
+		accTableView.getItems().clear();
+		showAccTable();
 	}
 
 	public void transactionTabOnSelect(Event event) {
