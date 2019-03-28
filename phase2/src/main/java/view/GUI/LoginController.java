@@ -47,7 +47,7 @@ public class LoginController extends GUIController{
 
 			homeController.show();
 
-			Main.root.getChildren().setAll(homeScene);
+			GraphicsUI.root.getChildren().setAll(homeScene);
 		} else {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setContentText("Incorrect password. Please check your password again.");

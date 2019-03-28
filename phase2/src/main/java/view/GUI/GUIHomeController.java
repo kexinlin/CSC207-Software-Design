@@ -59,7 +59,7 @@ public abstract class GUIHomeController extends GUIController{
 		GUIController controller = loader.getController();
 		controller.setGUIManager(guiManager);
 
-		Main.root.getChildren().setAll(homeScene);
+		GraphicsUI.root.getChildren().setAll(homeScene);
 	}
 
 }
