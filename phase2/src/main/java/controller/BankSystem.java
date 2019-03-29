@@ -110,7 +110,7 @@ public class BankSystem {
 		return dateFormat.format(date);
 	}
 
-	public String timeFormmater(Date date){
+	public String timeFormater(Date date){
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		return dateFormat.format(date);
 	}
