@@ -33,6 +33,8 @@ public class LoginController extends GUIController{
 			alert.show();
 		} else if (guiManager.getATM().login(username, password)) {
 			String resourceName;
+			// FIXME must also do UserEmployee's page.
+			//   Alternatively, let the user-employee choose an identity.
 			if (guiManager.getBankSystem().getLoginable(username) instanceof User) {
 				resourceName = "/UserHomeScene.fxml";
 			} else {
