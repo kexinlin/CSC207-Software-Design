@@ -45,12 +45,11 @@ class RecordController {
 	 * user-employee,USERNAME,PASSWORD
 	 * manager,USERNAME,PASSWORD
 	 * account,TYPE,BALANCE,DATE-OF-CREATION,ACC-ID,OWNER-USERNAME
-	 * tx,transfer,FROM-ACC-ID,TO-ACC-ID,DATE,AMOUNT
-	 * tx,deposit/withdraw,ACC-ID,DATE,AMOUNT
-	 * tx,paybill,ACC-ID,PAYEE,DATE,AMOUNT
+	 * tx,FROM-ACC-ID,TO-ACC-ID,DATE,AMOUNT
 	 * req,USERNAME,ACC-TYPE,MSG
 	 * msg,USERNAME,MESSAGE-TEXT
 	 * set,primary-acc,USERNAME,ACC-ID
+	 * set,co-owners,ACC-ID,USERNAME1,USERNAME2,...
 	 */
 	public void readRecords() {
 		File file = getRecordFile();
