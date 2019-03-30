@@ -322,7 +322,8 @@ public class BankManagerHomeController extends GUIHomeController {
 
 	@FXML
 	public void setPriChqAccOnClick(ActionEvent actionEvent) {
-		loadWindow("/BMSetPrimaryScene.fxml", "New User Creation");
+		loadWindow("/BMSetPrimaryScene.fxml", "Set Primary Account",
+			new BMSetPrimaryController(userTableView));
 	}
 
 	@FXML

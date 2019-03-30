@@ -16,6 +16,10 @@ public abstract class GUIHomeController extends GUIController{
 
 	Loginable currentUser;
 
+	private Stage stage;
+	public void setStage(Stage stage) { this.stage = stage; }
+	public Stage getStage() { return this.stage; }
+
 	@FXML
 	public void setCurrentUser(Loginable loginable){
 		this.currentUser = loginable;
@@ -41,7 +45,30 @@ public abstract class GUIHomeController extends GUIController{
 
 			Stage stage = new Stage(StageStyle.DECORATED);
 			stage.setTitle(title);
+			homeController.setStage(stage);
 
+			stage.setScene(new Scene(parent));
+			stage.show();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void loadWindow(String location, String title, GUIHomeController controller) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(location));
+			loader.setController(controller);
+
+			Parent parent = loader.load();
+
+			controller.setGUIManager(guiManager);
+			controller.setCurrentUser(getCurrentUser());
+			controller.show();
+
+			Stage stage = new Stage(StageStyle.DECORATED);
+			stage.setTitle(title);
+			controller.setStage(stage);
 
 			stage.setScene(new Scene(parent));
 			stage.show();

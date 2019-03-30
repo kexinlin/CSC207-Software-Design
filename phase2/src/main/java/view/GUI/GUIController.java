@@ -24,4 +24,8 @@ public abstract class GUIController implements Initializable {
 		alert.setHeaderText(title);
 		alert.show();
 	}
+
+	protected void err(String content, String title) {
+		showAlert(Alert.AlertType.ERROR, content, title);
+	}
 }

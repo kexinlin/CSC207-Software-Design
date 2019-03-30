@@ -2,77 +2,87 @@ package view.GUI;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import model.exceptions.AccountNotExistException;
 import model.persons.AccountOwner;
+import model.persons.Loginable;
 import model.persons.User;
 import model.transactors.Account;
 import model.transactors.ChequingAccount;
 
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 public class BMSetPrimaryController extends GUIHomeController {
+	private TableView<User> tableView;
+	public BMSetPrimaryController(TableView<User> userTableView) {
+		this.tableView = userTableView;
+	}
 
 	@FXML
 	TextField chqAccUsername;
 	@FXML
 	TextField priChqAccNum;
+	@FXML
+	Button acceptButton;
 
+	@Override
+	public void initialize(URL url, ResourceBundle bundle) {
+		acceptButton.setOnMouseClicked(this::ManagerSetPrimaryOnClick);
+		if(tableView.getFocusModel().getFocusedItem() != null) {
+			chqAccUsername.setText(tableView.getFocusModel().getFocusedItem().getUsername());
+		}
+	}
 
-	public void ManagerSetPrimaryOnClick(ActionEvent actionEvent) {
-
+	private void ManagerSetPrimaryOnClick(MouseEvent ignore) {
 		if (chqAccUsername.getText().equals("")||priChqAccNum.getText().equals("")) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Please fill in all required fields.");
-			alert.setHeaderText("Process failed");
-			alert.show();
+			err("Please fill in all required fields.",
+				"Process failed");
 			return;
 		}
 
-		AccountOwner owner = (AccountOwner) guiManager.getBankSystem().getLoginable(chqAccUsername.getText());
-		if(owner == null){
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Username does not exist.");
-			alert.setHeaderText("Process failed");
-			alert.show();
+		Loginable loginable = guiManager.getBankSystem().getLoginable(chqAccUsername.getText());
+		if (loginable == null) {
+			err("Username does not exist.",
+				"Process failed");
 			return;
 		}
+		if (!(loginable instanceof AccountOwner)) {
+			err("The individual is not a user.",
+				"Process failed");
+			return;
+		}
+		AccountOwner owner = (AccountOwner) loginable;
 
 		Account acc;
 
 		try {
 			acc = guiManager.getBankSystem().getAccountById(priChqAccNum.getText());
 		} catch (AccountNotExistException e) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Account number does not exist.");
-			alert.setHeaderText("Process failed");
-			alert.show();
+			err("Account number does not exist.",
+				"Process failed");
 			return;
 		}
 
 		if(!(acc instanceof ChequingAccount)){
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Account type must be chequing account.");
-			alert.setHeaderText("Process failed");
-			alert.show();
+			err("Account type must be chequing account.",
+				"Process failed");
 			return;
 		}
 
-		if(acc.getOwner() != owner){
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("Owner of input account does not match input username.");
-			alert.setHeaderText("Process failed");
-			alert.show();
+		if(acc.isOwnedBy(owner)){
+			err("Owner of input account does not match input username.",
+				"Process failed");
 			return;
 		}
 
 		owner.setPrimaryCheuqingAccount((ChequingAccount) acc);
-		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setContentText("Primary chequing account has been set successfully.");
-		alert.setHeaderText("Process succeeded");
-		alert.show();
+		showAlert(Alert.AlertType.INFORMATION,
+			"Primary chequing account has been set successfully.",
+			"Process succeeded");
+		getStage().close();
 	}
 
 	@FXML

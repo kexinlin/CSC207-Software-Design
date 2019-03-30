@@ -121,6 +121,11 @@ public abstract class Account extends Transactor {
 		return primaryOwner;
 	}
 
+	public boolean isOwnedBy(AccountOwner owner) {
+		return owner.equals(primaryOwner)
+			|| getCoOwners().contains(owner);
+	}
+
 	public ArrayList<AccountOwner> getCoOwners() {
 		return coOwners;
 	}

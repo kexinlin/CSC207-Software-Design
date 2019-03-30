@@ -6,9 +6,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="200.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI.BMSetPrimaryController">
+<AnchorPane prefHeight="200.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button layoutX="217.0" layoutY="153.0" mnemonicParsing="false" onAction="#ManagerSetPrimaryOnClick" text="Confirm" />
+      <Button fx:id="acceptButton" layoutX="217.0" layoutY="153.0" mnemonicParsing="false" text="Confirm" />
       <Label layoutX="38.0" layoutY="40.0" text="Username of Account Owner" />
       <Label layoutX="38.0" layoutY="90.0" text="Chequing Account #" />
       <TextField fx:id="chqAccUsername" layoutX="273.0" layoutY="35.0" />
