@@ -52,9 +52,14 @@ public class HighInterestAccount extends AssetAccount {
 		setBalance(getBalance().add(amount));
 	}
 
+	@Override
+	public boolean hasInterest() {
+		return true;
+	}
 	/**
 	 * Increase the saving account balance bt a factor of 0.1%.
 	 */
+	@Override
 	public void increaseInterest() {
 		Money interest = new Money(getBalance().getMoneyValue() * interestRate);
 		setBalance(getBalance().add(interest));

@@ -76,8 +76,8 @@ public class BankSystem {
 			// on the first day of each month, gain interest
 			// as well as notice user of their debt accounts' statement balance
 			accounts.values().forEach(a -> {
-				if (a instanceof SavingAccount) {
-					((SavingAccount) a).increaseInterest();
+				if (a.hasInterest()) {
+					a.increaseInterest();
 				}
 				if (a instanceof DebtAccount) {
 					((DebtAccount) a).genStatement();
