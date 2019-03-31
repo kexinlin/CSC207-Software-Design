@@ -152,6 +152,7 @@ class RecordController {
 					Loginable l = bankSystem.getLoginable(s);
 					if (l instanceof AccountOwner) {
 						acc.addCoOwner((AccountOwner)l);
+						((AccountOwner) l).addAccount(acc);
 					}
 				}
 			} catch (AccountNotExistException ignore) {
