@@ -340,6 +340,26 @@ public class BankSystem {
 		}
 	}
 
+	/**
+	 * Add owner to acc's co-owner list
+	 * Add acc to owner's account list
+	 * @param acc
+	 * @param owner
+	 */
+	public void addCoOwner(Account acc, AccountOwner owner) {
+		acc.addCoOwner(owner);
+		owner.addAccount(acc);
+	}
+
+	public boolean removeCoOwner(Account acc, AccountOwner owner) {
+		if (acc.getCoOwners().contains(owner)) {
+			acc.getCoOwners().remove(owner);
+			owner.getAccounts().remove(acc);
+			return true;
+		}
+		return false;
+	}
+
 	public void addLoginable(Loginable loginable) {
 		loginables.put(loginable.getUsername(), loginable);
 	}

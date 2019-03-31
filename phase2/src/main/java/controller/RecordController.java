@@ -152,8 +152,7 @@ class RecordController {
 					String s = it.next();
 					Loginable l = bankSystem.getLoginable(s);
 					if (l instanceof AccountOwner) {
-						acc.addCoOwner((AccountOwner)l);
-						((AccountOwner) l).addAccount(acc);
+						bankSystem.addCoOwner(acc, (AccountOwner) l);
 					}
 				}
 			} catch (AccountNotExistException ignore) {
@@ -437,9 +436,10 @@ class RecordController {
 		ArrayList<AccountOwner> coOwners = account.getCoOwners();
 		if (! coOwners.isEmpty()) {
 			writer.write("set,co-owners,"
-			 + String.join(",",
+				+ account.getId() + ","
+				+ String.join(",",
 				coOwners.stream().map(o -> o.getUsername()).toArray( n -> new String[n] ))
-			 + "\n");
+				+ "\n");
 		}
 		if (account instanceof DebtAccount) {
 			writer.write("set,used-credit," +
