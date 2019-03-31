@@ -10,6 +10,7 @@ import model.exceptions.InsufficientCashException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
 import model.persons.User;
+import model.transactions.Transaction;
 import model.transactors.Account;
 
 import java.util.ArrayList;
@@ -54,9 +55,10 @@ public class BMWithdrawController extends GUIHomeController {
 		}
 
 		try {
-			guiManager.getATM().withdrawMoney(acc, amount);
+			Transaction trans = guiManager.getATM().withdrawMoney(acc, amount);
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
-			alert.setContentText("Succeeded. Please take the money.");
+			alert.setContentText("Succeeded. Please take the money. Please note that $"
+				+ trans.getFee() + " of service fee is deducted.");
 			alert.setHeaderText("Process succeeded");
 			alert.show();
 			getStage().close();
