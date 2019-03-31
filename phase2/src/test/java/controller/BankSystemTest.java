@@ -1,7 +1,9 @@
 package controller;
 
 import model.Money;
+import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
+import model.transactions.Transaction;
 import model.transactors.Account;
 import model.exceptions.AccountNotExistException;
 import model.transactors.DebtAccount;
@@ -43,6 +45,7 @@ public class BankSystemTest {
 					"account,chq,45.0,1552098056134,127,u1\n" +
 					"account,sav,100.0,1552172989694,874637,u1\n" +
 					"account,cre,0.0,1552172989694,999,u1\n" +
+					"account,loc,0.0,1552172989694,888,u1\n" +
 					"set,primary-acc,u1,127");
 			writer.close();
 			bankSystem = new BankSystem(recordFileName);
@@ -109,5 +112,29 @@ public class BankSystemTest {
 		assertEquals(40 * (1 + 0.1),
 			debtAcc.getStatementBalance().getMoneyValue(), 0.001);
 
+	}
+
+	@Test
+	public void testFees()
+		throws AccountNotExistException, NoEnoughMoneyException, InvalidOperationException {
+		Account locAcc = bankSystem.getAccountById("888");
+		Money locOrigBalance = locAcc.getBalance();
+		Account chqAcc = bankSystem.getAccountById("127");
+		Money chqOrigBalance = chqAcc.getBalance();
+
+		Money expectedFee = new Money(5);
+		Money amountTransferred = new Money(10);
+		Transaction tx = bankSystem.makeTx(10, locAcc, chqAcc);
+		// we have five-dollar fee for cash advance
+		assertEquals(0, tx.getFee().compareTo(expectedFee));
+		bankSystem.proceedTransaction(tx);
+
+		// the fee should be deducted from LOC account
+		assertEquals(0, locAcc.getBalance()
+			.compareTo(locOrigBalance.add(amountTransferred).add(expectedFee)));
+
+		// ... and does not go into CHQ account
+		assertEquals(0, chqAcc.getBalance()
+			.compareTo(chqOrigBalance.add(amountTransferred)));
 	}
 }
