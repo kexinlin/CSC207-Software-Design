@@ -81,6 +81,10 @@ public class BankSystem {
 				}
 				if (a instanceof DebtAccount) {
 					((DebtAccount) a).genStatement();
+					addMessage(new Message(a.getOwner(),
+						"Your balance of account " + a.getId() +
+						" is now " + ((DebtAccount) a).getStatementBalance() +
+						". You need to pay before the start of the 15th of this month."));
 				}
 			});
 		}
