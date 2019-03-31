@@ -11,7 +11,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Message;
 import model.persons.AccountOwner;
-import model.persons.User;
 import model.transactors.Account;
 
 import java.text.SimpleDateFormat;

@@ -21,13 +21,14 @@ import model.exceptions.NoEnoughMoneyException;
 import model.persons.AccountOwner;
 import model.persons.Employee;
 import model.persons.Loginable;
-import model.persons.User;
 import model.transactions.Transaction;
 import model.transactors.Account;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 
 public class BankManagerHomeController extends GUIHomeController {
@@ -46,7 +47,8 @@ public class BankManagerHomeController extends GUIHomeController {
 	Label twentyDollar;
 	@FXML
 	Label fiftyDollar;
-
+	@FXML
+	Label currentDate;
 
 	@FXML
 	TableView<Account> accTableView;
@@ -114,6 +116,11 @@ public class BankManagerHomeController extends GUIHomeController {
 	private final SimpleStringProperty twentyDollarAmount = new SimpleStringProperty();
 	@FXML
 	private final SimpleStringProperty fiftyDollarAmount = new SimpleStringProperty();
+	@FXML
+	private final SimpleStringProperty currentDateAmount = new SimpleStringProperty();
+
+	@FXML
+	DatePicker datePicker;
 
 	/**
 	 * Generates a "Permission denied" error dialog.
@@ -148,6 +155,13 @@ public class BankManagerHomeController extends GUIHomeController {
 	}
 
 	@FXML
+	public void showCurrentDate() {
+		SimpleDateFormat formatter = guiManager.getBankSystem().getDateFormmater();
+		currentDateAmount.setValue(formatter.format(guiManager.getBankSystem().getCurrentTime()));
+		currentDate.textProperty().bind(currentDateAmount);
+	}
+
+	@FXML
 	public void showAccTable() {
 
 		Collection<Account> accCollection = guiManager.getBankSystem().getAccounts().values();
@@ -178,9 +192,6 @@ public class BankManagerHomeController extends GUIHomeController {
 		);
 		accBalance.setCellValueFactory(
 			new PropertyValueFactory<>("balance")
-		);
-		accDateOfCreation.setCellValueFactory(
-			new PropertyValueFactory<>("dateOfCreation")
 		);
 
 		SimpleDateFormat formatter = guiManager.getBankSystem().getDateFormmater();
@@ -418,6 +429,7 @@ public class BankManagerHomeController extends GUIHomeController {
 		showTransTable();
 		showRequestTable();
 		showDollarAmount();
+		showCurrentDate();
 	}
 
 	@FXML
@@ -491,6 +503,7 @@ public class BankManagerHomeController extends GUIHomeController {
 
 	public void aboutATMTabOnSelect(Event event) {
 		showDollarAmount();
+		showCurrentDate();
 	}
 
 	@FXML
@@ -517,5 +530,17 @@ public class BankManagerHomeController extends GUIHomeController {
 			alert.setHeaderText("Process failed");
 			alert.show();
 		}
+	}
+
+	public void setTimeOnClick(ActionEvent actionEvent) {
+		LocalDate date = datePicker.getValue();
+		Calendar.Builder builder = new Calendar.Builder();
+		builder.setDate(date.getYear(),
+			date.getMonth().getValue() - 1, date.getDayOfMonth());
+		Calendar dateToSet = builder.build();
+		guiManager.getBankSystem().setCurrentTime(dateToSet.getTime());
+
+		showAlert(Alert.AlertType.INFORMATION, "Current date is reset successfully",
+			"Process succeeded.");
 	}
 }
