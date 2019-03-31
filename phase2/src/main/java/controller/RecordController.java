@@ -18,6 +18,8 @@ import java.util.Iterator;
 class RecordController {
 	private BankSystem bankSystem;
 	private AccountFactory accountFactory;
+	private TransactionFactory txFactory;
+	private LoginableFactory loginableFactory;
 
 	/**
 	 * Constructs a record controller
@@ -26,6 +28,8 @@ class RecordController {
 	public RecordController(BankSystem bankSystem) {
 		this.bankSystem = bankSystem;
 		this.accountFactory = new AccountFactory();
+		this.txFactory = new TransactionFactory();
+		this.loginableFactory = new LoginableFactory();
 	}
 
 	/**
@@ -66,15 +70,9 @@ class RecordController {
 				}
 				switch (entries[0]) {
 					case "user":
-						processUser(entries[1]);
-						break;
-
-					case "manager":
-						processManager(entries[1]);
-						break;
-
 					case "user-employee":
-						processUserEmployee(entries[1]);
+					case "manager":
+						processLoginable(entries[0], entries[1]);
 						break;
 
 					case "account":
@@ -227,30 +225,7 @@ class RecordController {
 	 * @param data the line containing the transaction, excluding the first column.
 	 */
 	private void processTx(String data) {
-		String[] entries = data.split(",", 4);
-		if (entries.length != 4) {
-			return;
-		}
-
-		String fromAccId = entries[0];
-		String toAccId = entries[1];
-		Transactor fromAcc, toAcc;
-		fromAcc = bankSystem.getTransactor(fromAccId);
-		toAcc = bankSystem.getTransactor(toAccId);
-		if (fromAcc == null || toAcc == null) {
-			return;
-		}
-
-		Date date;
-		double amount;
-		try {
-			date = new Date(Long.valueOf(entries[2]));
-			amount = Double.valueOf(entries[3]);
-		} catch (NumberFormatException e) {
-			return;
-		}
-
-		Transaction tx = new Transaction(new Money(amount), date, fromAcc, toAcc);
+		Transaction tx = txFactory.fromRecord(data, bankSystem);
 		bankSystem.addTransaction(tx);
 	}
 
@@ -287,50 +262,8 @@ class RecordController {
 	 * Reads a bank manager and add it to loginable list
 	 * @param data the line containing the bank manager, excluding the first column
 	 */
-	private void processManager(String data) {
-		String[] entries = data.split(",", 2);
-		if (entries.length != 2) {
-			// wrong format
-			return;
-		}
-		String username = entries[0];
-		String password = entries[1];
-
-		BankManager bankManager = new BankManager(username, password);
-		bankSystem.addLoginable(bankManager);
-	}
-
-	/**
-	 * Reads a user and add it to the loginable list
-	 * @param data the line containing the user, excluding the first column
-	 */
-	private void processUser(String data) {
-		String[] entries = data.split(",", 3);
-		if (entries.length != 3) {
-			// wrong format
-			return;
-		}
-
-		String name = entries[0];
-		String username = entries[1];
-		String password = entries[2];
-
-		AccountOwner user = new User(name, username, password);
-		bankSystem.addLoginable(user);
-	}
-
-	private void processUserEmployee(String data) {
-		String[] entries = data.split(",", 3);
-		if (entries.length != 3) {
-			// wrong format
-			return;
-		}
-		String name = entries[0];
-		String username = entries[1];
-		String password = entries[2];
-
-		UserEmployee employee = new UserEmployee(name, username, password);
-		bankSystem.addLoginable(employee);
+	private void processLoginable(String type, String data) {
+		bankSystem.addLoginable(loginableFactory.fromRecord(type, data));
 	}
 
 	/**
@@ -342,13 +275,7 @@ class RecordController {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 			// record users and managers
 			for (Loginable l : bankSystem.getLoginables().values()) {
-				if (l instanceof User) {
-					recordUser(writer, (User) l);
-				} else if (l instanceof UserEmployee) {
-					recordUserEmployee(writer, (UserEmployee)l);
-				} else if (l instanceof BankManager) {
-					recordManager(writer, (BankManager) l);
-				}
+				recordLoginable(writer, l);
 			}
 			// then, accounts
 			for (Account a : bankSystem.getAccounts().values()) {
@@ -447,37 +374,8 @@ class RecordController {
 		}
 	}
 
-	/**
-	 * Records a user
-	 * @param writer the BufferedWriter to use
-	 * @param user the user to record
-	 * @throws IOException
-	 */
-	private void recordUser(BufferedWriter writer, User user) throws IOException {
-		writer.write("user,"
-			+ user.getName() + ","
-			+ user.getUsername() + ","
-			+ user.getPassword() + "\n");
-	}
-
-	/**
-	 * Records a bank manager
-	 * @param writer the writer to use
-	 * @param manager the bank manager to record
-	 * @throws IOException when writer fails
-	 */
-	private void recordManager(BufferedWriter writer, BankManager manager) throws IOException {
-		writer.write("manager,"
-			+ manager.getUsername() + ","
-			+ manager.getPassword() + "\n");
-	}
-
-	private void recordUserEmployee(BufferedWriter writer, UserEmployee employee)
-		throws IOException {
-		writer.write("user-employee,"
-			+ employee.getName() + ","
-			+ employee.getUsername() + ","
-			+ employee.getPassword() + "\n");
+	private void recordLoginable(BufferedWriter writer, Loginable loginable) throws IOException {
+		writer.write(loginableFactory.toRecord(loginable) + "\n");
 	}
 
 	/**
@@ -487,15 +385,7 @@ class RecordController {
 	 * @throws IOException when writer fails
 	 */
 	private void recordTransaction(BufferedWriter writer, Transaction tx) throws IOException {
-		StringBuilder builder = new StringBuilder("tx,");
-		builder
-			.append(tx.getSource().getId()).append(",")
-			.append(tx.getDest().getId()).append(",");
-		builder.append(tx.getDate().getTime()).append(",")
-			.append(tx.getAmount())
-			.append("\n");
-
-		writer.write(builder.toString());
+		writer.write(txFactory.toRecord(tx) + "\n");
 	}
 
 

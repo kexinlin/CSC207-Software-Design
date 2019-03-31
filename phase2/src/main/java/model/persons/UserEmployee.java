@@ -11,4 +11,7 @@ public class UserEmployee extends AccountOwner implements Employee {
 	public boolean can(ManagerAction action) {
 		return action.getId() > ManagerAction._MANAGER_PRIVILEGE.getId();
 	}
+
+	@Override
+	public String getType() { return "user-employee"; }
 }

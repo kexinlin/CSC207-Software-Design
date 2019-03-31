@@ -21,4 +21,6 @@ public interface Loginable {
 	boolean setPassword(String password);
 
 	String getPassword();
+
+	String getType();
 }

@@ -1,11 +1,10 @@
 package controller.transactions;
 
 import controller.ATM;
-import controller.CashFactory;
+import model.CashFactory;
 import model.Cash;
 import model.CashCollection;
 import model.Money;
-import model.transactors.Account;
 import model.exceptions.InvalidOperationException;
 
 import java.io.BufferedReader;

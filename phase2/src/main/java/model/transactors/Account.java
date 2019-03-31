@@ -206,4 +206,20 @@ public abstract class Account extends Transactor {
 	public final Money getActualBalance() {
 		return balance.getValue();
 	}
+
+	/**
+	 * Indicates whether the account is able to gain (positive) interest.
+	 * In other words, if you put money into accounts which `hasInterest()`,
+	 * you will end up with more money.
+	 */
+	public boolean hasInterest() {
+		return false;
+	}
+
+	/**
+	 * should be called only when hasInterest() returns true.
+	 */
+	public void increaseInterest() {
+		throw new UnsupportedOperationException("This method is not defined");
+	}
 }

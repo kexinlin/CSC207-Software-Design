@@ -63,4 +63,7 @@ public class BankManager implements Loginable, Employee {
 	public boolean can(ManagerAction ignore) {
 		return true;
 	}
+
+	@Override
+	public String getType() { return "manager"; }
 }

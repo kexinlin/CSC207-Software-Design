@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.HashMap;
 
 import model.Cash;
+import model.CashFactory;
 
 class ATMRecordController {
 	private ATM atm;

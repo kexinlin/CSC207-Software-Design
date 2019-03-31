@@ -10,7 +10,7 @@ import model.persons.User;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class HighInterestAccount extends Account{
+public class HighInterestAccount extends AssetAccount {
 	// The account owns higher interest, but each time you take money out, higher fee is required.
 	private double interestRate;
 
@@ -49,18 +49,6 @@ public class HighInterestAccount extends Account{
 	@Override
 	public void putMoneyIn(Money amount) {
 		setBalance(getBalance().add(amount));
-	}
-
-	/**
-	 * Return the balance factor for this account.
-	 * This value is 1 if a positive balance means the account holder
-	 * has money while a negative balance means the holder owes money.
-	 * It should be -1 otherwise.
-	 * @return the balance factor of this account
-	 */
-	@Override
-	public int balanceFactor(){
-		return 1;
 	}
 
 	/**

@@ -23,5 +23,6 @@ public class User extends AccountOwner {
 		super(name, username, password, age, income, email);
 	}
 
-
+	@Override
+	public String getType() { return "user"; }
 }
