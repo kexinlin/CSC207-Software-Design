@@ -52,11 +52,13 @@
                      <children>
                         <TableView fx:id="accTableView" layoutX="23.0" layoutY="23.0" prefHeight="427.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <columns>
-                            <TableColumn fx:id="accNum" prefWidth="75.0" text="Account Number" />
-                              <TableColumn fx:id="accOwner" prefWidth="93.11983925104141" text="Account Owner" />
-                            <TableColumn fx:id="accType" prefWidth="226.8801727294922" text="Account Type" />
-                              <TableColumn fx:id="accBalance" prefWidth="75.0" text="Balance" />
-                              <TableColumn fx:id="accDateOfCreation" prefWidth="75.0" text="Date of Creation" />
+                            <TableColumn fx:id="accNum" minWidth="0.0" prefWidth="103.60516834259033" text="Account #" />
+                              <TableColumn fx:id="accOwner" minWidth="13.0" prefWidth="124.39482116699219" text="Primary Owner" />
+                              <TableColumn fx:id="accCoOwners" minWidth="0.0" prefWidth="101.00643920898438" text="Co-Owners" />
+                            <TableColumn fx:id="accType" minWidth="32.0" prefWidth="128.29287719726562" text="Account Type" />
+                              <TableColumn fx:id="accBalance" minWidth="1.0" prefWidth="88.50970458984375" text="Balance" />
+                              <TableColumn fx:id="accDateOfCreation" minWidth="24.0" prefWidth="108.50320434570312" text="Date of Creation" />
+                              <TableColumn fx:id="accOperations" minWidth="87.0" prefWidth="181.49676513671875" text="Operations for Co-owners" />
                           </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

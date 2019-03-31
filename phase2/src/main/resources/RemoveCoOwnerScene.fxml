@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="200.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI.RemoveCoOwnerController">
+   <children>
+      <Label layoutX="39.0" layoutY="29.0" text="Enter in the Username of the Co-Owne to Remove" />
+      <Label layoutX="51.0" layoutY="84.0" text="Username" />
+      <TextField fx:id="coOwnerUsername" layoutX="210.0" layoutY="79.0" prefHeight="27.0" prefWidth="150.0" />
+      <Button layoutX="167.0" layoutY="142.0" mnemonicParsing="false" onAction="#removeCoOnwerOnClick" text="Confirm" />
+   </children>
+</AnchorPane>

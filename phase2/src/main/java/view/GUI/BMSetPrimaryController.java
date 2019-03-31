@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class BMSetPrimaryController extends GUIHomeController {
-	private TableView<User> tableView;
-	public BMSetPrimaryController(TableView<User> userTableView) {
+	private TableView<AccountOwner> tableView;
+	public BMSetPrimaryController(TableView<AccountOwner> userTableView) {
 		this.tableView = userTableView;
 	}
 

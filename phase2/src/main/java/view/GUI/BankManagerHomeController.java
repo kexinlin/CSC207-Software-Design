@@ -7,18 +7,26 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.*;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
+import model.persons.AccountOwner;
 import model.persons.Employee;
 import model.persons.Loginable;
 import model.persons.User;
 import model.transactions.Transaction;
 import model.transactors.Account;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,7 +34,7 @@ import java.util.Collection;
 public class BankManagerHomeController extends GUIHomeController {
 
 	private Employee getCurEmployee() {
-		return (Employee)getCurrentUser();
+		return (Employee) getCurrentUser();
 	}
 
 	@FXML
@@ -46,6 +54,8 @@ public class BankManagerHomeController extends GUIHomeController {
 	@FXML
 	TableColumn<Account, String> accOwner;
 	@FXML
+	TableColumn<Account, String> accCoOwners;
+	@FXML
 	TableColumn<Account, String> accType;
 	@FXML
 	TableColumn<Account, String> accNum;
@@ -53,17 +63,19 @@ public class BankManagerHomeController extends GUIHomeController {
 	TableColumn<Account, String> accBalance;
 	@FXML
 	TableColumn<Account, String> accDateOfCreation;
+	@FXML
+	TableColumn<Account, Void> accOperations;
 
 	@FXML
-	TableView<User> userTableView;
+	TableView<AccountOwner> userTableView;
 	@FXML
-	TableColumn<User, String> userName;
+	TableColumn<AccountOwner, String> userName;
 	@FXML
-	TableColumn<User, String> userUsername;
+	TableColumn<AccountOwner, String> userUsername;
 	@FXML
-	TableColumn<User, String> userPriChqAcc;
+	TableColumn<AccountOwner, String> userPriChqAcc;
 	@FXML
-	TableColumn<User, String> userNetTotal;
+	TableColumn<AccountOwner, String> userNetTotal;
 
 	@FXML
 	TableView<Transaction> transTableView;
@@ -89,7 +101,7 @@ public class BankManagerHomeController extends GUIHomeController {
 	@FXML
 	private final ObservableList<Account> accData = FXCollections.observableArrayList();
 	@FXML
-	private final ObservableList<User> userData = FXCollections.observableArrayList();
+	private final ObservableList<AccountOwner> userData = FXCollections.observableArrayList();
 	@FXML
 	private final ObservableList<Transaction> transData = FXCollections.observableArrayList();
 	@FXML
@@ -147,8 +159,17 @@ public class BankManagerHomeController extends GUIHomeController {
 
 		accTableView.setItems(accData);
 
-
 		accOwner.setCellValueFactory(accData -> new SimpleStringProperty(accData.getValue().getOwner().getUsername()));
+
+		accCoOwners.setCellValueFactory(accData -> {
+			StringBuilder coOwnerStr = new StringBuilder();
+			ArrayList<AccountOwner> coOwnerList = accData.getValue().getCoOwners();
+			for (AccountOwner owner : coOwnerList) {
+				coOwnerStr.append(owner.getUsername());
+				coOwnerStr.append(" ");
+			}
+			return new SimpleStringProperty(coOwnerStr.toString());
+		});
 
 		accType.setCellValueFactory(
 			new PropertyValueFactory<>("accountType")
@@ -166,6 +187,76 @@ public class BankManagerHomeController extends GUIHomeController {
 		SimpleDateFormat formatter = guiManager.getBankSystem().getDateFormmater();
 		accDateOfCreation.setCellValueFactory(accData ->
 			new SimpleStringProperty(formatter.format(accData.getValue().getDateOfCreation())));
+
+		accOperations.setCellFactory(param -> new TableCell<Account, Void>() {
+			private final Button addButton = new Button("add");
+			private final Button removeButton = new Button("remove");
+			private final HBox pane = new HBox(addButton, removeButton);
+
+			{
+				addButton.setOnAction(event -> {
+					Account acc = getTableView().getItems().get(getIndex());
+					String location = "/AddCoOwnerScene.fxml";
+					String title = "Add Co-Owner";
+					try {
+						FXMLLoader loader = new FXMLLoader(getClass().getResource(location));
+						Parent parent = loader.load();
+
+						GUIHomeController homeController = loader.getController();
+						homeController.setGUIManager(guiManager);
+						homeController.setCurrentUser(getCurrentUser());
+						((AddCoOwnerController) homeController).setAcc(acc);
+						homeController.show();
+
+						Stage stage = new Stage(StageStyle.DECORATED);
+						stage.setTitle(title);
+						homeController.setStage(stage);
+
+						stage.setScene(new Scene(parent));
+						stage.show();
+
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+
+				});
+
+				removeButton.setOnAction(event -> {
+					Account acc = getTableView().getItems().get(getIndex());
+					String location = "/RemoveCoOwnerScene.fxml";
+					String title = "Remove Co-Owner";
+					try {
+						FXMLLoader loader = new FXMLLoader(getClass().getResource(location));
+						Parent parent = loader.load();
+
+						GUIHomeController homeController = loader.getController();
+						homeController.setGUIManager(guiManager);
+						homeController.setCurrentUser(getCurrentUser());
+						((RemoveCoOwnerController) homeController).setAcc(acc);
+						homeController.show();
+
+						Stage stage = new Stage(StageStyle.DECORATED);
+						stage.setTitle(title);
+						homeController.setStage(stage);
+
+						stage.setScene(new Scene(parent));
+						stage.show();
+
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+
+				});
+			}
+
+			@Override
+			protected void updateItem(Void item, boolean empty) {
+				super.updateItem(item, empty);
+
+				setGraphic(empty ? null : pane);
+			}
+		});
+
 	}
 
 	@FXML
@@ -176,11 +267,11 @@ public class BankManagerHomeController extends GUIHomeController {
 
 		Collection<Loginable> loginableCollection = guiManager.getBankSystem().getLoginables().values();
 
-		ArrayList<User> userList = new ArrayList<>();
+		ArrayList<AccountOwner> userList = new ArrayList<>();
 
 		for (Loginable l : loginableCollection) {
-			if (l instanceof User) {
-				userList.add((User) l);
+			if (l instanceof AccountOwner) {
+				userList.add((AccountOwner) l);
 			}
 		}
 
@@ -206,7 +297,7 @@ public class BankManagerHomeController extends GUIHomeController {
 
 	@FXML
 	public void showTransTable() {
-		if (! getCurEmployee().can(ManagerAction.LIST_TX)) {
+		if (!getCurEmployee().can(ManagerAction.LIST_TX)) {
 			return;
 		}
 
@@ -332,7 +423,7 @@ public class BankManagerHomeController extends GUIHomeController {
 
 	@FXML
 	public void createAccountButtonOnClick(ActionEvent actionEvent) {
-		if (! getCurEmployee().can(ManagerAction.PROCESS_REQUESTS)) {
+		if (!getCurEmployee().can(ManagerAction.PROCESS_REQUESTS)) {
 			pDenied();
 			return;
 		}
@@ -341,7 +432,7 @@ public class BankManagerHomeController extends GUIHomeController {
 
 	@FXML
 	public void createUserButtonOnClick(ActionEvent actionEvent) {
-		if (! getCurEmployee().can(ManagerAction.ADD_USER)) {
+		if (!getCurEmployee().can(ManagerAction.ADD_USER)) {
 			pDenied();
 			return;
 		}
@@ -350,7 +441,7 @@ public class BankManagerHomeController extends GUIHomeController {
 
 	@FXML
 	public void setPriChqAccOnClick(ActionEvent actionEvent) {
-		if (! getCurEmployee().can(ManagerAction.CHANGE_USER_SETTINGS)) {
+		if (!getCurEmployee().can(ManagerAction.CHANGE_USER_SETTINGS)) {
 			pDenied();
 			return;
 		}
@@ -358,7 +449,6 @@ public class BankManagerHomeController extends GUIHomeController {
 			new BMSetPrimaryController(userTableView));
 	}
 
-	// FIXME is it rational for employees to do transactions for the user?
 	@FXML
 	public void withdrawOnClick(ActionEvent actionEvent) {
 		loadWindow("/BMWithdrawScene.fxml", "Cash Withdrawal");
@@ -406,7 +496,7 @@ public class BankManagerHomeController extends GUIHomeController {
 
 	@FXML
 	public void restockATMOnClick(ActionEvent actionEvent) {
-		if (! getCurEmployee().can(ManagerAction.STOCK_CASH)) {
+		if (!getCurEmployee().can(ManagerAction.STOCK_CASH)) {
 			pDenied();
 			return;
 		}

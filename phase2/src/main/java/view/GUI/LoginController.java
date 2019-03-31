@@ -1,6 +1,5 @@
 package view.GUI;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
@@ -14,8 +13,6 @@ import javafx.scene.layout.AnchorPane;
 import model.persons.AccountOwner;
 import model.persons.Employee;
 import model.persons.Loginable;
-import model.persons.User;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -65,11 +62,9 @@ public class LoginController extends GUIController {
 			"Login failed");
 		} else if (guiManager.getATM().login(username, password)) {
 			String resourceName;
-			// FIXME must also do UserEmployee's page.
-			//   Alternatively, let the user-employee choose an identity.
 			Loginable loginable = guiManager.getBankSystem().getLoginable(username);
 			if (loginable instanceof AccountOwner && loginable instanceof Employee) {
-				resourceName = "/ChooseRoleScene.fxml"; // FIXME let the person choose!
+				resourceName = "/ChooseRoleScene.fxml";
 			} else if (loginable instanceof AccountOwner) {
 				resourceName = "/UserHomeScene.fxml";
 			} else {
