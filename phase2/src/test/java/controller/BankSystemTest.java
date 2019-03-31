@@ -136,5 +136,11 @@ public class BankSystemTest {
 		// ... and does not go into CHQ account
 		assertEquals(0, chqAcc.getBalance()
 			.compareTo(chqOrigBalance.add(amountTransferred)));
+
+		bankSystem.undoTransaction(tx);
+
+		// after undo, the balance should be same as before...
+		assertEquals(0, locAcc.getBalance().compareTo(locOrigBalance));
+		assertEquals(0, chqAcc.getBalance().compareTo(chqOrigBalance));
 	}
 }
