@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import model.Money;
 import model.exceptions.NoEnoughMoneyException;
 import model.persons.AccountOwner;
+import model.transactions.Transaction;
 
 import java.util.Date;
 
@@ -134,5 +135,15 @@ public abstract class DebtAccount extends Account {
 	public void genStatement() {
 		setStatementBalance(getStatementBalance().add(getUsedCredit()));
 		setUsedCredit(new Money(0));
+	}
+
+	@Override
+	public Money getFeeFor(Transaction tx) {
+		Money cashAdvanceFee = new Money(5);
+		Money free = new Money(0);
+		if (! (tx.getDest() instanceof OutgoingBill)) {
+			return cashAdvanceFee;
+		}
+		return free;
 	}
 }

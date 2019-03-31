@@ -5,6 +5,6 @@ import model.transactions.Transaction;
 public class NormalFeeCalculator implements FeeCalculator {
 	@Override
 	public Money getFee(Transaction tx) {
-		return new Money(0);
+		return tx.getSource().getFeeFor(tx);
 	}
 }

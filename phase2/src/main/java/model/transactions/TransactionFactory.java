@@ -14,8 +14,8 @@ public class TransactionFactory {
 	 * @return
 	 */
 	public Transaction fromRecord(String data, BankSystem bankSystem) {
-		String[] entries = data.split(",", 4);
-		if (entries.length != 4) {
+		String[] entries = data.split(",", 5);
+		if (entries.length < 4) {
 			return null;
 		}
 
@@ -36,6 +36,15 @@ public class TransactionFactory {
 		} catch (NumberFormatException e) {
 			return null;
 		}
+		if (entries.length == 5) {
+			try {
+				double fee = Double.valueOf(entries[4]);
+				return new Transaction(new Money(amount), date, fromAcc,
+					toAcc, new Money(fee));
+			} catch (NumberFormatException e) {
+				return null;
+			}
+		}
 		return new Transaction(new Money(amount), date, fromAcc, toAcc);
 	}
 	public String toRecord(Transaction tx) {
@@ -44,6 +53,7 @@ public class TransactionFactory {
 			tx.getSource().getId(),
 			tx.getDest().getId(),
 			String.valueOf(tx.getDate().getTime()),
-			String.valueOf(tx.getAmount()));
+			String.valueOf(tx.getAmount()),
+			String.valueOf(tx.getFee()));
 	}
 }

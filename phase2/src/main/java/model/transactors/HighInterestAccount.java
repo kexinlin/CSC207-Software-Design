@@ -4,6 +4,7 @@ import model.Money;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
 import model.exceptions.NoTransactionException;
+import model.persons.AccountOwner;
 import model.transactions.Transaction;
 import model.persons.User;
 
@@ -65,5 +66,23 @@ public class HighInterestAccount extends AssetAccount {
 	@Override
 	public String getAccountType(){
 		return "HighInterestAccount";
+	}
+
+	@Override
+	public Money getFeeFor(Transaction tx) {
+		Money onePercentFee = new Money(tx.getAmount().getMoneyValue() * 0.01);
+		Money free = new Money(0);
+		if (! (tx.getDest() instanceof Account)) {
+			return onePercentFee;
+		}
+		if (((Account) tx.getDest()).isOwnedBy(getOwner())) {
+			return free;
+		}
+		for (AccountOwner owner : getCoOwners()) {
+			if (((Account) tx.getDest()).isOwnedBy(owner)) {
+				return free;
+			}
+		}
+		return onePercentFee;
 	}
 }

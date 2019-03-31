@@ -260,8 +260,7 @@ public class BankSystem {
 		if (tx.getSource() instanceof Account
 			&& tx.getDest() instanceof Account) {
 			Transaction reverseTx = new Transaction(tx.getAmount(), getCurrentTime(),
-				tx.getDest(), tx.getSource(),
-				"Reverted the following: " + tx.toString());
+				tx.getDest(), tx.getSource(), tx.getFee().getOpposite());
 			proceedTransaction(reverseTx);
 		} else {
 			throw new InvalidOperationException(
@@ -387,13 +386,20 @@ public class BankSystem {
 	 */
 	public void proceedTransaction(Transaction tx)
 		throws NoEnoughMoneyException, InvalidOperationException {
-		tx.getSource().takeMoneyOut(tx.getAmount());
+		Money sourceAmount = tx.getAmount();
+		Money destAmount = tx.getAmount();
+		if (tx.getFee().compareTo(new Money(0)) > 0) {
+			sourceAmount = sourceAmount.add(tx.getFee());
+		} else { // negative fee indicates that we are undoing a tx
+			destAmount = destAmount.subtract(tx.getFee());
+		}
+		tx.getSource().takeMoneyOut(sourceAmount);
 		try {
-			tx.getDest().putMoneyIn(tx.getAmount());
+			tx.getDest().putMoneyIn(destAmount);
 		} catch (InvalidOperationException e) {
 			// if dest cannot receive the money (e.g. there is not enough cash
 			// in the machine), revert this
-			tx.getSource().putMoneyIn(tx.getAmount());
+			tx.getSource().putMoneyIn(sourceAmount);
 			throw e;
 		}
 

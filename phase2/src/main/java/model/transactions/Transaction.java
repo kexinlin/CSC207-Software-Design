@@ -1,6 +1,8 @@
 package model.transactions;
 
+import model.FeeCalculator;
 import model.Money;
+import model.NormalFeeCalculator;
 import model.transactors.Transactor;
 
 import java.text.SimpleDateFormat;
@@ -11,6 +13,7 @@ public class Transaction {
 	private Date transTime;
 	private Transactor source, dest;
 	private String comment;
+	private Money fee;
 
 	/**
 	 * Construct a new Transaction.
@@ -26,7 +29,19 @@ public class Transaction {
 		this.source = source;
 		this.dest = dest;
 		this.comment = "";
+		FeeCalculator calc = new NormalFeeCalculator();
+		this.fee = calc.getFee(this);
 	}
+
+	public Transaction(Money amount, Date time, Transactor source, Transactor dest, Money fee) {
+		this.amount = amount;
+		this.transTime = time;
+		this.source = source;
+		this.dest = dest;
+		this.comment = "";
+		this.fee = fee;
+	}
+
 
 	public Transaction(Money amount, Date time, Transactor source, Transactor dest, String comment) {
 		this.amount = amount;
@@ -34,6 +49,8 @@ public class Transaction {
 		this.source = source;
 		this.dest = dest;
 		this.comment = comment;
+		FeeCalculator calc = new NormalFeeCalculator();
+		this.fee = calc.getFee(this);
 	}
 
 	/**
@@ -75,6 +92,10 @@ public class Transaction {
 	 */
 	public Transactor getDest() {
 		return dest;
+	}
+
+	public Money getFee() {
+		return fee;
 	}
 
 	/**

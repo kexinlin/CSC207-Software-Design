@@ -3,6 +3,7 @@ package model.transactors;
 import model.Money;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
+import model.transactions.Transaction;
 
 import java.util.Observable;
 
@@ -39,4 +40,12 @@ public abstract class Transactor extends Observable {
 	 * @param amount the amount of money to put in
 	 */
 	public abstract void putMoneyIn(Money amount) throws InvalidOperationException;
+
+	/**
+	 * Get the fee for a transaction taking money from this account.
+	 * @return
+	 */
+	public Money getFeeFor(Transaction ignored) {
+		return new Money(0);
+	}
 }
