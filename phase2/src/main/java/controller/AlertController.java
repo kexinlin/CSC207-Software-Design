@@ -58,7 +58,7 @@ class AlertController {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
 			writer.write(bankSystem.getCurrentTimeStr() + ": ATM replenishment needed. " +
-				cashSummary.toString());
+				cashSummary.toString() + "\n");
 			writer.close();
 		} catch (IOException e) {
 			System.err.println("Cannot write alert." + e);
