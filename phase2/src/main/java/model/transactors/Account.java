@@ -201,4 +201,13 @@ public abstract class Account extends Transactor {
 	 */
 	public abstract int balanceFactor();
 
+	/**
+	 * This function cannot be overrode by subclasses
+	 * used to get the balance in the constructor.
+	 * Used in record controller to get information.
+	 * @return
+	 */
+	public final Money getActualBalance() {
+		return balance.getValue();
+	}
 }

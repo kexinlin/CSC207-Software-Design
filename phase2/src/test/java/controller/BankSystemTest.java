@@ -77,10 +77,10 @@ public class BankSystemTest {
 		debtAcc.setDebtLimit(new Money(200));
 		debtAcc.takeMoneyOut(new Money(20));
 		bankSystem.close(); // will have a statement
-		assertEquals(20, debtAcc.getBalance().getMoneyValue(), 0.001);
+		assertEquals(20, debtAcc.getStatementBalance().getMoneyValue(), 0.001);
 		debtAcc.takeMoneyOut(new Money(50));
 		bankSystem.close(); // will have another statement
-		assertEquals(70, debtAcc.getBalance().getMoneyValue(), 0.001);
+		assertEquals(70, debtAcc.getStatementBalance().getMoneyValue(), 0.001);
 	}
 
 	@Test
@@ -95,7 +95,7 @@ public class BankSystemTest {
 		debtAcc.takeMoneyOut(new Money(50));
 		debtAcc.setInterestRate(0.1);
 		bankSystem.close(); // will generate a statement
-		assertEquals(50, debtAcc.getBalance().getMoneyValue(), 0.001);
+		assertEquals(50, debtAcc.getStatementBalance().getMoneyValue(), 0.001);
 
 		// make next day the pay day
 		bankSystem.setCurrentTime(beforePayDay());
@@ -107,7 +107,7 @@ public class BankSystemTest {
 		bankSystem.close();
 
 		assertEquals(40 * (1 + 0.1),
-			debtAcc.getBalance().getMoneyValue(), 0.001);
+			debtAcc.getStatementBalance().getMoneyValue(), 0.001);
 
 	}
 }
