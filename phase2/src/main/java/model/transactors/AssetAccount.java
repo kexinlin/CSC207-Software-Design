@@ -32,6 +32,6 @@ public abstract class AssetAccount extends Account {
 	 */
 	@Override
 	public void putMoneyIn(Money amount) {
-		this.balance.setValue(this.balance.getValue().add(amount));
+		setBalance(getBalance().add(amount));
 	}
 }

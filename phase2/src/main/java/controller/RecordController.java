@@ -50,6 +50,7 @@ class RecordController {
 	 * msg,USERNAME,MESSAGE-TEXT
 	 * set,primary-acc,USERNAME,ACC-ID
 	 * set,co-owners,ACC-ID,USERNAME1,USERNAME2,...
+	 * set,used-credit,DEBT-ACC-ID,AMOUNT
 	 */
 	public void readRecords() {
 		File file = getRecordFile();
@@ -158,6 +159,24 @@ class RecordController {
 			} catch (AccountNotExistException ignore) {
 
 			}
+		} else if (entries[0].equals("used-credit")) {
+			String[] arr = entries[1].split(",", 2);
+			if (arr.length < 2) {
+				return;
+			}
+			String accountId = arr[0];
+			Account acc;
+			double val;
+			try {
+				acc = bankSystem.getAccountById(accountId);
+				val = Double.valueOf(arr[1]);
+			} catch (NumberFormatException|AccountNotExistException e) {
+				return;
+			}
+			if (! (acc instanceof DebtAccount)) {
+				return;
+			}
+			((DebtAccount) acc).setUsedCredit(new Money(val));
 		}
 
 	}
@@ -420,6 +439,10 @@ class RecordController {
 			 + String.join(",",
 				coOwners.stream().map(o -> o.getUsername()).toArray( n -> new String[n] ))
 			 + "\n");
+		}
+		if (account instanceof DebtAccount) {
+			writer.write("set,used-credit," +
+				account.getId() + "," + ((DebtAccount) account).getUsedCredit() + "\n");
 		}
 	}
 

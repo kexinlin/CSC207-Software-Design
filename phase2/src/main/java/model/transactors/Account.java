@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.Date;
 
 public abstract class Account extends Transactor {
-	final SimpleObjectProperty<Money> balance;
+	final private SimpleObjectProperty<Money> balance;
 	final private SimpleObjectProperty<Date> dateOfCreation;
 	final private SimpleStringProperty accountId;
 	private AccountOwner primaryOwner;

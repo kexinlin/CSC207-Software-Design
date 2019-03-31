@@ -65,15 +65,30 @@ public class BankSystem {
 	 * save records to file.
 	 */
 	public void close() {
+		int statementDay = 1;
+		int payDay = 15;
 		Calendar cal = new Calendar.Builder().build();
 		cal.setTime(getCurrentTime());
 		// proceed to the next day, since the system shuts down at midnight
 		cal.add(Calendar.DAY_OF_MONTH, 1);
-		// on the first day of each month, gain interest.
-		if (cal.get(Calendar.DAY_OF_MONTH) == 1) {
+
+		if (cal.get(Calendar.DAY_OF_MONTH) == statementDay) {
+			// on the first day of each month, gain interest
+			// as well as notice user of their debt accounts' statement balance
 			accounts.values().forEach(a -> {
 				if (a instanceof SavingAccount) {
 					((SavingAccount) a).increaseInterest();
+				}
+				if (a instanceof DebtAccount) {
+					((DebtAccount) a).genStatement();
+				}
+			});
+		}
+
+		if (cal.get(Calendar.DAY_OF_MONTH) == payDay) {
+			accounts.values().forEach(a -> {
+				if (a instanceof DebtAccount) {
+					((DebtAccount) a).gainInterest();
 				}
 			});
 		}

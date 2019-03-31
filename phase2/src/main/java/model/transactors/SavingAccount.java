@@ -31,19 +31,19 @@ public class SavingAccount extends AssetAccount {
 	 */
 	@Override
 	public void takeMoneyOut(Money amount) throws NoEnoughMoneyException {
-		if (this.balance.getValue().compareTo(amount) < 0) {
+		if (getBalance().compareTo(amount) < 0) {
 			throw new NoEnoughMoneyException("Sorry, operation failed. " +
 				"The amount exceeds existing balance in this account");
 		}
-		this.balance.setValue(this.balance.getValue().subtract(amount));
+		setBalance(getBalance().subtract(amount));
 	}
 
 	/**
 	 * Increase the saving account balance bt a factor of 0.1%.
 	 */
 	public void increaseInterest() {
-		Money interest = new Money(this.balance.getValue().getMoneyValue() * interestRate);
-		this.balance.setValue(this.balance.getValue().add(interest));
+		Money interest = new Money(getBalance().getMoneyValue() * interestRate);
+		setBalance(getBalance().add(interest));
 	}
 
 	/**
