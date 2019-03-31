@@ -126,16 +126,14 @@ public abstract class Account extends Transactor {
 			|| getCoOwners().contains(owner);
 	}
 
-	public boolean checkIsCoOwner(AccountOwner owner){
-		return getCoOwners().contains(owner);
-	}
-
 	public ArrayList<AccountOwner> getCoOwners() {
 		return coOwners;
 	}
 
 	public void addCoOwner(AccountOwner owner) {
-		coOwners.add(owner);
+		if (!isOwnedBy(owner)) {
+			coOwners.add(owner);
+		}
 	}
 
 
@@ -205,6 +203,7 @@ public abstract class Account extends Transactor {
 	 * This function cannot be overrode by subclasses
 	 * used to get the balance in the constructor.
 	 * Used in record controller to get information.
+	 *
 	 * @return
 	 */
 	public final Money getActualBalance() {

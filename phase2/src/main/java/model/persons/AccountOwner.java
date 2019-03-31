@@ -17,6 +17,7 @@ public abstract class AccountOwner implements Loginable {
 	private int age = 0;
 	private int income = 0;
 	private String email;
+
 	/**
 	 * Constructs a user object.
 	 *
@@ -33,11 +34,12 @@ public abstract class AccountOwner implements Loginable {
 
 	/**
 	 * Constructs a user object with income, age, and email info
+	 *
 	 * @param username the username of this user
 	 * @param password the password of this user
-	 * @param age	the age of this user
-	 * @param income the income of this user
-	 * @param email the email address of this user
+	 * @param age      the age of this user
+	 * @param income   the income of this user
+	 * @param email    the email address of this user
 	 */
 	public AccountOwner(String name, String username, String password, int age, int income, String email) {
 		this.name = name;
@@ -173,7 +175,9 @@ public abstract class AccountOwner implements Loginable {
 	 * @param acc the account to add
 	 */
 	public void addAccount(Account acc) {
-		this.accounts.add(acc);
+		if (!this.accounts.contains(acc)) {
+			this.accounts.add(acc);
+		}
 	}
 
 	/**
@@ -233,6 +237,7 @@ public abstract class AccountOwner implements Loginable {
 	}
 
 
-
-	public String getEmail(){return this.email;}
+	public String getEmail() {
+		return this.email;
+	}
 }
