@@ -179,7 +179,19 @@
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <Button layoutX="25.0" layoutY="207.0" mnemonicParsing="false" onAction="#restockATMOnClick" text="restock ATM" />
+                        <Button layoutX="25.0" layoutY="196.0" mnemonicParsing="false" onAction="#restockATMOnClick" text="restock ATM" />
+                        <Button layoutX="24.0" layoutY="336.0" mnemonicParsing="false" onAction="#setTimeOnClick" text="Set current time" />
+                        <DatePicker fx:id="datePicker" layoutX="24.0" layoutY="290.0" />
+                        <Label fx:id="fiveDollar1" layoutX="27.0" layoutY="256.0" text="Current date:">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="currentDate" layoutX="151.0" layoutY="256.0" text="Label">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
                      </children>
                   </AnchorPane>
                </content>
