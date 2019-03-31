@@ -27,6 +27,7 @@ public class AccountCreationController extends GUIHomeController {
 			"bank managers to process it.");
 		alert.setHeaderText("Request sent");
 		alert.show();
+		getStage().close();
 	}
 
 	@FXML

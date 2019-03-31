@@ -271,12 +271,13 @@ public class ATM {
 	 * @throws InsufficientCashException if the atm does not have enough cash
 	 * @throws NoEnoughMoneyException if the account does not have enough fund
 	 */
-	public void withdrawMoney(Account acc, double amount)
+	public Transaction withdrawMoney(Account acc, double amount)
 		throws InvalidOperationException, InsufficientCashException, NoEnoughMoneyException {
 		CashCollection col = getCashController().getCashToWithdraw(amount);
 		Transaction tx = new Transaction(col, getBankSystem().getCurrentTime(),
 			acc, envelope);
 		getBankSystem().proceedTransaction(tx);
+		return tx;
 	}
 
 	public MoneyEnvelope getEnvelope() {
@@ -289,7 +290,7 @@ public class ATM {
 	 * account. Records the transaction.
 	 * @param acc the account to deposit.
 	 */
-	public void depositMoney(Account acc)
+	public Transaction depositMoney(Account acc)
 		throws InvalidOperationException {
 		Money money = getDepositController().getDepositMoney();
 		Transaction tx = new Transaction(money, getBankSystem().getCurrentTime(),
@@ -300,6 +301,7 @@ public class ATM {
 			e.printStackTrace();
 			throw new InvalidOperationException("This should not happen.");
 		}
+		return tx;
 	}
 
 	/**

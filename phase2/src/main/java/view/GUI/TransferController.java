@@ -10,6 +10,7 @@ import model.exceptions.InsufficientCashException;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
 import model.persons.User;
+import model.transactions.Transaction;
 import model.transactors.Account;
 
 import java.util.ArrayList;
@@ -76,9 +77,10 @@ public class TransferController extends GUIHomeController {
 		}
 
 		try {
-			guiManager.getBankSystem().transferMoney(srcAccount,desAccount,amount);
+			Transaction trans = guiManager.getBankSystem().transferMoney(srcAccount, desAccount, amount);
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
-			alert.setContentText("Succeeded. You can now check your new account balance");
+			alert.setContentText("Succeeded. You can now check your new account balance. Please note that $"
+				+ trans.getFee() + " of service fee is deducted.");
 			alert.setHeaderText("Process succeeded");
 			alert.show();
 			getStage().close();

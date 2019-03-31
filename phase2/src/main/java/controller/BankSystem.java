@@ -290,7 +290,7 @@ public class BankSystem {
 	 * @throws InvalidOperationException when attempting to transfer out from CreditCardAccount
 	 * @throws NoEnoughMoneyException    when amount of money transferred out exceeds what is allowed
 	 */
-	public void transferMoney(Account fromAcc, Account toAcc, double amount)
+	public Transaction transferMoney(Account fromAcc, Account toAcc, double amount)
 		throws InvalidOperationException, NoEnoughMoneyException {
 
 		if (fromAcc instanceof CreditCardAccount) {
@@ -301,6 +301,7 @@ public class BankSystem {
 		Transaction newTrans = new Transaction(new Money(amount),
 			getCurrentTime(), fromAcc, toAcc);
 		proceedTransaction(newTrans);
+		return newTrans;
 	}
 
 	/**
@@ -502,11 +503,12 @@ public class BankSystem {
 	 * @param payeeName
 	 * @param amount
 	 */
-	public void payBill(Account source, String payeeName, double amount)
+	public Transaction payBill(Account source, String payeeName, double amount)
 		throws NoEnoughMoneyException, InvalidOperationException {
 		Transactor payee = getTransactor("<bill-" + payeeName + ">");
-		proceedTransaction(
-			new Transaction(new Money(amount), getCurrentTime(), source, payee));
+		Transaction trans = new Transaction(new Money(amount), getCurrentTime(), source, payee);
+		proceedTransaction(trans);
+		return trans;
 	}
 
 	public ArrayList<String> getAllAccountType(){

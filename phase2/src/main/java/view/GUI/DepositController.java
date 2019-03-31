@@ -7,6 +7,7 @@ import javafx.scene.control.ChoiceBox;
 import model.exceptions.AccountNotExistException;
 import model.exceptions.InvalidOperationException;
 import model.persons.User;
+import model.transactions.Transaction;
 import model.transactors.Account;
 
 import java.util.ArrayList;
@@ -35,9 +36,10 @@ public class DepositController extends GUIHomeController {
 		}
 
 		try {
-			guiManager.getATM().depositMoney(acc);
+			Transaction trans = guiManager.getATM().depositMoney(acc);
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
-			alert.setContentText("Succeeded. You can now check the new balance.");
+			alert.setContentText("Succeeded. You can now check the new balance. Please note that $"
+				+ trans.getFee() + " of service fee is deducted.");
 			alert.setHeaderText("Process succeeded");
 			alert.show();
 			getStage().close();
