@@ -10,12 +10,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
-import model.Cash;
-import model.CashCollection;
-import model.Money;
-import model.Request;
+import model.*;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
+import model.persons.Employee;
 import model.persons.Loginable;
 import model.persons.User;
 import model.transactions.Transaction;
@@ -26,6 +24,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class BankManagerHomeController extends GUIHomeController {
+
+	private Employee getCurEmployee() {
+		return (Employee)getCurrentUser();
+	}
 
 	@FXML
 	Label username;
@@ -102,6 +104,12 @@ public class BankManagerHomeController extends GUIHomeController {
 	@FXML
 	private final SimpleStringProperty fiftyDollarAmount = new SimpleStringProperty();
 
+	/**
+	 * Generates a "Permission denied" error dialog.
+	 */
+	private void pDenied() {
+		err("You are not allowed to do this.", "Permission denied");
+	}
 
 	@FXML
 	public void showUserName() {
@@ -111,6 +119,10 @@ public class BankManagerHomeController extends GUIHomeController {
 
 	@FXML
 	public void showDollarAmount() {
+		if (!getCurEmployee().can(ManagerAction.SHOW_CASH)) {
+			fiveDollar.setText("You are not allowed to see the number of cash in the machine.");
+			return;
+		}
 		fiveDollarAmount.setValue(String.valueOf((guiManager.getATM().getBillAmount().get(Cash.FIVE))));
 		fiveDollar.textProperty().bind(fiveDollarAmount);
 
@@ -122,7 +134,6 @@ public class BankManagerHomeController extends GUIHomeController {
 
 		fiftyDollarAmount.setValue(String.valueOf((guiManager.getATM().getBillAmount().get(Cash.FIFTY))));
 		fiftyDollar.textProperty().bind(fiftyDollarAmount);
-
 	}
 
 	@FXML
@@ -159,6 +170,9 @@ public class BankManagerHomeController extends GUIHomeController {
 
 	@FXML
 	public void showUserTable() {
+		if (!getCurEmployee().can(ManagerAction.LIST_USER)) {
+			return;
+		}
 
 		Collection<Loginable> loginableCollection = guiManager.getBankSystem().getLoginables().values();
 
@@ -192,6 +206,9 @@ public class BankManagerHomeController extends GUIHomeController {
 
 	@FXML
 	public void showTransTable() {
+		if (! getCurEmployee().can(ManagerAction.LIST_TX)) {
+			return;
+		}
 
 		ArrayList<Transaction> transList = guiManager.getBankSystem().getTransactions();
 
@@ -248,6 +265,9 @@ public class BankManagerHomeController extends GUIHomeController {
 
 	@FXML
 	public void showRequestTable() {
+		if (!getCurEmployee().can(ManagerAction.PROCESS_REQUESTS)) {
+			return;
+		}
 		ArrayList<Request> requestList = guiManager.getBankSystem().getRequests();
 
 		requestData.addAll(requestList);
@@ -312,20 +332,33 @@ public class BankManagerHomeController extends GUIHomeController {
 
 	@FXML
 	public void createAccountButtonOnClick(ActionEvent actionEvent) {
+		if (! getCurEmployee().can(ManagerAction.PROCESS_REQUESTS)) {
+			pDenied();
+			return;
+		}
 		loadWindow("/NewAccountCreationScene.fxml", "Account Creation Request");
 	}
 
 	@FXML
 	public void createUserButtonOnClick(ActionEvent actionEvent) {
+		if (! getCurEmployee().can(ManagerAction.ADD_USER)) {
+			pDenied();
+			return;
+		}
 		loadWindow("/NewUserCreationScene.fxml", "New User Creation");
 	}
 
 	@FXML
 	public void setPriChqAccOnClick(ActionEvent actionEvent) {
+		if (! getCurEmployee().can(ManagerAction.CHANGE_USER_SETTINGS)) {
+			pDenied();
+			return;
+		}
 		loadWindow("/BMSetPrimaryScene.fxml", "Set Primary Account",
 			new BMSetPrimaryController(userTableView));
 	}
 
+	// FIXME is it rational for employees to do transactions for the user?
 	@FXML
 	public void withdrawOnClick(ActionEvent actionEvent) {
 		loadWindow("/BMWithdrawScene.fxml", "Cash Withdrawal");
@@ -373,6 +406,10 @@ public class BankManagerHomeController extends GUIHomeController {
 
 	@FXML
 	public void restockATMOnClick(ActionEvent actionEvent) {
+		if (! getCurEmployee().can(ManagerAction.STOCK_CASH)) {
+			pDenied();
+			return;
+		}
 
 		try {
 			Money m = guiManager.getATM().getDepositController().getDepositMoney();

@@ -11,6 +11,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import model.persons.AccountOwner;
+import model.persons.Employee;
+import model.persons.Loginable;
 import model.persons.User;
 
 import java.io.IOException;
@@ -64,7 +67,10 @@ public class LoginController extends GUIController {
 			String resourceName;
 			// FIXME must also do UserEmployee's page.
 			//   Alternatively, let the user-employee choose an identity.
-			if (guiManager.getBankSystem().getLoginable(username) instanceof User) {
+			Loginable loginable = guiManager.getBankSystem().getLoginable(username);
+			if (loginable instanceof AccountOwner && loginable instanceof Employee) {
+				resourceName = "/BankManagerHomeScene.fxml"; // FIXME let the person choose!
+			} else if (loginable instanceof AccountOwner) {
 				resourceName = "/UserHomeScene.fxml";
 			} else {
 				resourceName = "/BankManagerHomeScene.fxml";
