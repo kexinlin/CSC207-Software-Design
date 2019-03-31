@@ -47,7 +47,7 @@ public class NewUserCreationController extends GUIHomeController {
 		alert.setContentText("This new user has been added to bank system.");
 		alert.setHeaderText("Process succeeded");
 		alert.show();
-
+		getStage().close();
 	}
 
 	@FXML

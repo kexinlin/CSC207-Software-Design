@@ -75,6 +75,7 @@ public class BMTransferController extends GUIHomeController {
 			alert.setContentText("Succeeded. You can now check the new account balance");
 			alert.setHeaderText("Process succeeded");
 			alert.show();
+			getStage().close();
 		} catch (InvalidOperationException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setContentText("An error occurred during transaction. Please note " +

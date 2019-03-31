@@ -69,6 +69,7 @@ public class PayBillController extends GUIHomeController {
 			alert.setContentText("Succeeded. You can now check your new account balance");
 			alert.setHeaderText("Process succeeded");
 			alert.show();
+			getStage().close();
 		} catch (InvalidOperationException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setContentText("An error occurred during transaction.");

@@ -56,6 +56,7 @@ public class WithdrawController extends GUIHomeController {
 			alert.setContentText("Succeeded. Please take your money.");
 			alert.setHeaderText("Process succeeded");
 			alert.show();
+			getStage().close();
 		} catch (InvalidOperationException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setContentText("An error occurred during withdrawal.");

@@ -72,7 +72,7 @@ public class BMSetPrimaryController extends GUIHomeController {
 			return;
 		}
 
-		if(acc.isOwnedBy(owner)){
+		if(!acc.isOwnedBy(owner)){
 			err("Owner of input account does not match input username.",
 				"Process failed");
 			return;

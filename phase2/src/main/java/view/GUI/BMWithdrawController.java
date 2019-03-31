@@ -59,6 +59,7 @@ public class BMWithdrawController extends GUIHomeController {
 			alert.setContentText("Succeeded. Please take the money.");
 			alert.setHeaderText("Process succeeded");
 			alert.show();
+			getStage().close();
 		} catch (InvalidOperationException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setContentText("An error occurred during withdrawal.");

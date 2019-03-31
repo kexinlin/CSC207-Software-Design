@@ -58,6 +58,7 @@ public class NewAccountCreationController extends GUIHomeController {
 		alert.setContentText("New account has been created.");
 		alert.setHeaderText("Process succeeded");
 		alert.show();
+		getStage().close();
 	}
 
 	@FXML

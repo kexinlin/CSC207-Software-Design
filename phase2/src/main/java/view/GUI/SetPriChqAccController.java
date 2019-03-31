@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import model.exceptions.AccountNotExistException;
 import model.exceptions.InvalidOperationException;
+import model.persons.AccountOwner;
 import model.persons.User;
 import model.transactors.Account;
 import model.transactors.ChequingAccount;
@@ -37,10 +38,10 @@ public class SetPriChqAccController extends GUIHomeController {
 
 		((User) getCurrentUser()).setPrimaryCheuqingAccount((ChequingAccount) acc);
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setContentText("Succeeded. You can see your new primary chequing account by " +
-			"switching back to \"My Profiles\" tab to refresh.");
+		alert.setContentText("Your new primary chequing has been updated.");
 		alert.setHeaderText("Process succeeded");
 		alert.show();
+		getStage().close();
 	}
 
 	@FXML
