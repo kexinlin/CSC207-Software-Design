@@ -1,0 +1,44 @@
+user,Kexin Lin,klin,123
+manager,m1,111
+user,Test Name,test,111
+manager,mgr1,lolol
+user,David Liu,u1,xxx
+user-employee,Lindsey Shorser,e1,111
+account,sav,0.0,1553618028744,245549,klin
+set,min-balance,245549,0.0
+account,chq,0.0,1553565730258,634104,u1
+account,chq,50.0,1552098056150,137269,klin
+account,cre,0.0,1552098056134,939736,klin
+set,used-credit,939736,0.0
+account,sav,0.0,1554041004804,907983,test
+set,co-owners,907983,klin,u1
+set,min-balance,907983,0.0
+account,hii,0.0,1554070993912,240034,test
+set,min-balance,240034,0.0
+account,hii,0.0,1554071062799,814568,klin
+set,min-balance,814568,0.0
+account,chq,50.0,1552098056134,127123,klin
+account,cre,-410.0,1552098056134,939000,u1
+set,used-credit,939000,0.0
+account,chq,340.0,1552098056134,127000,u1
+account,chq,0.0,1553654641129,894877,test
+tx,127000,939000,1553389371352,2.0,0.0
+tx,939000,127000,1553390746695,2.0,5.0
+tx,127000,<envelope>,1553542688732,20.0,0.0
+tx,<envelope>,939000,1553546963469,410.0,0.0
+tx,<envelope>,127000,1553546963469,410.0,0.0
+tx,127000,<bill-Jaxon>,1553565730258,100.0,0.0
+req,test,Line Of Credit Account,Requested Sun Mar 31 10:12:41 EDT 2019
+msg,klin,Your request to create a account of type Saving Account was accepted at 2019-03-26 12:33:48
+msg,klin,Your request to create a account of type Credit Card Account was declined at 2019-03-26 12:51:01
+msg,test,Your request to create a account of type Chequing Account was accepted at 2019-03-26 22:44:01
+msg,test,Your request to create a account of type Saving Account was accepted at 2019-03-31
+msg,test,Your request to create a account of type HighInterestAccount was accepted at 2019-03-31
+msg,klin,Your balance of account 939736 is now 0.0. You need to pay before the start of the 15th of this month.
+msg,u1,Your balance of account 939000 is now -410.0. You need to pay before the start of the 15th of this month.
+msg,klin,Your request to create a account of type HighInterestAccount was accepted at 2019-03-31
+msg,klin,Your balance of account 939736 is now 0.0. You need to pay before the start of the 15th of this month.
+msg,u1,Your balance of account 939000 is now -410.0. You need to pay before the start of the 15th of this month.
+set,primary-acc,klin,127123
+set,primary-acc,test,894877
+set,primary-acc,u1,127000
