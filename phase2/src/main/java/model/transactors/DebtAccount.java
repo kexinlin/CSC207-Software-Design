@@ -2,11 +2,13 @@ package model.transactors;
 
 import javafx.beans.property.SimpleObjectProperty;
 import model.Money;
+import model.exceptions.NoEnoughMoneyException;
 import model.persons.AccountOwner;
 
 import java.util.Date;
 
 public abstract class DebtAccount extends Account {
+	private Money debtLimit;
 	/**
 	 * Create an instance of account
 	 * @param balance the balance of the account
@@ -16,7 +18,14 @@ public abstract class DebtAccount extends Account {
 	 */
 	DebtAccount(Money balance, Date dateOfCreation, String accountId, AccountOwner owner) {
 		super(balance, dateOfCreation, accountId, owner);
+		debtLimit = new Money(500);
 	}
+
+	public void setDebtLimit(Money m) {
+		debtLimit = m;
+	}
+
+	public Money getDebtLimit() { return debtLimit; }
 
 	/**
 	 * Take money out of the credit card account.
@@ -24,8 +33,12 @@ public abstract class DebtAccount extends Account {
 	 * @param amount the amount of money to take out.
 	 */
 	@Override
-	public void takeMoneyOut(Money amount) {
-		this.balance.setValue(this.balance.getValue().add(amount));
+	public void takeMoneyOut(Money amount) throws NoEnoughMoneyException {
+		if (amount.compareTo(debtLimit) <= 0) {
+			this.balance.setValue(this.balance.getValue().add(amount));
+		} else {
+			throw new NoEnoughMoneyException("The amount exceeds the debt limit.");
+		}
 	}
 
 	/**
