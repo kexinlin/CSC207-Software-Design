@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
 import model.*;
 import model.exceptions.InvalidOperationException;
 import model.exceptions.NoEnoughMoneyException;
+import model.persons.AccountOwner;
 import model.persons.Employee;
 import model.persons.Loginable;
 import model.persons.User;
@@ -46,6 +47,8 @@ public class BankManagerHomeController extends GUIHomeController {
 	@FXML
 	TableColumn<Account, String> accOwner;
 	@FXML
+	TableColumn<Account, String> accCoOwners;
+	@FXML
 	TableColumn<Account, String> accType;
 	@FXML
 	TableColumn<Account, String> accNum;
@@ -53,17 +56,19 @@ public class BankManagerHomeController extends GUIHomeController {
 	TableColumn<Account, String> accBalance;
 	@FXML
 	TableColumn<Account, String> accDateOfCreation;
+	@FXML
+	TableColumn<Account, Void> accOperations;
 
 	@FXML
-	TableView<User> userTableView;
+	TableView<AccountOwner> userTableView;
 	@FXML
-	TableColumn<User, String> userName;
+	TableColumn<AccountOwner, String> userName;
 	@FXML
-	TableColumn<User, String> userUsername;
+	TableColumn<AccountOwner, String> userUsername;
 	@FXML
-	TableColumn<User, String> userPriChqAcc;
+	TableColumn<AccountOwner, String> userPriChqAcc;
 	@FXML
-	TableColumn<User, String> userNetTotal;
+	TableColumn<AccountOwner, String> userNetTotal;
 
 	@FXML
 	TableView<Transaction> transTableView;
@@ -89,7 +94,7 @@ public class BankManagerHomeController extends GUIHomeController {
 	@FXML
 	private final ObservableList<Account> accData = FXCollections.observableArrayList();
 	@FXML
-	private final ObservableList<User> userData = FXCollections.observableArrayList();
+	private final ObservableList<AccountOwner> userData = FXCollections.observableArrayList();
 	@FXML
 	private final ObservableList<Transaction> transData = FXCollections.observableArrayList();
 	@FXML
@@ -147,8 +152,17 @@ public class BankManagerHomeController extends GUIHomeController {
 
 		accTableView.setItems(accData);
 
-
 		accOwner.setCellValueFactory(accData -> new SimpleStringProperty(accData.getValue().getOwner().getUsername()));
+
+		accCoOwners.setCellValueFactory(accData -> {
+			StringBuilder coOwnerStr = new StringBuilder();
+			ArrayList<AccountOwner> coOwnerList = accData.getValue().getCoOwners();
+			for(AccountOwner owner:coOwnerList){
+				coOwnerStr.append(owner.getUsername());
+				coOwnerStr.append(" ");
+			}
+			return new SimpleStringProperty(coOwnerStr.toString());
+		});
 
 		accType.setCellValueFactory(
 			new PropertyValueFactory<>("accountType")
@@ -162,6 +176,7 @@ public class BankManagerHomeController extends GUIHomeController {
 		accDateOfCreation.setCellValueFactory(
 			new PropertyValueFactory<>("dateOfCreation")
 		);
+
 
 		SimpleDateFormat formatter = guiManager.getBankSystem().getDateFormmater();
 		accDateOfCreation.setCellValueFactory(accData ->
