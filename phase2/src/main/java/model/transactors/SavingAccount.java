@@ -40,7 +40,7 @@ public class SavingAccount extends AssetAccount {
 
 	@Override
 	public boolean hasInterest() {
-		return false;
+		return true;
 	}
 	/**
 	 * Increase the saving account balance bt a factor of 0.1%.
