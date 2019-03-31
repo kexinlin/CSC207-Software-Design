@@ -23,7 +23,7 @@ public class HighInterestAccount extends AssetAccount {
 	 * @param accountId      account id
 	 * @param owner          owner of the account
 	 */
-	public HighInterestAccount(Money balance, Date dateOfCreation, String accountId, User owner) {
+	public HighInterestAccount(Money balance, Date dateOfCreation, String accountId, AccountOwner owner) {
 		super(balance, dateOfCreation, accountId, owner);
 		this.interestRate = 0.5/100;
 	}

@@ -40,6 +40,11 @@ public class AccountFactory {
 			case "Line Of Credit Account":
 				return new LineOfCreditAccount(balance, time, accountId, owner);
 
+			case "hii":
+			case "HighInterestAccount":
+			case "High Interest Account":
+				return new HighInterestAccount(balance, time, accountId, owner);
+
 			default:
 				return null;
 		}
@@ -59,8 +64,9 @@ public class AccountFactory {
 			return "cre";
 		} else if (account instanceof LineOfCreditAccount) {
 			return "loc";
-		} else {
-			return null;
+		} else if (account instanceof HighInterestAccount) {
+			return "hii";
 		}
+		return null;
 	}
 }
