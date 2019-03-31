@@ -429,7 +429,7 @@ class RecordController {
 	private void recordAccount(BufferedWriter writer, Account account) throws IOException {
 		writer.write("account,"
 			+ accountFactory.getAccountType(account) + ","
-			+ account.getBalance() + ","
+			+ account.getActualBalance() + ","
 			+ account.getDateOfCreation().getTime() + ","
 			+ account.getId() + ","
 			+ account.getOwner().getUsername() + "\n");

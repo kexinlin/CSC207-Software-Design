@@ -49,7 +49,7 @@ public abstract class DebtAccount extends Account {
 		this.interestRate = interestRate;
 	}
 
-	private Money getStatementBalance() {
+	public Money getStatementBalance() {
 		return super.getBalance();
 	}
 
@@ -61,9 +61,12 @@ public abstract class DebtAccount extends Account {
 	 * current balance = statement balance + used credit
 	 * @return cumulative balance
 	 */
-	public Money getCumulativeBalance() {
+	@Override
+	public Money getBalance() {
 		return getStatementBalance().add(usedCredit);
 	}
+
+	private Money getCumulativeBalance() { return getBalance(); }
 
 	/**
 	 * Take money out of the credit card account.
@@ -118,7 +121,7 @@ public abstract class DebtAccount extends Account {
 	public void gainInterest() {
 		if (getStatementBalance().compareTo(new Money(0)) > 0) {
 			setStatementBalance(
-				new Money(this.getBalance().getMoneyValue()
+				new Money(this.getStatementBalance().getMoneyValue()
 					* (1 + interestRate)));
 		}
 	}
