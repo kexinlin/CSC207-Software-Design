@@ -10,10 +10,10 @@
    <children>
       <Label layoutX="38.0" layoutY="36.0" text="Amount of Payment" />
       <TextField fx:id="payAmount" layoutX="274.0" layoutY="32.0" />
-      <Button layoutX="217.0" layoutY="190.0" mnemonicParsing="false" onAction="#payConfirmOnClick" text="Confirm" />
       <Label layoutX="38.0" layoutY="88.0" text="Source Account" />
       <ChoiceBox fx:id="srcAccChoiceBox" layoutX="275.0" layoutY="84.0" prefWidth="150.0" />
       <Label layoutX="38.0" layoutY="138.0" text="Payee Name" />
       <TextField fx:id="payeeName" layoutX="274.0" layoutY="136.0" />
+      <Button layoutX="217.0" layoutY="190.0" mnemonicParsing="false" onAction="#payConfirmOnClick" text="Confirm" />
    </children>
 </AnchorPane>

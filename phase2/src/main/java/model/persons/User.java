@@ -1,8 +1,6 @@
 package model.persons;
 
 public class User extends AccountOwner {
-	private String name;
-
 	/**
 	 * Constructs a user object.
 	 * @param name the full name of this user
@@ -10,11 +8,8 @@ public class User extends AccountOwner {
 	 * @param password the password of this user
 	 */
 	public User(String name, String username, String password) {
-		super(username, password);
-		this.name = name;
+		super(name, username, password);
 	}
-
-
 
 	/**
 	 * Constructs a user object with income, age, and email info
@@ -25,17 +20,8 @@ public class User extends AccountOwner {
 	 * @param email the email address of this user
 	 */
 	public User(String name, String username, String password, int age, int income, String email) {
-		super(username, password, age, income, email);
-		this.name = name;
+		super(name, username, password, age, income, email);
 	}
 
 
-	/**
-	 * Get the name of this AccountOwner.
-	 *
-	 * @return name of this AccountOwner
-	 */
-	public String getName() {
-		return name;
-	}
 }

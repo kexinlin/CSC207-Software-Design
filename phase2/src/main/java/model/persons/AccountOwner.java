@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 public abstract class AccountOwner implements Loginable {
 	private String username;
+	private String name;
 	private String password;
 	private ArrayList<Account> accounts = new ArrayList<>();
 	private ChequingAccount primaryAccount;
@@ -22,8 +23,9 @@ public abstract class AccountOwner implements Loginable {
 	 * @param username the username of this user
 	 * @param password the password of this user
 	 */
-	public AccountOwner(String username, String password) {
+	public AccountOwner(String name, String username, String password) {
 		this.username = username;
+		this.name = name;
 		this.password = password;
 
 	}
@@ -37,7 +39,8 @@ public abstract class AccountOwner implements Loginable {
 	 * @param income the income of this user
 	 * @param email the email address of this user
 	 */
-	public AccountOwner(String username, String password, int age, int income, String email) {
+	public AccountOwner(String name, String username, String password, int age, int income, String email) {
+		this.name = name;
 		this.username = username;
 		this.password = password;
 		this.age = age;
@@ -126,6 +129,9 @@ public abstract class AccountOwner implements Loginable {
 		return total;
 	}
 
+	public String getName() {
+		return name;
+	}
 
 	/**
 	 * return sum of balance of all debt accounts

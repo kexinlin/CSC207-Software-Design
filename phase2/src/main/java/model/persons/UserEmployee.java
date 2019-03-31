@@ -3,8 +3,8 @@ package model.persons;
 import model.ManagerAction;
 
 public class UserEmployee extends AccountOwner implements Employee {
-	public UserEmployee(String username, String password) {
-		super(username, password);
+	public UserEmployee(String name, String username, String password) {
+		super(name, username, password);
 	}
 
 	@Override

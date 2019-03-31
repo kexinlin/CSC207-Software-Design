@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Message;
+import model.persons.AccountOwner;
 import model.persons.User;
 import model.transactors.Account;
 
@@ -57,20 +58,20 @@ public class UserHomeController extends GUIHomeController {
 
 	@FXML
 	public void showName() {
-		StringProperty valueProperty = new SimpleStringProperty(((User) currentUser).getName());
+		StringProperty valueProperty = new SimpleStringProperty(((AccountOwner) currentUser).getName());
 		name.textProperty().bind(valueProperty);
 	}
 
 	@FXML
 	public void showAndRefreshNetTotal() {
-		netTotalVal.setValue(String.valueOf(((User) currentUser).getNetTotal()));
+		netTotalVal.setValue(String.valueOf(((AccountOwner) currentUser).getNetTotal()));
 		netTotal.textProperty().bind(netTotalVal);
 	}
 
 	@FXML
 	public void showTable() {
 
-		ArrayList<Account> accList = ((User) currentUser).getAccounts();
+		ArrayList<Account> accList = ((AccountOwner) currentUser).getAccounts();
 
 		data.addAll(accList);
 
@@ -96,7 +97,7 @@ public class UserHomeController extends GUIHomeController {
 
 	@FXML
 	public void showMessageList(){
-		ArrayList<Message> msgList = ((User) currentUser).getMessages();
+		ArrayList<Message> msgList = ((AccountOwner) currentUser).getMessages();
 		ArrayList<String> msgContentList = new ArrayList<>();
 		for(Message msg:msgList){
 			msgContentList.add(msg.getText());
@@ -107,7 +108,7 @@ public class UserHomeController extends GUIHomeController {
 
 	@FXML
 	public void showNameInProfile() {
-		StringProperty nameProperty = new SimpleStringProperty(((User) currentUser).getName());
+		StringProperty nameProperty = new SimpleStringProperty(((AccountOwner) currentUser).getName());
 		nameInProfile.textProperty().bind(nameProperty);
 
 		StringProperty usernameProperty = new SimpleStringProperty((currentUser).getUsername());
@@ -116,10 +117,10 @@ public class UserHomeController extends GUIHomeController {
 
 	@FXML
 	public void showAndRefreshPriChqAcc() {
-		if (((User) currentUser).getPrimaryChequingAccount() == null) {
+		if (((AccountOwner) currentUser).getPrimaryChequingAccount() == null) {
 			priChqAccNumVal.setValue("You don't have a primary chequing account");
 		} else {
-			priChqAccNumVal.setValue(String.valueOf(((User) currentUser).getPrimaryChequingAccount().getAccountId()));
+			priChqAccNumVal.setValue(String.valueOf(((AccountOwner) currentUser).getPrimaryChequingAccount().getAccountId()));
 		}
 		priChqAccNum.textProperty().bind(priChqAccNumVal);
 	}
