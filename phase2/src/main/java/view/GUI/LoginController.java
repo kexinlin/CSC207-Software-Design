@@ -53,8 +53,6 @@ public class LoginController extends GUIController {
 	private void loginUser() {
 		String username = usernameInput.getText();
 		String password = passwordInput.getText();
-		System.out.println(username);
-		System.out.println(password);
 
 		if (username.equals("") || password.equals("")) {
 			showAlert(Alert.AlertType.ERROR,
