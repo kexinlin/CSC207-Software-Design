@@ -27,6 +27,12 @@ public class BankSystemTest {
 		return builder.build().getTime();
 	}
 
+	private Date twoDaysBeforeStmtDay() {
+		Calendar.Builder builder = new Calendar.Builder();
+		builder.setDate(2019, Calendar.FEBRUARY, 27);
+		return builder.build().getTime();
+	}
+
 	private Date beforePayDay() {
 		Calendar.Builder builder = new Calendar.Builder();
 		// Feb 14. next day, Feb 15, is pay day.
@@ -55,19 +61,21 @@ public class BankSystemTest {
 	}
 
 	@Test
-	public void testGainInterest() {
-		Date date = beforeStatementDay();
-		System.out.println(date);
-		bankSystem.setCurrentTime(date);
+	public void testGainInterest() throws AccountNotExistException {
+		bankSystem.setCurrentTime(twoDaysBeforeStmtDay());
+		Account acc = bankSystem.getAccountById("874637");
+		acc.setMinimumBalance(new Money(100));
+		assertNotNull(acc);
 		bankSystem.close();
-		try {
-			Account acc = bankSystem.getAccountById("874637");
-			assertNotNull(acc);
-			// it should gain 0.1% interest.
-			assertEquals(100.1, acc.getBalance().getMoneyValue(), 0.0001);
-		} catch (AccountNotExistException e) {
-			fail("Cannot find the account.");
-		}
+
+		acc.putMoneyIn(new Money(100));
+		bankSystem.setCurrentTime(beforeStatementDay());
+		bankSystem.close();
+
+		// it should gain 0.1% interest.
+		// this should be calculated from the minimum balance for each day.
+		assertEquals(200.1, acc.getBalance().getMoneyValue(), 0.0001);
+
 	}
 
 	@Test
