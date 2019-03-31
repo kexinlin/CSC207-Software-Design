@@ -191,11 +191,11 @@ public class BankManagerHomeController extends GUIHomeController {
 
 		Collection<Loginable> loginableCollection = guiManager.getBankSystem().getLoginables().values();
 
-		ArrayList<User> userList = new ArrayList<>();
+		ArrayList<AccountOwner> userList = new ArrayList<>();
 
 		for (Loginable l : loginableCollection) {
-			if (l instanceof User) {
-				userList.add((User) l);
+			if (l instanceof AccountOwner) {
+				userList.add((AccountOwner) l);
 			}
 		}
 
