@@ -61,7 +61,7 @@ public class HighInterestAccount extends AssetAccount {
 	 */
 	@Override
 	public void increaseInterest() {
-		Money interest = new Money(getBalance().getMoneyValue() * interestRate);
+		Money interest = new Money(getMinimumBalance().getMoneyValue() * interestRate);
 		setBalance(getBalance().add(interest));
 	}
 

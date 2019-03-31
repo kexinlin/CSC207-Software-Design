@@ -21,6 +21,7 @@ public abstract class Account extends Transactor {
 	final private SimpleStringProperty accountType;
 	private ArrayList<AccountOwner> coOwners;
 	private ArrayList<Transaction> logs;
+	private Money minimumBalance;
 
 	/**
 	 * Create an instance of account
@@ -40,6 +41,7 @@ public abstract class Account extends Transactor {
 
 		String[] typeClass = String.valueOf(this.getClass()).split("\\.");
 		this.accountType = new SimpleStringProperty(typeClass[typeClass.length - 1]);
+		this.minimumBalance = new Money(-1);
 	}
 
 	/**
@@ -61,6 +63,7 @@ public abstract class Account extends Transactor {
 
 		String[] typeClass = String.valueOf(this.getClass()).split("\\.");
 		this.accountType = new SimpleStringProperty(typeClass[typeClass.length - 1]);
+		this.minimumBalance = new Money(-1);
 	}
 
 	/**
@@ -224,5 +227,35 @@ public abstract class Account extends Transactor {
 	 */
 	public void increaseInterest() {
 		throw new UnsupportedOperationException("This method is not defined");
+	}
+
+	public void setMinimumBalance(Money m) {
+		if (hasInterest()) {
+			minimumBalance = m;
+		} else {
+			throw new UnsupportedOperationException();
+		}
+	}
+	public Money getMinimumBalance() {
+		if (hasInterest()) {
+			return minimumBalance;
+		}
+		throw new UnsupportedOperationException();
+	}
+
+	public void updateMinimumBalance() {
+		if (getMinimumBalance().compareTo(new Money(0)) < 0) {
+			// it is not yet set
+			setMinimumBalance(getBalance());
+		} else {
+			setMinimumBalance(new Money(
+				Math.min(getBalance().getMoneyValue(), getMinimumBalance().getMoneyValue())
+			));
+		}
+	}
+
+	public void resetMinimumBalance() {
+		setMinimumBalance(new Money(-1));
+		updateMinimumBalance();
 	}
 }

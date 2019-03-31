@@ -156,7 +156,8 @@ class RecordController {
 			} catch (AccountNotExistException ignore) {
 
 			}
-		} else if (entries[0].equals("used-credit")) {
+		} else if (entries[0].equals("used-credit")
+			|| entries[0].equals("min-balance")) {
 			String[] arr = entries[1].split(",", 2);
 			if (arr.length < 2) {
 				return;
@@ -170,10 +171,17 @@ class RecordController {
 			} catch (NumberFormatException|AccountNotExistException e) {
 				return;
 			}
-			if (! (acc instanceof DebtAccount)) {
-				return;
+			if (entries[0].equals("used-credit")) {
+				if (!(acc instanceof DebtAccount)) {
+					return;
+				}
+				((DebtAccount) acc).setUsedCredit(new Money(val));
+			} else {
+				if (! (acc.hasInterest())) {
+					return;
+				}
+				acc.setMinimumBalance(new Money(val));
 			}
-			((DebtAccount) acc).setUsedCredit(new Money(val));
 		}
 
 	}
@@ -371,6 +379,10 @@ class RecordController {
 		if (account instanceof DebtAccount) {
 			writer.write("set,used-credit," +
 				account.getId() + "," + ((DebtAccount) account).getUsedCredit() + "\n");
+		}
+		if (account.hasInterest()) {
+			writer.write("set,min-balance," +
+				account.getId() + "," + account.getMinimumBalance() + "\n");
 		}
 	}
 

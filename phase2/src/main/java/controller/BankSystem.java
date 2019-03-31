@@ -78,6 +78,8 @@ public class BankSystem {
 			accounts.values().forEach(a -> {
 				if (a.hasInterest()) {
 					a.increaseInterest();
+					// reset min balance at the beginning of each week
+					a.resetMinimumBalance();
 				}
 				if (a instanceof DebtAccount) {
 					((DebtAccount) a).genStatement();
@@ -85,6 +87,12 @@ public class BankSystem {
 						"Your balance of account " + a.getId() +
 						" is now " + ((DebtAccount) a).getStatementBalance() +
 						". You need to pay before the start of the 15th of this month."));
+				}
+			});
+		} else {
+			accounts.values().forEach(a -> {
+				if (a.hasInterest()) {
+					a.updateMinimumBalance();
 				}
 			});
 		}
@@ -394,7 +402,8 @@ public class BankSystem {
 		Money destAmount = tx.getAmount();
 		if (tx.getFee().compareTo(new Money(0)) > 0) {
 			sourceAmount = sourceAmount.add(tx.getFee());
-		} else { // negative fee indicates that we are undoing a tx
+		} else if (tx.getFee().compareTo(new Money(0)) < 0) {
+			// negative fee indicates that we are undoing a tx
 			destAmount = destAmount.subtract(tx.getFee());
 		}
 		tx.getSource().takeMoneyOut(sourceAmount);
