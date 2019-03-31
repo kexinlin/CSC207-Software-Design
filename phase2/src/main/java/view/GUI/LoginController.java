@@ -69,7 +69,7 @@ public class LoginController extends GUIController {
 			//   Alternatively, let the user-employee choose an identity.
 			Loginable loginable = guiManager.getBankSystem().getLoginable(username);
 			if (loginable instanceof AccountOwner && loginable instanceof Employee) {
-				resourceName = "/BankManagerHomeScene.fxml"; // FIXME let the person choose!
+				resourceName = "/ChooseRoleScene.fxml"; // FIXME let the person choose!
 			} else if (loginable instanceof AccountOwner) {
 				resourceName = "/UserHomeScene.fxml";
 			} else {

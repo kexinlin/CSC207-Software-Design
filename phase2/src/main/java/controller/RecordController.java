@@ -321,15 +321,16 @@ class RecordController {
 	}
 
 	private void processUserEmployee(String data) {
-		String[] entries = data.split(",", 2);
-		if (entries.length != 2) {
+		String[] entries = data.split(",", 3);
+		if (entries.length != 3) {
 			// wrong format
 			return;
 		}
-		String username = entries[0];
-		String password = entries[1];
+		String name = entries[0];
+		String username = entries[1];
+		String password = entries[2];
 
-		UserEmployee employee = new UserEmployee(username, password);
+		UserEmployee employee = new UserEmployee(name, username, password);
 		bankSystem.addLoginable(employee);
 	}
 
@@ -474,6 +475,7 @@ class RecordController {
 	private void recordUserEmployee(BufferedWriter writer, UserEmployee employee)
 		throws IOException {
 		writer.write("user-employee,"
+			+ employee.getName() + ","
 			+ employee.getUsername() + ","
 			+ employee.getPassword() + "\n");
 	}

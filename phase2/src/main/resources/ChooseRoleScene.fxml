@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI.ChooseRoleController">
+   <children>
+      <Label layoutX="286.0" layoutY="70.0" text="Please choose your login role">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Button layoutX="112.0" layoutY="153.0" mnemonicParsing="false" onAction="#chooseUserOnClick" prefHeight="249.0" prefWidth="242.0" text="User">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Button layoutX="474.0" layoutY="149.0" mnemonicParsing="false" onAction="#chooseEmployeeOnClick" prefHeight="249.0" prefWidth="242.0" text="Employee">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
