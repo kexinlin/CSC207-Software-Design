@@ -502,6 +502,7 @@ public class BankSystem {
 		accType.add("SavingAccount");
 		accType.add("LineOfCreditAccount");
 		accType.add("CreditCardAccount");
+		accType.add("HighInterestAccount");
 		return accType;
 	}
 

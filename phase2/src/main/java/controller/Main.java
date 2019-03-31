@@ -32,8 +32,8 @@ public class Main extends Application {
 			ui = new GraphicsUI(atm);
 		}
 		ui.mainLoop();
-		atm.close();
-		sys.close();
+//		atm.close();
+//		sys.close();
 		Platform.exit();
 	}
 
