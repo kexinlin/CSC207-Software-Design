@@ -7,6 +7,8 @@ import javafx.scene.control.ChoiceBox;
 import model.Request;
 import model.persons.AccountOwner;
 
+import java.util.ArrayList;
+
 public class AccountCreationController extends GUIHomeController {
 
 	@FXML
@@ -29,11 +31,9 @@ public class AccountCreationController extends GUIHomeController {
 
 	@FXML
 	public void show() {
-		accTypeChoiceBox.setValue("Saving Account");
-		accTypeChoiceBox.getItems().add("Saving Account");
-		accTypeChoiceBox.getItems().add("Chequing Account");
-		accTypeChoiceBox.getItems().add("Credit Card Account");
-		accTypeChoiceBox.getItems().add("Line Of Credit Account");
+		ArrayList<String> accTypeList = guiManager.getBankSystem().getAllAccountType();
+		for (String accType : accTypeList) {
+			accTypeChoiceBox.getItems().add(accType);
+		}
 	}
-
 }
